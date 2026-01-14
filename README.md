@@ -39,11 +39,11 @@ The script reads Windows' `Zone.Identifier` stream (Alternate Data Stream) to id
 **Recognized safe sites:**
 - CurseForge
 - Modrinth
-- GitHub
 
 **Risky sites:**
 - Discord / Discord CDN
 - MediaFire
+- Github
 - MEGA
 - Dropbox
 - Google Drive
