@@ -1,5 +1,5 @@
 # Meow Mod Analyzer
-PowerShell script to analyze Minecraft mods and identify potential cheat clients.
+CMD script to analyze Minecraft mods and identify potential cheat clients.
 
 ## Installation
 ```powershell
