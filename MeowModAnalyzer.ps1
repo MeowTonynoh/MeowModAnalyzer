@@ -132,7 +132,7 @@ $suspiciousPatterns = @(
     "AimAssist", "AnchorTweaks", "AutoAnchor", "AutoCrystal", "AutoDoubleHand",
     "AutoHitCrystal", "AutoPot", "AutoTotem", "AutoArmor", "InventoryTotem",
     "JumpReset", "LegitTotem", "PingSpoof", "SelfDestruct",
-    "ShieldBreaker", "TriggerBot", "Velocity", "AxeSpam", "WebMacro",
+    "ShieldBreaker", "TriggerBot", "AxeSpam", "WebMacro",
     "FastPlace", "WalskyOptimizer", "WalksyOptimizer", "walsky.optimizer",
     "WalksyCrystalOptimizerMod", "Donut", "Replace Mod",
     "ShieldDisabler", "SilentAim", "Totem Hit", "Wtap", "FakeLag",
@@ -189,7 +189,7 @@ $cheatStrings = @(
     "AimAssist", "aimassist", "aim assist",
     "triggerbot", "trigger bot",
     "FakeInv", "Friends", "swapBackToOriginalSlot",
-    "FakeLag", "pingspoof", "ping spoof", "velocity",
+    "FakeLag", "pingspoof", "ping spoof",
     "webmacro", "web macro",
     "lvstrng", "dqrkis", "selfdestruct", "self destruct",
     "AutoMace", "AutoFirework", "MaceSwap", "AirAnchor",
@@ -285,14 +285,25 @@ function Invoke-BypassScan {
         $httpDownloadFound = $false
         $httpExfilFound    = $false
         $obfuscatedCount   = 0
+        $numericClassCount = 0
+        $unicodeClassCount = 0
         $totalClassCount   = 0
+        $base64Found       = $false
 
         foreach ($entry in $allEntries) {
             $name = $entry.FullName
 
             if ($name -match "\.class$") {
                 $totalClassCount++
+                $className = [System.IO.Path]::GetFileNameWithoutExtension(($name -split "/")[-1])
 
+                # numeric-only class name: 123.class, 4567.class
+                if ($className -match "^\d+$") { $numericClassCount++ }
+
+                # unicode / non-ASCII class name
+                if ($className -match "[^\x00-\x7F]") { $unicodeClassCount++ }
+
+                # existing single-letter path obfuscation check
                 $segs = ($name -replace "\.class$","") -split "/"
                 $consecutiveSingle = 0
                 $maxConsecutive    = 0
@@ -333,6 +344,12 @@ function Invoke-BypassScan {
                         $ct -match "getProperty") {
                         $httpExfilFound = $true
                     }
+
+                    # base64: look for long base64-like strings (32+ chars) in the constant pool
+                    if (-not $base64Found) {
+                        if ($ct -match "[A-Za-z0-9+/]{32,}={0,2}") { $base64Found = $true }
+                    }
+
                 } catch { }
             }
         }
@@ -340,9 +357,11 @@ function Invoke-BypassScan {
         foreach ($iz in $innerZips) { try { $iz.Dispose() } catch { } }
         $zip.Dispose()
 
-        $obfPct = if ($totalClassCount -ge 10) { [math]::Round(($obfuscatedCount / $totalClassCount) * 100) } else { 0 }
+        $obfPct     = if ($totalClassCount -ge 10) { [math]::Round(($obfuscatedCount   / $totalClassCount) * 100) } else { 0 }
+        $numPct     = if ($totalClassCount -ge 5)  { [math]::Round(($numericClassCount / $totalClassCount) * 100) } else { 0 }
+        $uniPct     = if ($totalClassCount -ge 5)  { [math]::Round(($unicodeClassCount / $totalClassCount) * 100) } else { 0 }
 
-        if ($runtimeExecFound -and $obfPct -ge 40) {
+        if ($runtimeExecFound -and $obfPct -ge 25) {
             $flags.Add("Runtime.exec() in obfuscated code — can run arbitrary OS commands")
         }
 
@@ -354,8 +373,20 @@ function Invoke-BypassScan {
             $flags.Add("HTTP POST exfiltration — sends system data to an external server")
         }
 
-        if ($totalClassCount -ge 10 -and $obfPct -ge 40) {
+        if ($totalClassCount -ge 10 -and $obfPct -ge 25) {
             $flags.Add("Heavy obfuscation — $obfPct% of classes use single-letter path segments (a/b/c style)")
+        }
+
+        if ($numPct -ge 20) {
+            $flags.Add("Numeric class names — $numPct% of classes have numeric-only names (e.g. 1234.class)")
+        }
+
+        if ($uniPct -ge 10) {
+            $flags.Add("Unicode class names — $uniPct% of classes use non-ASCII characters")
+        }
+
+        if ($base64Found) {
+            $flags.Add("Base64 strings detected — long encoded strings found in bytecode (possible hidden payload)")
         }
 
         $knownLegitModIds = @(
@@ -421,25 +452,13 @@ function Invoke-ModScan {
                 $raw = Get-Content $tmp -Raw
                 Remove-Item $tmp -Force -ErrorAction SilentlyContinue
                 foreach ($s in $cheatStrings) {
-                    if ($s -eq "velocity") {
-                        if ($raw -match "velocity(?:hack|module|cheat|bypass|packet|horizontal|vertical|amount|factor|setting)") {
-                            [void]$foundStrings.Add($s)
-                        }
-                    } elseif ($raw -match [regex]::Escape($s)) {
-                        [void]$foundStrings.Add($s)
-                    }
+                    if ($raw -match [regex]::Escape($s)) { [void]$foundStrings.Add($s) }
                 }
             }
         } else {
             $rawText = [System.Text.Encoding]::ASCII.GetString([System.IO.File]::ReadAllBytes($FilePath))
             foreach ($s in $cheatStrings) {
-                if ($s -eq "velocity") {
-                    if ($rawText -match "velocity(?:hack|module|cheat|bypass|packet|horizontal|vertical|amount|factor|setting)") {
-                        [void]$foundStrings.Add($s)
-                    }
-                } elseif ($rawText -match [regex]::Escape($s)) {
-                    [void]$foundStrings.Add($s)
-                }
+                if ($rawText -match [regex]::Escape($s)) { [void]$foundStrings.Add($s) }
             }
             try {
                 $zip = [System.IO.Compression.ZipFile]::OpenRead($FilePath)
@@ -450,13 +469,7 @@ function Invoke-ModScan {
                         $classText = $reader.ReadToEnd()
                         $reader.Close(); $stream.Close()
                         foreach ($s in $cheatStrings) {
-                            if ($s -eq "velocity") {
-                                if ($classText -match "velocity(?:hack|module|cheat|bypass|packet|horizontal|vertical|amount|factor|setting)") {
-                                    [void]$foundStrings.Add($s)
-                                }
-                            } elseif ($classText -match [regex]::Escape($s)) {
-                                [void]$foundStrings.Add($s)
-                            }
+                            if ($classText -match [regex]::Escape($s)) { [void]$foundStrings.Add($s) }
                         }
                     } catch { }
                 }
