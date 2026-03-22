@@ -494,38 +494,39 @@ function Write-SectionHeader {
 function Write-SuspiciousCard {
     param($Mod)
 
-    $border = "  " + ("─" * 70)
-
-    # top border + header
-    Write-Host $border -ForegroundColor DarkRed
-    Write-Host "  " -NoNewline
+    # top line + badge + filename
+    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkRed
+    Write-Host "  │ " -ForegroundColor DarkRed -NoNewline
     Write-Host " FLAGGED " -ForegroundColor White -BackgroundColor DarkRed -NoNewline
-    Write-Host "  $($Mod.FileName)" -ForegroundColor Yellow
-    Write-Host $border -ForegroundColor DarkRed
-    Write-Host ""
+    Write-Host "  " -NoNewline
+    Write-Host $Mod.FileName -ForegroundColor Yellow
+    Write-Host ("  │ " + ("─" * 66)) -ForegroundColor DarkRed
 
     # patterns
     if ($Mod.Patterns.Count -gt 0) {
-        Write-Host "    PATTERNS" -ForegroundColor DarkGray
+        Write-Host "  │" -ForegroundColor DarkRed
+        Write-Host "  │  " -ForegroundColor DarkRed -NoNewline
+        Write-Host "PATTERNS" -ForegroundColor DarkGray
         foreach ($p in ($Mod.Patterns | Sort-Object)) {
-            Write-Host "      " -NoNewline
+            Write-Host "  │    " -ForegroundColor DarkRed -NoNewline
             Write-Host $p -ForegroundColor Red
         }
-        Write-Host ""
     }
 
     # strings
     $uniqueStrings = $Mod.Strings | Where-Object { $Mod.Patterns -notcontains $_ } | Sort-Object
     if ($uniqueStrings.Count -gt 0) {
-        Write-Host "    STRINGS" -ForegroundColor DarkGray
+        Write-Host "  │" -ForegroundColor DarkRed
+        Write-Host "  │  " -ForegroundColor DarkRed -NoNewline
+        Write-Host "STRINGS" -ForegroundColor DarkGray
         foreach ($s in $uniqueStrings) {
-            Write-Host "      " -NoNewline
+            Write-Host "  │    " -ForegroundColor DarkRed -NoNewline
             Write-Host $s -ForegroundColor DarkYellow
         }
-        Write-Host ""
     }
 
-    Write-Host $border -ForegroundColor DarkRed
+    Write-Host "  │" -ForegroundColor DarkRed
+    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkRed
     Write-Host ""
 }
 
@@ -533,15 +534,13 @@ function Write-SuspiciousCard {
 function Write-InjectionCard {
     param($Mod)
 
-    $border = "  " + ("─" * 70)
-
-    # top border + header
-    Write-Host $border -ForegroundColor DarkMagenta
-    Write-Host "  " -NoNewline
+    # top line + badge + filename
+    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkMagenta
+    Write-Host "  │ " -ForegroundColor DarkMagenta -NoNewline
     Write-Host " INJECTION " -ForegroundColor White -BackgroundColor DarkMagenta -NoNewline
-    Write-Host "  $($Mod.FileName)" -ForegroundColor Yellow
-    Write-Host $border -ForegroundColor DarkMagenta
-    Write-Host ""
+    Write-Host "  " -NoNewline
+    Write-Host $Mod.FileName -ForegroundColor Yellow
+    Write-Host ("  │ " + ("─" * 66)) -ForegroundColor DarkMagenta
 
     foreach ($flag in $Mod.Flags) {
         if ($flag -match "^(.+?) — (.+)$") {
@@ -552,18 +551,19 @@ function Write-InjectionCard {
             $flagDesc  = ""
         }
 
-        Write-Host "    " -NoNewline
+        Write-Host "  │" -ForegroundColor DarkMagenta
+        Write-Host "  │  " -ForegroundColor DarkMagenta -NoNewline
         Write-Host "◉ " -ForegroundColor Magenta -NoNewline
         Write-Host $flagTitle -ForegroundColor White
 
         if ($flagDesc -ne "") {
-            Write-Host "      " -NoNewline
+            Write-Host "  │    " -ForegroundColor DarkMagenta -NoNewline
             Write-Host $flagDesc -ForegroundColor Gray
         }
-        Write-Host ""
     }
 
-    Write-Host $border -ForegroundColor DarkMagenta
+    Write-Host "  │" -ForegroundColor DarkMagenta
+    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkMagenta
     Write-Host ""
 }
 
