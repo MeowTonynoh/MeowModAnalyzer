@@ -246,12 +246,12 @@ function Invoke-BypassScan {
             }
         }
         foreach ($sj in $suspiciousNestedJars) {
-            $flags.Add("Suspicious nested JAR — no version number, not a known dependency: $sj")
+            $flags.Add("Suspicious nested JAR — no version, unknown dependency: $sj")
         }
 
         if ($nestedJars.Count -eq 1 -and $outerClasses.Count -lt 3) {
             $njName = [System.IO.Path]::GetFileName(($nestedJars | Select-Object -First 1).FullName)
-            $flags.Add("Hollow shell — outer JAR has only $($outerClasses.Count) own class(es) but wraps: $njName")
+            $flags.Add("Hollow shell — only $($outerClasses.Count) own class(es), wraps: $njName")
         }
 
         $outerModId = ""
@@ -343,19 +343,19 @@ function Invoke-BypassScan {
         $obfPct = if ($totalClassCount -ge 10) { [math]::Round(($obfuscatedCount / $totalClassCount) * 100) } else { 0 }
 
         if ($runtimeExecFound -and $obfPct -ge 40) {
-            $flags.Add("Runtime.exec() inside obfuscated code — mod can execute arbitrary OS commands (combined with heavy obfuscation this is a strong malice indicator)")
+            $flags.Add("Runtime.exec() in obfuscated code — can run arbitrary OS commands")
         }
 
         if ($httpDownloadFound) {
-            $flags.Add("HTTP file download — mod fetches and writes files from a remote server at runtime (no legitimate Fabric mod does this)")
+            $flags.Add("HTTP file download — fetches and writes files from a remote server at runtime")
         }
 
         if ($httpExfilFound) {
-            $flags.Add("HTTP POST exfiltration — mod reads system properties and sends data to an external server (possible token/session theft)")
+            $flags.Add("HTTP POST exfiltration — sends system data to an external server")
         }
 
         if ($totalClassCount -ge 10 -and $obfPct -ge 40) {
-            $flags.Add("Heavy obfuscation — $obfPct% of classes have 3+ consecutive single-letter path segments (a/b/c style). Legitimate mods never do this.")
+            $flags.Add("Heavy obfuscation — $obfPct% of classes use single-letter path segments (a/b/c style)")
         }
 
         $knownLegitModIds = @(
@@ -368,7 +368,7 @@ function Invoke-BypassScan {
             $_ -match "Runtime\.exec|HTTP file download|HTTP POST|Heavy obfuscation|Suspicious nested JAR"
         }).Count
         if ($outerModId -and ($knownLegitModIds -contains $outerModId) -and $dangerCount -gt 0) {
-            $flags.Add("Fake mod identity — outer JAR claims to be '$outerModId' but dangerous code was found inside (trojanized build)")
+            $flags.Add("Fake mod identity — claims to be '$outerModId' but contains dangerous code")
         }
 
     } catch { }
