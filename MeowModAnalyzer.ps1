@@ -30,10 +30,12 @@ $Banner = @"
 
 Write-Host $Banner -ForegroundColor Cyan
 Write-Host ""
-Write-Host "  by " -ForegroundColor DarkGray -NoNewline
+Write-Host "                Made with " -ForegroundColor Gray -NoNewline
+Write-Host "♥ " -ForegroundColor Red -NoNewline
+Write-Host "by " -ForegroundColor Gray -NoNewline
 Write-Host "MeowTonynoh" -ForegroundColor Cyan
 Write-Host ""
-Write-Host ("  " + ("─" * 74)) -ForegroundColor DarkGray
+Write-Host ("━" * 76) -ForegroundColor DarkCyan
 Write-Host
 
 # ask the user where their mods folder is
@@ -60,8 +62,7 @@ if (-not (Test-Path $modsPath -PathType Container)) {
     exit 1
 }
 
-Write-Host "  path  " -ForegroundColor DarkGray -NoNewline
-Write-Host "$modsPath" -ForegroundColor White
+Write-Host "📁 Scanning directory: $modsPath" -ForegroundColor Green
 Write-Host
 
 # check if minecraft is already running
@@ -74,8 +75,9 @@ if ($mcProcess) {
     try {
         $startTime = $mcProcess.StartTime
         $uptime = (Get-Date) - $startTime
-        Write-Host "  minecraft" -ForegroundColor DarkCyan -NoNewline
-        Write-Host "  pid $($mcProcess.Id)  uptime $($uptime.Hours)h $($uptime.Minutes)m $($uptime.Seconds)s" -ForegroundColor DarkGray
+        Write-Host "🕒 { Minecraft Uptime }" -ForegroundColor DarkCyan
+        Write-Host "   $($mcProcess.Name) PID $($mcProcess.Id) started at $startTime" -ForegroundColor Gray
+        Write-Host "   Running for: $($uptime.Hours)h $($uptime.Minutes)m $($uptime.Seconds)s" -ForegroundColor Gray
         Write-Host ""
     } catch {
         # couldn't grab process info, no biggie
@@ -509,8 +511,7 @@ if ($jarFiles.Count -eq 0) {
 }
 
 $fileWord = if ($jarFiles.Count -eq 1) { "file" } else { "files" }
-Write-Host "  found  " -ForegroundColor DarkGray -NoNewline
-Write-Host "$($jarFiles.Count) jar $fileWord" -ForegroundColor White
+Write-Host "🔍 Found $($jarFiles.Count) JAR $fileWord to analyze" -ForegroundColor Green
 Write-Host
 
 $spinnerFrames = @("⣾","⣽","⣻","⢿","⡿","⣟","⣯","⣷")
@@ -546,8 +547,7 @@ Write-Host "`r$(' ' * 100)`r" -NoNewline
 
 # pass 2 - deep scan every jar for cheat patterns and strings
 $modWord = if ($totalFiles -eq 1) { "mod" } else { "mods" }
-Write-Host "  scan   " -ForegroundColor DarkGray -NoNewline
-Write-Host "deep-scanning $totalFiles $modWord" -ForegroundColor White
+Write-Host "🔬 Deep-scanning all $totalFiles $modWord..." -ForegroundColor Cyan
 $idx = 0
 
 foreach ($jar in $jarFiles) {
@@ -570,8 +570,7 @@ foreach ($jar in $jarFiles) {
 Write-Host "`r$(' ' * 100)`r" -NoNewline
 
 # pass 3 - bypass / injection scan
-Write-Host "  bypass " -ForegroundColor DarkGray -NoNewline
-Write-Host "injection scan on $totalFiles $modWord" -ForegroundColor White
+Write-Host "🛡️  Running bypass/injection scan on all $totalFiles $modWord..." -ForegroundColor Magenta
 $idx = 0
 
 foreach ($jar in $jarFiles) {
@@ -594,102 +593,124 @@ foreach ($jar in $jarFiles) {
 Write-Host "`r$(' ' * 100)`r" -NoNewline
 
 # --- results ---
-Write-Host ""
-Write-Host ("  " + ("─" * 74)) -ForegroundColor DarkGray
-Write-Host ""
+Write-Host "`n" + ("━" * 76) -ForegroundColor DarkCyan
 
 if ($verifiedMods.Count -gt 0) {
-    Write-Host "  VERIFIED" -ForegroundColor Green -NoNewline
-    Write-Host "  $($verifiedMods.Count) mod$(if($verifiedMods.Count -ne 1){'s'})" -ForegroundColor DarkGray
-    Write-Host ""
+    Write-Host "✅ VERIFIED MODS ($($verifiedMods.Count))" -ForegroundColor Green
+    Write-Host ("─" * 76) -ForegroundColor DarkGray
     foreach ($mod in $verifiedMods) {
-        Write-Host "    + " -ForegroundColor Green -NoNewline
+        Write-Host "  ✓ " -ForegroundColor Green -NoNewline
         Write-Host "$($mod.ModName)" -ForegroundColor White -NoNewline
-        Write-Host "  $($mod.FileName)" -ForegroundColor DarkGray
+        Write-Host " → " -ForegroundColor Gray -NoNewline
+        Write-Host "$($mod.FileName)" -ForegroundColor DarkGray
     }
     Write-Host ""
 }
 
 if ($unknownMods.Count -gt 0) {
-    Write-Host "  UNKNOWN" -ForegroundColor Yellow -NoNewline
-    Write-Host "  $($unknownMods.Count) mod$(if($unknownMods.Count -ne 1){'s'})" -ForegroundColor DarkGray
-    Write-Host ""
+    Write-Host "❓ UNKNOWN MODS ($($unknownMods.Count))" -ForegroundColor Yellow
+    Write-Host ("─" * 76) -ForegroundColor DarkGray
     foreach ($mod in $unknownMods) {
-        $src = if ($mod.DownloadSource) { $mod.DownloadSource } else { "unknown source" }
-        Write-Host "    ? " -ForegroundColor Yellow -NoNewline
-        Write-Host "$($mod.FileName)" -ForegroundColor White -NoNewline
-        Write-Host "  via $src" -ForegroundColor DarkGray
+        $name = $mod.FileName
+        if ($name.Length -gt 50) { $name = $name.Substring(0,47) + "..." }
+        $topLine    = "  ╔═ ? " + $name + " " + ("═" * (65 - $name.Length)) + "╗"
+        $sourceText = if ($mod.DownloadSource) { "Source: $($mod.DownloadSource)" } else { "Source: ?" }
+        $bottomLine = "  ╚═ " + $sourceText + " " + ("═" * (67 - $sourceText.Length)) + "╝"
+        Write-Host $topLine    -ForegroundColor Yellow
+        Write-Host $bottomLine -ForegroundColor Yellow
+        Write-Host ""
     }
-    Write-Host ""
 }
 
 if ($suspiciousMods.Count -gt 0) {
-    Write-Host "  SUSPICIOUS" -ForegroundColor Red -NoNewline
-    Write-Host "  $($suspiciousMods.Count) mod$(if($suspiciousMods.Count -ne 1){'s'})" -ForegroundColor DarkGray
+    Write-Host "🚨 SUSPICIOUS MODS ($($suspiciousMods.Count))" -ForegroundColor Red
+    Write-Host ("─" * 76) -ForegroundColor DarkGray
     Write-Host ""
     foreach ($mod in $suspiciousMods) {
-        Write-Host "    ! " -ForegroundColor Red -NoNewline
-        Write-Host "$($mod.FileName)" -ForegroundColor White
-        Write-Host ""
+        Write-Host "  ╔═══ " -ForegroundColor Red -NoNewline
+        Write-Host "FLAGGED" -ForegroundColor White -BackgroundColor Red -NoNewline
+        Write-Host " ═══════════════════════════════════════════════════════════" -ForegroundColor Red
+        Write-Host "  ║" -ForegroundColor Red
+        Write-Host "  ║  File: " -ForegroundColor Red -NoNewline
+        Write-Host "$($mod.FileName)" -ForegroundColor Yellow
 
         if ($mod.Patterns.Count -gt 0) {
-            Write-Host "      patterns" -ForegroundColor DarkGray
+            Write-Host "  ║" -ForegroundColor Red
+            Write-Host "  ║  Detected Patterns:" -ForegroundColor Red
             foreach ($p in ($mod.Patterns | Sort-Object)) {
-                Write-Host "        $p" -ForegroundColor DarkRed
+                Write-Host "  ║    • " -ForegroundColor Red -NoNewline
+                Write-Host "$p" -ForegroundColor White
             }
-            Write-Host ""
         }
 
         $uniqueStrings = $mod.Strings | Where-Object { $mod.Patterns -notcontains $_ } | Sort-Object
         if ($uniqueStrings.Count -gt 0) {
-            Write-Host "      strings" -ForegroundColor DarkGray
+            Write-Host "  ║" -ForegroundColor Red
+            Write-Host "  ║  Detected Strings:" -ForegroundColor DarkYellow
             foreach ($s in $uniqueStrings) {
-                Write-Host "        $s" -ForegroundColor DarkYellow
+                Write-Host "  ║    • " -ForegroundColor DarkYellow -NoNewline
+                Write-Host "$s" -ForegroundColor DarkYellow
             }
-            Write-Host ""
         }
 
-        Write-Host ("    " + ("·" * 68)) -ForegroundColor DarkGray
+        Write-Host "  ║" -ForegroundColor Red
+        Write-Host "  ╚═══════════════════════════════════════════════════════════════════════" -ForegroundColor Red
         Write-Host ""
     }
 }
 
 if ($bypassMods.Count -gt 0) {
-    Write-Host "  INJECTION" -ForegroundColor Magenta -NoNewline
-    Write-Host "  $($bypassMods.Count) mod$(if($bypassMods.Count -ne 1){'s'})" -ForegroundColor DarkGray
+    Write-Host "☠️  BYPASS / INJECTION DETECTED ($($bypassMods.Count))" -ForegroundColor Magenta
+    Write-Host ("─" * 76) -ForegroundColor DarkGray
     Write-Host ""
     foreach ($mod in $bypassMods) {
-        Write-Host "    ! " -ForegroundColor Magenta -NoNewline
-        Write-Host "$($mod.FileName)" -ForegroundColor White
-        Write-Host ""
-        Write-Host "      flags" -ForegroundColor DarkGray
+        Write-Host "  ╔═══ " -ForegroundColor Magenta -NoNewline
+        Write-Host "INJECTION" -ForegroundColor White -BackgroundColor DarkMagenta -NoNewline
+        Write-Host " ══════════════════════════════════════════════════════════" -ForegroundColor Magenta
+        Write-Host "  ║" -ForegroundColor Magenta
+        Write-Host "  ║  File: " -ForegroundColor Magenta -NoNewline
+        Write-Host "$($mod.FileName)" -ForegroundColor Yellow
+        Write-Host "  ║" -ForegroundColor Magenta
+        Write-Host "  ║  Bypass Flags:" -ForegroundColor Magenta
         foreach ($flag in $mod.Flags) {
-            Write-Host "        $flag" -ForegroundColor Gray
+            Write-Host "  ║    ⚠ " -ForegroundColor Magenta -NoNewline
+            Write-Host "$flag" -ForegroundColor White
         }
-        Write-Host ""
-        Write-Host ("    " + ("·" * 68)) -ForegroundColor DarkGray
+        Write-Host "  ║" -ForegroundColor Magenta
+        Write-Host "  ╚═══════════════════════════════════════════════════════════════════════" -ForegroundColor Magenta
         Write-Host ""
     }
 }
 
-Write-Host ("  " + ("─" * 74)) -ForegroundColor DarkGray
+Write-Host "📊 SUMMARY" -ForegroundColor Cyan
+Write-Host ("━" * 76) -ForegroundColor Blue
+Write-Host "  Total files scanned: " -ForegroundColor Gray -NoNewline; Write-Host "$totalFiles"              -ForegroundColor White
+Write-Host "  Verified mods:       " -ForegroundColor Gray -NoNewline; Write-Host "$($verifiedMods.Count)"   -ForegroundColor Green
+Write-Host "  Unknown mods:        " -ForegroundColor Gray -NoNewline; Write-Host "$($unknownMods.Count)"    -ForegroundColor Yellow
+Write-Host "  Suspicious mods:     " -ForegroundColor Gray -NoNewline; Write-Host "$($suspiciousMods.Count)" -ForegroundColor Red
+Write-Host "  Bypass/Injected:     " -ForegroundColor Gray -NoNewline; Write-Host "$($bypassMods.Count)"     -ForegroundColor Magenta
+Write-Host
+Write-Host ("━" * 76) -ForegroundColor Blue
 Write-Host ""
-Write-Host "  SUMMARY" -ForegroundColor DarkCyan
+Write-Host "  ✨ Analysis complete! Thanks for using Meow Mod Analyzer 🐱" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "    scanned     " -ForegroundColor DarkGray -NoNewline; Write-Host "$totalFiles" -ForegroundColor White
-Write-Host "    verified    " -ForegroundColor DarkGray -NoNewline; Write-Host "$($verifiedMods.Count)" -ForegroundColor Green
-Write-Host "    unknown     " -ForegroundColor DarkGray -NoNewline; Write-Host "$($unknownMods.Count)" -ForegroundColor Yellow
-Write-Host "    suspicious  " -ForegroundColor DarkGray -NoNewline; Write-Host "$($suspiciousMods.Count)" -ForegroundColor Red
-Write-Host "    injected    " -ForegroundColor DarkGray -NoNewline; Write-Host "$($bypassMods.Count)" -ForegroundColor Magenta
+Write-Host "  👤 Created by: " -ForegroundColor White -NoNewline
+Write-Host "🌟 " -ForegroundColor Cyan -NoNewline
+Write-Host "Tonynoh" -ForegroundColor Cyan
+Write-Host "  📱 My Socials: " -ForegroundColor White -NoNewline
+Write-Host "💬 " -ForegroundColor Blue -NoNewline
+Write-Host "Discord  : " -ForegroundColor Blue -NoNewline
+Write-Host "tonyboy90_" -ForegroundColor Blue
+Write-Host "                 " -NoNewline
+Write-Host "🔗 " -ForegroundColor DarkGray -NoNewline
+Write-Host "GitHub   : " -ForegroundColor DarkGray -NoNewline
+Write-Host "https://github.com/MeowTonynoh" -ForegroundColor DarkGray
+Write-Host "                 " -NoNewline
+Write-Host "🎥 " -ForegroundColor Red -NoNewline
+Write-Host "YouTube  : " -ForegroundColor Red -NoNewline
+Write-Host "tonynoh-07" -ForegroundColor Red
 Write-Host ""
-Write-Host ("  " + ("─" * 74)) -ForegroundColor DarkGray
+Write-Host ("━" * 76) -ForegroundColor Blue
 Write-Host ""
-Write-Host "  Meow Mod Analyzer  by Tonynoh" -ForegroundColor DarkGray
-Write-Host "    discord   tonyboy90_" -ForegroundColor DarkGray
-Write-Host "    github    https://github.com/MeowTonynoh" -ForegroundColor DarkGray
-Write-Host "    youtube   tonynoh-07" -ForegroundColor DarkGray
-Write-Host ""
-Write-Host ("  " + ("─" * 74)) -ForegroundColor DarkGray
-Write-Host ""
-Write-Host "  press any key to exit" -ForegroundColor DarkGray
+Write-Host "Press any key to exit..." -ForegroundColor DarkGray
 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
