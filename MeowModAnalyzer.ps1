@@ -288,7 +288,7 @@ function Invoke-BypassScan {
         $numericClassCount = 0
         $unicodeClassCount = 0
         $totalClassCount   = 0
-        $base64Found       = $false
+
 
         foreach ($entry in $allEntries) {
             $name = $entry.FullName
@@ -345,11 +345,6 @@ function Invoke-BypassScan {
                         $httpExfilFound = $true
                     }
 
-                    # base64: look for long base64-like strings (32+ chars) in the constant pool
-                    if (-not $base64Found) {
-                        if ($ct -match "[A-Za-z0-9+/]{32,}={0,2}") { $base64Found = $true }
-                    }
-
                 } catch { }
             }
         }
@@ -385,9 +380,6 @@ function Invoke-BypassScan {
             $flags.Add("Unicode class names — $uniPct% of classes use non-ASCII characters")
         }
 
-        if ($base64Found) {
-            $flags.Add("Base64 strings detected — long encoded strings found in bytecode (possible hidden payload)")
-        }
 
         $knownLegitModIds = @(
             "vmp-fabric","vmp","lithium","sodium","iris","fabric-api",
