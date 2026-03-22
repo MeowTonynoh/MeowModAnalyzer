@@ -106,6 +106,7 @@ function Get-DownloadSource {
         elseif ($url -match "doomsdayclient\.com")                               { return "DoomsdayClient" }
         elseif ($url -match "prestigeclient\.vip")                               { return "PrestigeClient" }
         elseif ($url -match "198macros\.com")                                    { return "198Macros" }
+        elseif ($url -match "dqrkis\.xyz")                                       { return "Dqrkis" }
         else {
             if ($url -match "https?://(?:www\.)?([^/]+)") { return $matches[1] }
             return $url
@@ -139,16 +140,16 @@ function Query-Megabase {
 $suspiciousPatterns = @(
     "AimAssist", "AnchorTweaks", "AutoAnchor", "AutoCrystal", "AutoDoubleHand",
     "AutoHitCrystal", "AutoPot", "AutoTotem", "AutoArmor", "InventoryTotem",
-    "Hitboxes", "JumpReset", "LegitTotem", "PingSpoof", "SelfDestruct",
+    "JumpReset", "LegitTotem", "PingSpoof", "SelfDestruct",
     "ShieldBreaker", "TriggerBot", "Velocity", "AxeSpam", "WebMacro",
     "FastPlace", "WalskyOptimizer", "WalksyOptimizer", "walsky.optimizer",
-    "WalksyCrystalOptimizerMod", "Donut", "Replace Mod", "Reach",
+    "WalksyCrystalOptimizerMod", "Donut", "Replace Mod",
     "ShieldDisabler", "SilentAim", "Totem Hit", "Wtap", "FakeLag",
     "BlockESP", "dev.krypton", "Virgin", "AntiMissClick",
     "LagReach", "PopSwitch", "SprintReset", "ChestSteal", "AntiBot",
     "ElytraSwap", "FastXP", "FastExp", "Refill", "NoJumpDelay", "AirAnchor",
     "jnativehook", "FakeInv", "HoverTotem", "AutoClicker", "AutoFirework",
-    "PackSpoof", "Antiknockback", "scrim", "catlean", "Argon",
+    "PackSpoof", "Antiknockback", "catlean", "Argon",
     "AuthBypass", "Asteria", "Prestige", "AutoEat", "AutoMine",
     "MaceSwap", "DoubleAnchor", "AutoTPA", "BaseFinder", "Xenon", "gypsy",
     "Grim", "grim",
@@ -165,7 +166,7 @@ $suspiciousPatterns = @(
     "org.chainlibs.module.impl.modules.Blatant.cj",
     "org.chainlibs.module.impl.modules.Blatant.dk",
     "imgui", "imgui.gl3", "imgui.glfw",
-    "BowAim", "Criticals", "Flight", "Fakenick", "FakeItem",
+    "BowAim", "Criticals", "Fakenick", "FakeItem",
     "invsee", "ItemExploit", "Hellion", "hellion",
     "LicenseCheckMixin", "ClientPlayerInteractionManagerAccessor",
     "ClientPlayerEntityMixim", "dev.gambleclient", "obfuscatedAuth",
@@ -202,7 +203,7 @@ $cheatStrings = @(
     "lvstrng", "dqrkis", "selfdestruct", "self destruct",
     "AutoMace", "AutoFirework", "MaceSwap", "AirAnchor",
     "ElytraSwap", "FastXP", "FastExp", "NoJumpDelay",
-    "PackSpoof", "Antiknockback", "scrim", "catlean",
+    "PackSpoof", "Antiknockback", "catlean",
     "AuthBypass", "obfuscatedAuth", "LicenseCheckMixin",
     "BaseFinder", "invsee", "ItemExploit",
     "NoFall", "nofall",
@@ -309,15 +310,6 @@ function Invoke-BypassScan {
             if ($name -match "\.class$") {
                 $totalClassCount++
 
-                # ── FIX: Obfuscation detection — consecutive single-char segments ──────
-                # The old check required ALL path segments to be <=2 chars, which missed
-                # obfuscated subpackages hidden inside a legitimate-looking root package.
-                # e.g. "realmod/realmod/compat/a/a/e/d.class" was not caught because
-                # the root segments are long, even though the inner path is obfuscated.
-                #
-                # New check: flag any class that has 3 or more CONSECUTIVE single-char
-                # path segments anywhere in the path. Legitimate mods never have this —
-                # they always use real package names throughout (com/example/mod/...).
                 $segs = ($name -replace "\.class$","") -split "/"
                 $consecutiveSingle = 0
                 $maxConsecutive    = 0
@@ -331,12 +323,6 @@ function Invoke-BypassScan {
                 }
                 if ($maxConsecutive -ge 3) { $obfuscatedCount++ }
 
-                # ── FIX: Read bytecode as raw bytes to avoid StreamReader encoding issues ──
-                # The old StreamReader with Latin1 encoding could silently drop or corrupt
-                # bytes during string conversion, causing regex matches on constant-pool
-                # strings (e.g. "java/lang/Runtime", "exec") to fail unpredictably.
-                # Reading as raw bytes and converting to ASCII is more reliable for
-                # scanning printable strings embedded in JVM bytecode.
                 try {
                     $st = $entry.Open()
                     $ms2 = New-Object System.IO.MemoryStream
@@ -344,37 +330,20 @@ function Invoke-BypassScan {
                     $st.Close()
                     $rawBytes = $ms2.ToArray()
                     $ms2.Dispose()
-                    # Convert to ASCII string — non-ASCII bytes become '?' but constant-pool
-                    # strings (URLs, class names, method names) are pure ASCII and survive intact
                     $ct = [System.Text.Encoding]::ASCII.GetString($rawBytes)
 
-                    # Runtime.exec detection.
-                    # Legitimate mods (ModMenu, YACL) use Runtime.exec to open folders/files
-                    # in the system file manager or editor — that's completely normal UI behaviour.
-                    # We only record the hit here; the flag is only EMITTED below when the mod
-                    # is also heavily obfuscated, which no legitimate mod ever is.
                     if ($ct -match "java/lang/Runtime" -and
                         $ct -match "getRuntime" -and
                         $ct -match "exec") {
                         $runtimeExecFound = $true
                     }
 
-                    # HTTP file download: fetches a remote URL and writes the result to disk.
-                    # No legitimate Fabric mod downloads arbitrary files to disk at runtime —
-                    # updates go through the launcher and assets are bundled in the JAR.
-                    # This pattern alone is enough to flag regardless of obfuscation.
                     if ($ct -match "openConnection" -and
                         $ct -match "HttpURLConnection" -and
                         $ct -match "FileOutputStream") {
                         $httpDownloadFound = $true
                     }
 
-                    # HTTP POST exfiltration: sends a request body to an external server.
-                    # Update checkers and crash reporters also use setDoOutput+getOutputStream,
-                    # so this pattern alone produces false positives on library mods (e.g. ukulib).
-                    # We tighten it: only flag when the same class ALSO reads system properties
-                    # (getProperty), which indicates harvesting of environment data (tokens,
-                    # usernames, OS info) before sending — a strong exfiltration signal.
                     if ($ct -match "openConnection" -and
                         $ct -match "setDoOutput" -and
                         $ct -match "getOutputStream" -and
@@ -390,13 +359,8 @@ function Invoke-BypassScan {
 
         # ── Emit dangerous-code flags ─────────────────────────────────────────
 
-        # Compute obfuscation percentage here so the Runtime.exec gate can use it.
         $obfPct = if ($totalClassCount -ge 10) { [math]::Round(($obfuscatedCount / $totalClassCount) * 100) } else { 0 }
 
-        # Runtime.exec is only flagged when the mod is also obfuscated.
-        # Legitimate mods like ModMenu and YACL use exec() to open folders/files in the
-        # OS file manager or text editor — perfectly normal. But no legitimate mod is
-        # obfuscated, so combining exec + obfuscation is a reliable malice signal.
         if ($runtimeExecFound -and $obfPct -ge 40) {
             $flags.Add("Runtime.exec() inside obfuscated code — mod can execute arbitrary OS commands (combined with heavy obfuscation this is a strong malice indicator)")
         }
@@ -405,18 +369,10 @@ function Invoke-BypassScan {
             $flags.Add("HTTP file download — mod fetches and writes files from a remote server at runtime (no legitimate Fabric mod does this)")
         }
 
-        # HTTP POST is only flagged when system properties are also read in the same class,
-        # indicating data harvesting (tokens, session IDs, OS/user info) before exfiltration.
-        # Pure update checkers and crash reporters do NOT read system properties alongside POST.
         if ($httpExfilFound) {
             $flags.Add("HTTP POST exfiltration — mod reads system properties and sends data to an external server (possible token/session theft)")
         }
 
-        # ── FIX: Obfuscation threshold lowered from 60% to 40% ───────────────
-        # The old 60% threshold was calibrated for fully-obfuscated standalone cheats.
-        # Trojanized legitimate mods hide their payload in an obfuscated subpackage while
-        # keeping the real mod's classes readable — still producing ~93% obfuscation.
-        # 40% is still far above anything a legitimate mod produces (always 0%).
         if ($totalClassCount -ge 10 -and $obfPct -ge 40) {
             $flags.Add("Heavy obfuscation — $obfPct% of classes have 3+ consecutive single-letter path segments (a/b/c style). Legitimate mods never do this.")
         }
