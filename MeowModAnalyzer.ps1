@@ -169,44 +169,235 @@ $suspiciousPatterns = @(
 )
 
 $cheatStrings = @(
+    # ── AutoCrystal ──────────────────────────────────────────────────────────
     "AutoCrystal", "autocrystal", "auto crystal", "cw crystal",
     "dontPlaceCrystal", "dontBreakCrystal",
     "AutoHitCrystal", "autohitcrystal", "canPlaceCrystalServer", "healPotSlot",
+    "ＡｕｔｏＣｒｙｓｔａｌ", "Ａｕｔｏ Ｃｒｙｓｔａｌ",
+    "ＡｕｔｏＨｉｔＣｒｙｓｔａｌ",
+
+    # ── AutoAnchor / SafeAnchor / DoubleAnchor ───────────────────────────────
     "AutoAnchor", "autoanchor", "auto anchor", "DoubleAnchor",
     "hasGlowstone", "HasAnchor", "anchortweaks", "anchor macro", "safe anchor", "safeanchor",
+    "SafeAnchor", "AirAnchor",
+    "ＡｕｔｏＡｎｃｈｏｒ", "Ａｕｔｏ Ａｎｃｈｏｒ",
+    "ＤｏｕｂｌｅＡｎｃｈｏｒ", "Ｄｏｕｂｌｅ Ａｎｃｈｏｒ",
+    "ＳａｆｅＡｎｃｈｏｒ", "Ｓａｆｅ Ａｎｃｈｏｒ",
+    "Ａｎｃｈｏｒ Ｍａｃｒｏ", "anchorMacro",
+
+    # ── AutoTotem / HoverTotem / InventoryTotem ──────────────────────────────
     "AutoTotem", "autototem", "auto totem", "InventoryTotem",
     "inventorytotem", "HoverTotem", "hover totem", "legittotem",
+    "ＡｕｔｏＴｏｔｅｍ", "Ａｕｔｏ Ｔｏｔｅｍ",
+    "ＨｏｖｅｒＴｏｔｅｍ", "Ｈｏｖｅｒ Ｔｏｔｅｍ",
+    "ＩｎｖｅｎｔｏｒｙＴｏｔｅｍ", "Ａｕｔｏ Ｉｎｖｅｎｔｏｒｙ Ｔｏｔｅｍ",
+    "Ａｕｔｏ Ｔｏｔｅｍ Ｈｉｔ",
+
+    # ── AutoPot / AutoArmor ──────────────────────────────────────────────────
     "AutoPot", "autopot", "auto pot", "speedPotSlot", "strengthPotSlot",
     "AutoArmor", "autoarmor", "auto armor",
+    "ＡｕｔｏＰｏｔ", "Ａｕｔｏ Ｐｏｔ",
+    "Ａｕｔｏ Ｐｏｔ Ｒｅｆｉｌｌ", "AutoPotRefill",
+    "ＡｕｔｏＡｒｍｏｒ", "Ａｕｔｏ Ａｒｍｏｒ",
+
+    # ── ShieldBreaker / ShieldDisabler ───────────────────────────────────────
     "preventSwordBlockBreaking", "preventSwordBlockAttack",
-    "AutoDoubleHand", "autodoublehand", "auto double hand",
-    "AutoClicker",
-    "Failed to switch to mace after axe!",
+    "ShieldDisabler", "ShieldBreaker",
+    "ＳｈｉｅｌｄＤｉｓａｂｌｅｒ", "Ｓｈｉｅｌｄ Ｄｉｓａｂｌｅｒ",
     "Breaking shield with axe...",
+
+    # ── AutoDoubleHand ───────────────────────────────────────────────────────
+    "AutoDoubleHand", "autodoublehand", "auto double hand",
+    "ＡｕｔｏＤｏｕｂｌｅＨａｎｄ", "Ａｕｔｏ Ｄｏｕｂｌｅ Ｈａｎｄ",
+
+    # ── AutoClicker ──────────────────────────────────────────────────────────
+    "AutoClicker",
+    "ＡｕｔｏＣｌｉｃｋｅｒ",
+
+    # ── MaceSwap / AutoMace / SpearSwap ──────────────────────────────────────
+    "Failed to switch to mace after axe!",
+    "AutoMace", "MaceSwap", "SpearSwap",
+    "ＡｕｔｏＭａｃｅ", "Ａｕｔｏ Ｍａｃｅ",
+    "ＭａｃｅＳｗａｐ", "Ｍａｃｅ Ｓｗａｐ",
+    "Ｓｐｅａｒ Ｓｗａｐ", "Ａｕｔｏｍａｔｉｃａｌｌｙ ａｘｅ ａｎｄ ｍａｃｅ ｓｈｉｅｌｄｅｄ ｐｌａｙｅｒｓ",
+    "Ｓｔｕｎ Ｓｌａｍ", "StunSlam",
+
+    # ── Donut / JumpReset / AxeSpam ──────────────────────────────────────────
     "Donut", "JumpReset", "axespam", "axe spam",
-    "shieldbreaker", "shield breaker", "EndCrystalItemMixin",
+    "EndCrystalItemMixin",
     "findKnockbackSword", "attackRegisteredThisClick",
+
+    # ── AimAssist / TriggerBot ───────────────────────────────────────────────
     "AimAssist", "aimassist", "aim assist",
     "triggerbot", "trigger bot",
+    "ＡｉｍＡｓｓｉｓｔ", "Ａｉｍ Ａｓｓｉｓｔ",
+    "ＴｒｉｇｇｅｒＢｏｔ", "Ｔｒｉｇｇｅｒ Ｂｏｔ",
+    "Silent Rotations", "SilentRotations",
+    "Ｓｉｌｅｎｔ Ｒｏｔａｔｉｏｎｓ",
+
+    # ── FakeInv / FakeLag / PingSpoof ────────────────────────────────────────
     "FakeInv", "Friends", "swapBackToOriginalSlot",
     "FakeLag", "pingspoof", "ping spoof",
+    "ＦａｋｅＬａｇ", "Ｆａｋｅ Ｌａｇ",
+    "fakePunch", "Fake Punch",
+    "Ｆａｋｅ Ｐｕｎｃｈ",
+
+    # ── WebMacro / AntiWeb / AutoWeb ─────────────────────────────────────────
     "webmacro", "web macro",
+    "AntiWeb", "AutoWeb",
+    "Ａｎｔｉ Ｗｅｂ", "ＡｕｔｏＷｅｂ",
+    "Ｐｌａｃｅｓ Ｗｅｂｓ Ｏｎ Ｅｎｅｍｉｅｓ",
+
+    # ── WalksyOptimizer ──────────────────────────────────────────────────────
     "lvstrng", "dqrkis", "selfdestruct", "self destruct",
-    "AutoMace", "AutoFirework", "MaceSwap", "AirAnchor",
-    "ElytraSwap", "FastXP", "FastExp", "NoJumpDelay",
-    "PackSpoof", "Antiknockback", "catlean",
-    "AuthBypass", "obfuscatedAuth", "LicenseCheckMixin",
-    "BaseFinder", "invsee", "ItemExploit",
-    "NoFall", "nofall",
     "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer",
+    "Ｗａｌｋｓｙ Ｏｐｔｉｍｉｚｅｒ",
     "autoCrystalPlaceClock",
+
+    # ── ElytraSwap / FastXP / NoJumpDelay / AirAnchor ────────────────────────
+    "AutoFirework", "ElytraSwap", "FastXP", "FastExp", "NoJumpDelay",
+    "ＥｌｙｔｒａＳｗａｐ", "Ｅｌｙｔｒａ Ｓｗａｐ",
+
+    # ── PackSpoof / Antiknockback / catlean ──────────────────────────────────
+    "PackSpoof", "Antiknockback", "catlean",
+
+    # ── AuthBypass / obfuscated ───────────────────────────────────────────────
+    "AuthBypass", "obfuscatedAuth", "LicenseCheckMixin",
+
+    # ── BaseFinder / invsee / ItemExploit ────────────────────────────────────
+    "BaseFinder", "invsee", "ItemExploit",
+
+    # ── NoFall ───────────────────────────────────────────────────────────────
+    "NoFall", "nofall",
+
+    # ── Freecam / NoClip / FreezePlayer ─────────────────────────────────────
+    "Freecam", "NoClip", "FreezePlayer",
+    "Ｆｒｅｅｃａｍ", "Ｍｏｖｅ ｆｒｅｅｌｙ ｔｈｒｏｕｇｈ ｗａｌｌｓ",
+    "Ｎｏ Ｃｌｉｐ", "Ｆｒｅｅｚｅ Ｐｌａｙｅｒ",
+
+    # ── LWFH Crystal ─────────────────────────────────────────────────────────
+    "LWFH Crystal",
+    "ＬＷＦＨ Ｃｒｙｓｔａｌ",
+
+    # ── KeyPearl / LootYeeter ────────────────────────────────────────────────
+    "KeyPearl", "LootYeeter",
+    "ＫｅｙＰｅａｒｌ", "Ｋｅｙ Ｐｅａｒｌ",
+    "Ｌｏｏｔ Ｙｅｅｔｅｒ",
+
+    # ── FastPlace ────────────────────────────────────────────────────────────
+    "FastPlace",
+    "Ｆａｓｔ Ｐｌａｃｅ", "Ｐｌａｃｅ ｂｌｏｃｋｓ ｆａｓｔｅｒ",
+
+    # ── AutoBreach ───────────────────────────────────────────────────────────
+    "AutoBreach",
+    "Ａｕｔｏ Ｂｒｅａｃｈ",
+
+    # ── Mixins / internal hooks ───────────────────────────────────────────────
     "setBlockBreakingCooldown", "getBlockBreakingCooldown", "blockBreakingCooldown",
     "onBlockBreaking", "setItemUseCooldown",
     "setSelectedSlot", "invokeDoAttack", "invokeDoItemUse", "invokeOnMouseButton",
     "onTickMovement", "onPushOutOfBlocks", "onIsGlowing",
+
+    # ── Generic cheat strings ────────────────────────────────────────────────
     "Automatically switches to sword when hitting with totem",
     "arrayOfString", "POT_CHEATS",
-    "Dqrkis Client", "Entity.isGlowing"
+    "Dqrkis Client", "Entity.isGlowing",
+
+    # ── Config / UI strings (fullwidth) ─────────────────────────────────────
+    "Activate Key", "Ａｃｔｉｖａｔｅ Ｋｅｙ",
+    "Click Simulation", "Ｃｌｉｃｋ Ｓｉｍｕｌａｔｉｏｎ",
+    "On RMB", "Ｏｎ ＲＭＢ",
+    "No Count Glitch", "Ｎｏ Ｃｏｕｎｔ Ｇｌｉｔｃｈ",
+    "No Bounce", "NoBounce", "Ｎｏ Ｂｏｕｎｃｅ", "ＮｏＢｏｕｎｃｅ",
+    "Ｒｅｍｏｖｅｓ ｔｈｅ ｃｒｙｓｔａｌ ｂｏｕｎｃｅ ａｎｉｍａｔｉｏｎ",
+    "Place Delay", "Ｐｌａｃｅ Ｄｅｌａｙ",
+    "Break Delay", "Ｂｒｅａｋ Ｄｅｌａｙ",
+    "Fast Mode", "Ｆａｓｔ Ｍｏｄｅ",
+    "Place Chance", "Ｐｌａｃｅ Ｃｈａｎｃｅ",
+    "Break Chance", "Ｂｒｅａｋ Ｃｈａｎｃｅ",
+    "Stop On Kill", "Ｓｔｏｐ Ｏｎ Ｋｉｌｌ",
+    "Damage Tick", "Ｄａｍａｇｅ Ｔｉｃｋ", "damagetick",
+    "Anti Weakness", "Ａｎｔｉ Ｗｅａｋｎｅｓｓ",
+    "Particle Chance", "Ｐａｒｔｉｃｌｅ Ｃｈａｎｃｅ",
+    "Trigger Key", "Ｔｒｉｇｇｅｒ Ｋｅｙ",
+    "Switch Delay", "Ｓｗｉｔｃｈ Ｄｅｌａｙ",
+    "Totem Slot", "Ｔｏｔｅｍ Ｓｌｏｔ",
+    "Silent Rotations", "Ｓｉｌｅｎｔ Ｒｏｔａｔｉｏｎｓ",
+    "Smooth Rotations", "Ｓｍｏｏｔｈ Ｒｏｔａｔｉｏｎｓ",
+    "Rotation Speed", "Ｒｏｔａｔｉｏｎ Ｓｐｅｅｄ",
+    "Use Easing", "Ｕｓｅ Ｅａｓｉｎｇ",
+    "Easing Strength", "Ｅａｓｉｎｇ Ｓｔｒｅｎｇｔｈ",
+    "While Use", "Ｗｈｉｌｅ Ｕｓｅ",
+    "Stop on Kill", "Ｓｔｏｐ ｏｎ Ｋｉｌｌ",
+    "Click Simulation", "Ｃｌｉｃｋ Ｓｉｍｕｌａｔｉｏｎ",
+    "Glowstone Delay", "Ｇｌｏｗｓｔｏｎｅ Ｄｅｌａｙ",
+    "Glowstone Chance", "Ｇｌｏｗｓｔｏｎｅ Ｃｈａｎｃｅ",
+    "Explode Delay", "Ｅｘｐｌｏｄｅ Ｄｅｌａｙ",
+    "Explode Chance", "Ｅｘｐｌｏｄｅ Ｃｈａｎｃｅ",
+    "Explode Slot", "Ｅｘｐｌｏｄｅ Ｓｌｏｔ",
+    "Only Own", "Ｏｎｌｙ Ｏｗｎ",
+    "Only Charge", "Ｏｎｌｙ Ｃｈａｒｇｅ",
+    "Anchor Macro", "Ａｎｃｈｏｒ Ｍａｃｒｏ",
+    "Reach Distance", "Ｒｅａｃｈ Ｄｉｓｔａｎｃｅ",
+    "Min Height", "Ｍｉｎ Ｈｅｉｇｈｔ",
+    "Min Fall Speed", "Ｍｉｎ Ｆａｌｌ Ｓｐｅｅｄ",
+    "Attack Delay", "Ａｔｔａｃｋ Ｄｅｌａｙ",
+    "Breach Delay", "Ｂｒｅａｃｈ Ｄｅｌａｙ",
+    "Require Elytra", "Ｒｅｑｕｉｒｅ Ｅｌｙｔｒａ",
+    "Auto Switch Back", "Ａｕｔｏ Ｓｗｉｔｃｈ Ｂａｃｋ",
+    "Check Line of Sight", "Ｃｈｅｃｋ Ｌｉｎｅ ｏｆ Ｓｉｇｈｔ",
+    "Only When Falling", "Ｏｎｌｙ Ｗｈｅｎ Ｆａｌｌｉｎｇ",
+    "Require Crit", "Ｒｅｑｕｉｒｅ Ｃｒｉｔ",
+    "Show Status Display", "Ｓｈｏｗ Ｓｔａｔｕｓ Ｄｉｓｐｌａｙ",
+    "Stop On Crystal", "Ｓｔｏｐ Ｏｎ Ｃｒｙｓｔａｌ",
+    "Check Shield", "Ｃｈｅｃｋ Ｓｈｉｅｌｄ",
+    "On Pop", "Ｏｎ Ｐｏｐ",
+    "On Health", "Ｏｎ Ｈｅａｌｔｈ",
+    "Predict Damage", "Ｐｒｅｄｉｃｔ Ｄａｍａｇｅ",
+    "On Ground", "Ｏｎ Ｇｒｏｕｎｄ",
+    "Check Players", "Ｃｈｅｃｋ Ｐｌａｙｅｒｓ",
+    "Predict Crystals", "Ｐｒｅｄｉｃｔ Ｃｒｙｓｔａｌｓ",
+    "Check Aim", "Ｃｈｅｃｋ Ａｉｍ",
+    "Check Items", "Ｃｈｅｃｋ Ｉｔｅｍｓ",
+    "Activates Above", "Ａｃｔｉｖａｔｅｓ Ａｂｏｖｅ",
+    "Blatant", "Ｂｌａｔａｎｔ",
+    "Force Totem", "Ｆｏｒｃｅ Ｔｏｔｅｍ",
+    "Stay Open For", "Ｓｔａｙ Ｏｐｅｎ Ｆｏｒ",
+    "Auto Inventory Totem", "Ａｕｔｏ Ｉｎｖｅｎｔｏｒｙ Ｔｏｔｅｍ",
+    "Only On Pop", "Ｏｎｌｙ Ｏｎ Ｐｏｐ",
+    "Vertical Speed", "Ｖｅｒｔｉｃａｌ Ｓｐｅｅｄ",
+    "Hover Totem", "Ｈｏｖｅｒ Ｔｏｔｅｍ",
+    "Swap Speed", "Ｓｗａｐ Ｓｐｅｅｄ",
+    "Strict One-Tick", "Ｓｔｒｉｃｔ Ｏｎｅ－Ｔｉｃｋ",
+    "Mace Priority", "Ｍａｃｅ Ｐｒｉｏｒｉｔｙ",
+    "Min Totems", "Ｍｉｎ Ｔｏｔｅｍｓ",
+    "Min Pearls", "Ｍｉｎ Ｐｅａｒｌｓ",
+    "Totem First", "Ｔｏｔｅｍ Ｆｉｒｓｔ",
+    "Drop Interval", "Ｄｒｏｐ Ｉｎｔｅｒｖａｌ",
+    "Random Pattern", "Ｒａｎｄｏｍ Ｐａｔｔｅｒｎ",
+    "Loot Yeeter", "Ｌｏｏｔ Ｙｅｅｔｅｒ",
+    "Horizontal Aim Speed", "Ｈｏｒｉｚｏｎｔａｌ Ａｉｍ Ｓｐｅｅｄ",
+    "Vertical Aim Speed", "Ｖｅｒｔｉｃａｌ Ａｉｍ Ｓｐｅｅｄ",
+    "Include Head", "Ｉｎｃｌｕｄｅ Ｈｅａｄ",
+    "Web Delay", "Ｗｅｂ Ｄｅｌａｙ",
+    "Holding Web", "Ｈｏｌｄｉｎｇ Ｗｅｂ",
+    "Break Blocks", "Ｂｒｅａｋ Ｂｌｏｃｋｓ",
+    "Not When Affects Player", "Ｎｏｔ Ｗｈｅｎ Ａｆｆｅｃｔｓ Ｐｌａｙｅｒ",
+    "Hit Delay", "Ｈｉｔ Ｄｅｌａｙ",
+    "Switch Back", "Ｓｗｉｔｃｈ Ｂａｃｋ",
+    "Require Hold Axe", "Ｒｅｑｕｉｒｅ Ｈｏｌｄ Ａｘｅ",
+    "Fake Punch", "Ｆａｋｅ Ｐｕｎｃｈ",
+    "placeInterval", "breakInterval", "stopOnKill",
+    "activateOnRightClick", "holdCrystal",
+    "ｐｌａｃｅＩｎｔｅｒｖａｌ", "ｂｒｅａｋＩｎｔｅｒｖａｌ",
+    "ｓｔｏｐＯｎＫｉｌｌ", "ａｃｔｉｖａｔｅＯｎＲｉｇｈｔＣｌｉｃｋ",
+    "ｄａｍａｇｅｔｉｃｋ", "ｈｏｌｄＣｒｙｓｔａｌ",
+    "ｆａｋｅＰｕｎｃｈ",
+    "Ｒｅｆｉｌｌｓ ｙｏｕｒ ｈｏｔｂａｒ ｗｉｔｈ ｐｏｔｉｏｎｓ",
+    "Ｋｅｐｓ ｙｏｕ ｓｐｒｉｎｔｉｎｇ ａｔ ａｌｌ ｔｉｍｅｓ",
+    "Ｐｌａｃｅｓ ａｎｃｈｏｒ， ｃｈａｒｇｅｓ ｉｔ， ｐｒｏｔｅｃｔｓ ｙｏｕ， ａｎｄ ｅｘｐｌｏｄｅｓ",
+    "Ａｕｔｏ ｓｗａｐ ｔｏ ｓｐｅａｒ ｏｎ ａｔｔａｃｋ",
+    "Macro Key", "Ａｕｔｏ Ｐｏｔ", "Ｍａｃｒｏ Ｋｅｙ"
 )
 
 function Invoke-BypassScan {
@@ -297,13 +488,9 @@ function Invoke-BypassScan {
                 $totalClassCount++
                 $className = [System.IO.Path]::GetFileNameWithoutExtension(($name -split "/")[-1])
 
-                # numeric-only class name: 123.class, 4567.class
                 if ($className -match "^\d+$") { $numericClassCount++ }
-
-                # unicode / non-ASCII class name
                 if ($className -match "[^\x00-\x7F]") { $unicodeClassCount++ }
 
-                # existing single-letter path obfuscation check
                 $segs = ($name -replace "\.class$","") -split "/"
                 $consecutiveSingle = 0
                 $maxConsecutive    = 0
@@ -379,7 +566,6 @@ function Invoke-BypassScan {
         if ($uniPct -ge 10) {
             $flags.Add("Unicode class names — $uniPct% of classes use non-ASCII characters")
         }
-
 
         $knownLegitModIds = @(
             "vmp-fabric","vmp","lithium","sodium","iris","fabric-api",
@@ -473,13 +659,11 @@ function Invoke-ModScan {
     return @{ Patterns = $foundPatterns; Strings = $foundStrings }
 }
 
-# ─── helper: draw a horizontal rule ────────────────────────────────────────────
 function Write-Rule {
     param([string]$Char = "─", [int]$Width = 76, [ConsoleColor]$Color = "DarkGray")
     Write-Host ($Char * $Width) -ForegroundColor $Color
 }
 
-# ─── helper: section header  ●  TITLE  (N)  ───────────────────────────────────
 function Write-SectionHeader {
     param(
         [string]$Title,
@@ -495,11 +679,9 @@ function Write-SectionHeader {
     Write-Host ""
 }
 
-# ─── helper: render a SUSPICIOUS card ─────────────────────────────────────────
 function Write-SuspiciousCard {
     param($Mod)
 
-    # top line + badge + filename
     Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkRed
     Write-Host "  │ " -ForegroundColor DarkRed -NoNewline
     Write-Host " FLAGGED " -ForegroundColor White -BackgroundColor DarkRed -NoNewline
@@ -507,7 +689,6 @@ function Write-SuspiciousCard {
     Write-Host $Mod.FileName -ForegroundColor Yellow
     Write-Host ("  │ " + ("─" * 66)) -ForegroundColor DarkRed
 
-    # patterns
     if ($Mod.Patterns.Count -gt 0) {
         Write-Host "  │" -ForegroundColor DarkRed
         Write-Host "  │  " -ForegroundColor DarkRed -NoNewline
@@ -518,7 +699,6 @@ function Write-SuspiciousCard {
         }
     }
 
-    # strings
     $uniqueStrings = $Mod.Strings | Where-Object { $Mod.Patterns -notcontains $_ } | Sort-Object
     if ($uniqueStrings.Count -gt 0) {
         Write-Host "  │" -ForegroundColor DarkRed
@@ -535,11 +715,9 @@ function Write-SuspiciousCard {
     Write-Host ""
 }
 
-# ─── helper: render an INJECTION card ─────────────────────────────────────────
 function Write-InjectionCard {
     param($Mod)
 
-    # top line + badge + filename
     Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkMagenta
     Write-Host "  │ " -ForegroundColor DarkMagenta -NoNewline
     Write-Host " INJECTION " -ForegroundColor White -BackgroundColor DarkMagenta -NoNewline
@@ -601,7 +779,6 @@ $spinnerFrames = @("⣾","⣽","⣻","⢿","⡿","⣟","⣯","⣷")
 $totalFiles    = $jarFiles.Count
 $idx           = 0
 
-# pass 1 - hash lookup
 foreach ($jar in $jarFiles) {
     $idx++
     $spinner = $spinnerFrames[$idx % $spinnerFrames.Length]
@@ -628,7 +805,6 @@ foreach ($jar in $jarFiles) {
 
 Write-Host "`r$(' ' * 100)`r" -NoNewline
 
-# pass 2 - deep scan
 $modWord = if ($totalFiles -eq 1) { "mod" } else { "mods" }
 Write-Host "🔬 Deep-scanning all $totalFiles $modWord..." -ForegroundColor Cyan
 $idx = 0
@@ -652,7 +828,6 @@ foreach ($jar in $jarFiles) {
 
 Write-Host "`r$(' ' * 100)`r" -NoNewline
 
-# pass 3 - bypass scan
 Write-Host "🛡️  Running bypass/injection scan on all $totalFiles $modWord..." -ForegroundColor Magenta
 $idx = 0
 
@@ -675,13 +850,9 @@ foreach ($jar in $jarFiles) {
 
 Write-Host "`r$(' ' * 100)`r" -NoNewline
 
-# ══════════════════════════════════════════════════════════════════════════════
-# RESULTS
-# ══════════════════════════════════════════════════════════════════════════════
 Write-Host ""
 Write-Rule "━" 76 DarkCyan
 
-# ── VERIFIED ──────────────────────────────────────────────────────────────────
 if ($verifiedMods.Count -gt 0) {
     Write-SectionHeader -Title "VERIFIED MODS" -Count $verifiedMods.Count -DotColor Green -CountColor Green
     Write-Rule "─" 76 DarkGray
@@ -694,7 +865,6 @@ if ($verifiedMods.Count -gt 0) {
     Write-Host ""
 }
 
-# ── UNKNOWN ───────────────────────────────────────────────────────────────────
 if ($unknownMods.Count -gt 0) {
     Write-SectionHeader -Title "UNKNOWN MODS" -Count $unknownMods.Count -DotColor Yellow -CountColor Yellow
     Write-Rule "─" 76 DarkGray
@@ -710,7 +880,6 @@ if ($unknownMods.Count -gt 0) {
     }
 }
 
-# ── SUSPICIOUS ────────────────────────────────────────────────────────────────
 if ($suspiciousMods.Count -gt 0) {
     Write-SectionHeader -Title "SUSPICIOUS MODS" -Count $suspiciousMods.Count -DotColor Red -CountColor Red
     Write-Rule "─" 76 DarkGray
@@ -720,7 +889,6 @@ if ($suspiciousMods.Count -gt 0) {
     }
 }
 
-# ── BYPASS / INJECTION ────────────────────────────────────────────────────────
 if ($bypassMods.Count -gt 0) {
     Write-SectionHeader -Title "BYPASS / INJECTION DETECTED" -Count $bypassMods.Count -DotColor Magenta -CountColor Magenta
     Write-Rule "─" 76 DarkGray
@@ -730,7 +898,6 @@ if ($bypassMods.Count -gt 0) {
     }
 }
 
-# ── SUMMARY ───────────────────────────────────────────────────────────────────
 Write-Host "📊 SUMMARY" -ForegroundColor Cyan
 Write-Rule "━" 76 Blue
 Write-Host "  Total files scanned: " -ForegroundColor Gray -NoNewline; Write-Host "$totalFiles"              -ForegroundColor White
