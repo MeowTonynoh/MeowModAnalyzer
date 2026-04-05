@@ -634,23 +634,55 @@ function Invoke-ModScan {
                 }
             }
         } else {
+            # ASCII pass — catches plain strings
             $rawText = [System.Text.Encoding]::ASCII.GetString([System.IO.File]::ReadAllBytes($FilePath))
             foreach ($s in $cheatStrings) {
                 if ($rawText -match [regex]::Escape($s)) { [void]$foundStrings.Add($s) }
             }
             try {
                 $zip = [System.IO.Compression.ZipFile]::OpenRead($FilePath)
-                foreach ($entry in ($zip.Entries | Where-Object { $_.Name -like "*.class" })) {
+
+                # collect all entries including nested JARs
+                $allScanEntries = [System.Collections.Generic.List[object]]::new()
+                foreach ($e in $zip.Entries) { $allScanEntries.Add(@{ Entry = $e; Archive = $null }) }
+
+                $innerArchives = [System.Collections.Generic.List[object]]::new()
+                foreach ($nj in ($zip.Entries | Where-Object { $_.FullName -match "^META-INF/jars/.+\.jar$" })) {
                     try {
-                        $stream    = $entry.Open()
-                        $reader    = New-Object System.IO.StreamReader($stream)
-                        $classText = $reader.ReadToEnd()
-                        $reader.Close(); $stream.Close()
+                        $ns = $nj.Open()
+                        $ms = New-Object System.IO.MemoryStream
+                        $ns.CopyTo($ms); $ns.Close()
+                        $ms.Position = 0
+                        $iz = [System.IO.Compression.ZipArchive]::new($ms, [System.IO.Compression.ZipArchiveMode]::Read)
+                        $innerArchives.Add($iz)
+                        foreach ($ie in $iz.Entries) { $allScanEntries.Add(@{ Entry = $ie; Archive = $iz }) }
+                    } catch { }
+                }
+
+                foreach ($item in $allScanEntries) {
+                    $entry = $item.Entry
+                    if ($entry.Name -notlike "*.class") { continue }
+                    try {
+                        $stream = $entry.Open()
+                        $ms2    = New-Object System.IO.MemoryStream
+                        $stream.CopyTo($ms2); $stream.Close()
+                        $bytes  = $ms2.ToArray(); $ms2.Dispose()
+
+                        # ASCII pass
+                        $classTextAscii = [System.Text.Encoding]::ASCII.GetString($bytes)
                         foreach ($s in $cheatStrings) {
-                            if ($classText -match [regex]::Escape($s)) { [void]$foundStrings.Add($s) }
+                            if ($classTextAscii -match [regex]::Escape($s)) { [void]$foundStrings.Add($s) }
+                        }
+
+                        # UTF-8 pass — catches fullwidth Unicode strings
+                        $classTextUtf8 = [System.Text.Encoding]::UTF8.GetString($bytes)
+                        foreach ($s in $cheatStrings) {
+                            if ($classTextUtf8 -match [regex]::Escape($s)) { [void]$foundStrings.Add($s) }
                         }
                     } catch { }
                 }
+
+                foreach ($ia in $innerArchives) { try { $ia.Dispose() } catch { } }
                 $zip.Dispose()
             } catch { }
         }
