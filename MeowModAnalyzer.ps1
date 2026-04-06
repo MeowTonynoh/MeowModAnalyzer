@@ -417,7 +417,7 @@ function Invoke-JvmScan {
             foreach ($m in $agentMatches) {
                 $agentPath = $m.Groups[1].Value.Trim('"').Trim("'")
                 $agentName = [System.IO.Path]::GetFileName($agentPath)
-                $legitAgents = @("jmxremote","yjp","jrebel","newrelic","jacoco")
+                $legitAgents = @("jmxremote","yjp","jrebel","newrelic","jacoco","theseus")
                 $isLegit = $false
                 foreach ($la in $legitAgents) { if ($agentName -match $la) { $isLegit = $true; break } }
                 if (-not $isLegit) {
@@ -992,9 +992,13 @@ if ($jvmFlags.Count -gt 0) {
     Write-Host "  javaw / java process" -ForegroundColor Yellow
     Write-Host ("  │ " + ("─" * 66)) -ForegroundColor DarkYellow
     foreach ($flag in $jvmFlags) {
-        if ($flag -match "^(.+?) — (.+)$") {
+        # format: "Title — description (path: ...)"  or just "Title — description"
+        $ft = $flag; $fd = ""; $fpath = ""
+        if ($flag -match "^(.+?) — (.+) \(path: (.+)\)$") {
+            $ft = $matches[1]; $fd = $matches[2]; $fpath = $matches[3]
+        } elseif ($flag -match "^(.+?) — (.+)$") {
             $ft = $matches[1]; $fd = $matches[2]
-        } else { $ft = $flag; $fd = "" }
+        }
         Write-Host "  │" -ForegroundColor DarkYellow
         Write-Host "  │  " -ForegroundColor DarkYellow -NoNewline
         Write-Host "◉ " -ForegroundColor Yellow -NoNewline
@@ -1002,6 +1006,12 @@ if ($jvmFlags.Count -gt 0) {
         if ($fd -ne "") {
             Write-Host "  │    " -ForegroundColor DarkYellow -NoNewline
             Write-Host $fd -ForegroundColor Gray
+        }
+        if ($fpath -ne "") {
+            # truncate path if too long
+            $display = if ($fpath.Length -gt 60) { "..." + $fpath.Substring($fpath.Length - 57) } else { $fpath }
+            Write-Host "  │    " -ForegroundColor DarkYellow -NoNewline
+            Write-Host $display -ForegroundColor DarkGray
         }
     }
     Write-Host "  │" -ForegroundColor DarkYellow
