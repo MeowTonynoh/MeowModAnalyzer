@@ -405,11 +405,11 @@ function Invoke-JvmScan {
     if (-not $javaProc) { $javaProc = Get-Process java -ErrorAction SilentlyContinue }
     if (-not $javaProc) { return $results }
 
-    $pid = ($javaProc | Select-Object -First 1).Id
+    $javaPid = ($javaProc | Select-Object -First 1).Id
 
     # ── 1. JVM agent / flag detection via WMI command line ───────────────────
     try {
-        $wmi     = Get-WmiObject Win32_Process -Filter "ProcessId = $pid" -ErrorAction Stop
+        $wmi     = Get-WmiObject Win32_Process -Filter "ProcessId = $javaPid" -ErrorAction Stop
         $cmdLine = $wmi.CommandLine
 
         if ($cmdLine) {
