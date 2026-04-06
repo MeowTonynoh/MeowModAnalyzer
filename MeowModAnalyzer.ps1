@@ -236,7 +236,7 @@ $cheatStrings = @(
     "Ｓｉｌｅｎｔ Ｒｏｔａｔｉｏｎｓ",
 
     # ── FakeInv / FakeLag / PingSpoof ────────────────────────────────────────
-    "FakeInv", "Friends", "swapBackToOriginalSlot",
+    "FakeInv", "swapBackToOriginalSlot",
     "FakeLag", "pingspoof", "ping spoof",
     "ＦａｋｅＬａｇ", "Ｆａｋｅ Ｌａｇ",
     "fakePunch", "Fake Punch",
@@ -271,7 +271,7 @@ $cheatStrings = @(
     "NoFall", "nofall",
 
     # ── Freecam / NoClip / FreezePlayer ─────────────────────────────────────
-    "Freecam", "NoClip", "FreezePlayer",
+    "NoClip", "FreezePlayer",
     "Ｆｒｅｅｃａｍ", "Ｍｏｖｅ ｆｒｅｅｌｙ ｔｈｒｏｕｇｈ ｗａｌｌｓ",
     "Ｎｏ Ｃｌｉｐ", "Ｆｒｅｅｚｅ Ｐｌａｙｅｒ",
 
@@ -335,7 +335,6 @@ $cheatStrings = @(
     "Explode Delay", "Ｅｘｐｌｏｄｅ Ｄｅｌａｙ",
     "Explode Chance", "Ｅｘｐｌｏｄｅ Ｃｈａｎｃｅ",
     "Explode Slot", "Ｅｘｐｌｏｄｅ Ｓｌｏｔ",
-    "Only Own", "Ｏｎｌｙ Ｏｗｎ",
     "Only Charge", "Ｏｎｌｙ Ｃｈａｒｇｅ",
     "Anchor Macro", "Ａｎｃｈｏｒ Ｍａｃｒｏ",
     "Reach Distance", "Ｒｅａｃｈ Ｄｉｓｔａｎｃｅ",
@@ -352,7 +351,7 @@ $cheatStrings = @(
     "Stop On Crystal", "Ｓｔｏｐ Ｏｎ Ｃｒｙｓｔａｌ",
     "Check Shield", "Ｃｈｅｃｋ Ｓｈｉｅｌｄ",
     "On Pop", "Ｏｎ Ｐｏｐ",
-    "On Health", "Ｏｎ Ｈｅａｌｔｈ",
+
     "Predict Damage", "Ｐｒｅｄｉｃｔ Ｄａｍａｇｅ",
     "On Ground", "Ｏｎ Ｇｒｏｕｎｄ",
     "Check Players", "Ｃｈｅｃｋ Ｐｌａｙｅｒｓ",
@@ -381,7 +380,6 @@ $cheatStrings = @(
     "Include Head", "Ｉｎｃｌｕｄｅ Ｈｅａｄ",
     "Web Delay", "Ｗｅｂ Ｄｅｌａｙ",
     "Holding Web", "Ｈｏｌｄｉｎｇ Ｗｅｂ",
-    "Break Blocks", "Ｂｒｅａｋ Ｂｌｏｃｋｓ",
     "Not When Affects Player", "Ｎｏｔ Ｗｈｅｎ Ａｆｆｅｃｔｓ Ｐｌａｙｅｒ",
     "Hit Delay", "Ｈｉｔ Ｄｅｌａｙ",
     "Switch Back", "Ｓｗｉｔｃｈ Ｂａｃｋ",
@@ -399,6 +397,50 @@ $cheatStrings = @(
     "Ａｕｔｏ ｓｗａｐ ｔｏ ｓｐｅａｒ ｏｎ ａｔｔａｃｋ",
     "Macro Key", "Ａｕｔｏ Ｐｏｔ", "Ｍａｃｒｏ Ｋｅｙ"
 )
+
+function Invoke-JvmScan {
+    $results = [System.Collections.Generic.List[string]]::new()
+
+    $javaProc = Get-Process javaw -ErrorAction SilentlyContinue
+    if (-not $javaProc) { $javaProc = Get-Process java -ErrorAction SilentlyContinue }
+    if (-not $javaProc) { return $results }
+
+    $pid = ($javaProc | Select-Object -First 1).Id
+
+    # ── 1. JVM agent / flag detection via WMI command line ───────────────────
+    try {
+        $wmi     = Get-WmiObject Win32_Process -Filter "ProcessId = $pid" -ErrorAction Stop
+        $cmdLine = $wmi.CommandLine
+
+        if ($cmdLine) {
+            $agentMatches = [regex]::Matches($cmdLine, '-javaagent:([^\s"]+)')
+            foreach ($m in $agentMatches) {
+                $agentPath = $m.Groups[1].Value.Trim('"').Trim("'")
+                $agentName = [System.IO.Path]::GetFileName($agentPath)
+                $legitAgents = @("jmxremote","yjp","jrebel","newrelic","jacoco")
+                $isLegit = $false
+                foreach ($la in $legitAgents) { if ($agentName -match $la) { $isLegit = $true; break } }
+                if (-not $isLegit) {
+                    $results.Add("JVM Agent — -javaagent:$agentName (path: $agentPath)")
+                }
+            }
+
+            $suspiciousFlags = @(
+                @{ Flag = "-Xbootclasspath/p:"; Desc = "prepends to bootstrap classpath, overrides core Java classes" },
+                @{ Flag = "-Xbootclasspath/a:"; Desc = "appends to bootstrap classpath, injects below classloader" },
+                @{ Flag = "-agentlib:jdwp";     Desc = "JDWP debug agent, remote debugging enabled" },
+                @{ Flag = "-agentpath:";         Desc = "native agent loaded, bypasses Java sandbox" }
+            )
+            foreach ($sf in $suspiciousFlags) {
+                if ($cmdLine -match [regex]::Escape($sf.Flag)) {
+                    $results.Add("Suspicious JVM flag — $($sf.Flag) ($($sf.Desc))")
+                }
+            }
+        }
+    } catch { }
+
+    return $results
+}
 
 function Invoke-BypassScan {
     param([string]$FilePath)
@@ -882,8 +924,17 @@ foreach ($jar in $jarFiles) {
 
 Write-Host "`r$(' ' * 100)`r" -NoNewline
 
-Write-Host ""
-Write-Rule "━" 76 DarkCyan
+# ── Pass 4 — JVM / injection scan ─────────────────────────────────────────
+$jvmFlags = @()
+Write-Host "⚡ Scanning JVM for agents and injections..." -ForegroundColor DarkYellow
+$jvmFlags = Invoke-JvmScan
+if ($jvmFlags.Count -gt 0) {
+    Write-Host "   ⚠️  JVM issues found!" -ForegroundColor Yellow
+} else {
+    Write-Host "   ✓  JVM looks clean" -ForegroundColor DarkGray
+}
+
+Write-Host "`r$(' ' * 100)`r" -NoNewline
 
 if ($verifiedMods.Count -gt 0) {
     Write-SectionHeader -Title "VERIFIED MODS" -Count $verifiedMods.Count -DotColor Green -CountColor Green
@@ -930,6 +981,34 @@ if ($bypassMods.Count -gt 0) {
     }
 }
 
+# ── JVM ───────────────────────────────────────────────────────────────────────
+if ($jvmFlags.Count -gt 0) {
+    Write-SectionHeader -Title "JVM / RUNTIME INJECTION" -Count $jvmFlags.Count -DotColor Yellow -CountColor Yellow
+    Write-Rule "─" 76 DarkGray
+    Write-Host ""
+    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkYellow
+    Write-Host "  │ " -ForegroundColor DarkYellow -NoNewline
+    Write-Host " JVM " -ForegroundColor Black -BackgroundColor Yellow -NoNewline
+    Write-Host "  javaw / java process" -ForegroundColor Yellow
+    Write-Host ("  │ " + ("─" * 66)) -ForegroundColor DarkYellow
+    foreach ($flag in $jvmFlags) {
+        if ($flag -match "^(.+?) — (.+)$") {
+            $ft = $matches[1]; $fd = $matches[2]
+        } else { $ft = $flag; $fd = "" }
+        Write-Host "  │" -ForegroundColor DarkYellow
+        Write-Host "  │  " -ForegroundColor DarkYellow -NoNewline
+        Write-Host "◉ " -ForegroundColor Yellow -NoNewline
+        Write-Host $ft -ForegroundColor White
+        if ($fd -ne "") {
+            Write-Host "  │    " -ForegroundColor DarkYellow -NoNewline
+            Write-Host $fd -ForegroundColor Gray
+        }
+    }
+    Write-Host "  │" -ForegroundColor DarkYellow
+    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkYellow
+    Write-Host ""
+}
+
 Write-Host "📊 SUMMARY" -ForegroundColor Cyan
 Write-Rule "━" 76 Blue
 Write-Host "  Total files scanned: " -ForegroundColor Gray -NoNewline; Write-Host "$totalFiles"              -ForegroundColor White
@@ -937,6 +1016,7 @@ Write-Host "  Verified mods:       " -ForegroundColor Gray -NoNewline; Write-Hos
 Write-Host "  Unknown mods:        " -ForegroundColor Gray -NoNewline; Write-Host "$($unknownMods.Count)"    -ForegroundColor Yellow
 Write-Host "  Suspicious mods:     " -ForegroundColor Gray -NoNewline; Write-Host "$($suspiciousMods.Count)" -ForegroundColor Red
 Write-Host "  Bypass/Injected:     " -ForegroundColor Gray -NoNewline; Write-Host "$($bypassMods.Count)"     -ForegroundColor Magenta
+Write-Host "  JVM issues:          " -ForegroundColor Gray -NoNewline; Write-Host "$($jvmFlags.Count)"       -ForegroundColor Yellow
 Write-Host
 Write-Rule "━" 76 Blue
 Write-Host ""
