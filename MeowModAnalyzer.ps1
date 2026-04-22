@@ -377,7 +377,7 @@ $cheatStrings = @(
     "PlayerESP", "MobESP", "ItemESP", "StorageESP", "ChestESP",
     "Tracers", "NameTagsHack",
     "XRayHack", "OreFinder", "CaveFinder", "OreESP",
-    "Freecam",  "CameraClip",
+    "Freecam", "FreeLook", "CameraClip",
     "FullBright", "NoFog",
     "NewChunks", "ChunkBorders", "TunnelFinder",
     "TargetHUD", "CPSDisplay", "ReachDisplay", "HitParticles",
@@ -563,7 +563,21 @@ function Invoke-ModScan {
         $archive.Dispose()
     } catch { }
 
-    return @{ Patterns = $foundPatterns; Strings = $foundStrings; Fullwidth = $foundFullwidth }
+    # Filter out fragments — drop any fullwidth string that is a substring of a longer one in the same set
+    $fwList = @($foundFullwidth)
+    $filteredFullwidth = [System.Collections.Generic.HashSet[string]]::new()
+    foreach ($fw in $fwList) {
+        $isFragment = $false
+        foreach ($other in $fwList) {
+            if ($fw.Length -lt $other.Length -and $other.Contains($fw)) {
+                $isFragment = $true
+                break
+            }
+        }
+        if (-not $isFragment) { [void]$filteredFullwidth.Add($fw) }
+    }
+
+    return @{ Patterns = $foundPatterns; Strings = $foundStrings; Fullwidth = $filteredFullwidth }
 }
 
 # ── Obfuscation analysis (ported & simplified from Yumiko) ───────────────────
@@ -987,7 +1001,7 @@ function Write-SuspiciousCard {
         Write-Host "FULLWIDTH UNICODE" -ForegroundColor DarkGray
         foreach ($fw in ($Mod.Fullwidth | Sort-Object)) {
             Write-Host "  │    " -ForegroundColor DarkRed -NoNewline
-            Write-Host "FULLWIDTH: $fw" -ForegroundColor Magenta
+            Write-Host "FULLWIDTH: $fw" -ForegroundColor Cyan
         }
     }
 
