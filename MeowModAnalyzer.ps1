@@ -377,7 +377,7 @@ $cheatStrings = @(
     "PlayerESP", "MobESP", "ItemESP", "StorageESP", "ChestESP",
     "Tracers", "NameTagsHack",
     "XRayHack", "OreFinder", "CaveFinder", "OreESP",
-    "Freecam", "FreeLook", "CameraClip",
+    "Freecam",  "CameraClip",
     "FullBright", "NoFog",
     "NewChunks", "ChunkBorders", "TunnelFinder",
     "TargetHUD", "CPSDisplay", "ReachDisplay", "HitParticles",
