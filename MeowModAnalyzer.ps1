@@ -563,21 +563,48 @@ function Invoke-ModScan {
         $archive.Dispose()
     } catch { }
 
-    # Filter out fragments — drop any fullwidth string that is a substring of a longer one in the same set
-    $fwList = @($foundFullwidth)
-    $filteredFullwidth = [System.Collections.Generic.HashSet[string]]::new()
-    foreach ($fw in $fwList) {
-        $isFragment = $false
-        foreach ($other in $fwList) {
-            if ($fw.Length -lt $other.Length -and $other.Contains($fw)) {
-                $isFragment = $true
-                break
+    # ── Resolve fragments → complete cheat strings ────────────────────────────
+    # For each fullwidth fragment found in the JAR, check if it is a substring
+    # of a known cheat string (fullwidth variants in $cheatStrings). If yes,
+    # report the full cheat string instead of the raw fragment. Fragments that
+    # don't match any cheat string are kept only when ≥ 6 chars.
+    $fwCheatPool = @($script:cheatStrings | Where-Object {
+        $_ -cmatch "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]"
+    })
+    $resolvedFullwidth = [System.Collections.Generic.HashSet[string]]::new()
+    foreach ($fw in @($foundFullwidth)) {
+        if ($fw.Length -lt 3) { continue }
+        $bestMatch = $null
+        foreach ($cs in $fwCheatPool) {
+            if ($cs.Contains($fw)) {
+                # Prefer the shortest cheat string that contains the fragment
+                if ($null -eq $bestMatch -or $cs.Length -lt $bestMatch.Length) {
+                    $bestMatch = $cs
+                }
             }
         }
-        if (-not $isFragment) { [void]$filteredFullwidth.Add($fw) }
+        if ($null -ne $bestMatch) {
+            [void]$resolvedFullwidth.Add($bestMatch)
+        } elseif ($fw.Length -ge 6) {
+            # No cheat-string match — keep only if long enough to be meaningful
+            [void]$resolvedFullwidth.Add($fw)
+        }
+    }
+    # Secondary pass: remove any resolved string that is itself a substring of
+    # another resolved string (handles duplicates introduced by the resolution)
+    $resolved = @($resolvedFullwidth)
+    $finalFullwidth = [System.Collections.Generic.HashSet[string]]::new()
+    foreach ($fw in $resolved) {
+        $isRedundant = $false
+        foreach ($other in $resolved) {
+            if ($fw.Length -lt $other.Length -and $other.Contains($fw)) {
+                $isRedundant = $true; break
+            }
+        }
+        if (-not $isRedundant) { [void]$finalFullwidth.Add($fw) }
     }
 
-    return @{ Patterns = $foundPatterns; Strings = $foundStrings; Fullwidth = $filteredFullwidth }
+    return @{ Patterns = $foundPatterns; Strings = $foundStrings; Fullwidth = $finalFullwidth }
 }
 
 # ── Obfuscation analysis (ported & simplified from Yumiko) ───────────────────
