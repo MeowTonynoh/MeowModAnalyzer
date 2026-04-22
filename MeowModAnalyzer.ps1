@@ -90,7 +90,7 @@ $suspiciousPatterns = @(
     "ShieldDisabler", "SilentAim", "Totem Hit", "Wtap", "FakeLag",
     "BlockESP", "dev.krypton", "Virgin", "AntiMissClick",
     "LagReach", "PopSwitch", "SprintReset", "ChestSteal", "AntiBot",
-    "ElytraSwap", "FastXP", "FastExp", "Refill", "NoJumpDelay", "AirAnchor",
+    "ElytraSwap", "FastXP", "FastExp", "Refill",  "AirAnchor",
     "jnativehook", "FakeInv", "HoverTotem", "AutoClicker", "AutoFirework",
     "PackSpoof", "Antiknockback", "catlean", "Argon",
     "AuthBypass", "Asteria", "Prestige", "AutoEat", "AutoMine",
@@ -333,7 +333,7 @@ $cheatStrings = @(
     "Holding Web", "Ｈｏｌｄｉｎｇ Ｗｅｂ",
     "Not When Affects Player", "Ｎｏｔ Ｗｈｅｎ Ａｆｆｅｃｔｓ Ｐｌａｙｅｒ",
     "Hit Delay", "Ｈｉｔ Ｄｅｌａｙ",
-    "Switch Back", "Ｓｗｉｔｃｈ Ｂａｃｋ",
+    "Ｓｗｉｔｃｈ Ｂａｃｋ",
     "Require Hold Axe", "Ｒｅｑｕｉｒｅ Ｈｏｌｄ Ａｘｅ",
     "Fake Punch", "Ｆａｋｅ Ｐｕｎｃｈ",
     "placeInterval", "breakInterval", "stopOnKill",
@@ -377,8 +377,7 @@ $cheatStrings = @(
     "PlayerESP", "MobESP", "ItemESP", "StorageESP", "ChestESP",
     "Tracers", "NameTagsHack",
     "XRayHack", "OreFinder", "CaveFinder", "OreESP",
-    "Freecam", "FreeLook", "CameraClip",
-    "FullBright", "NoFog",
+    "Freecam", 
     "NewChunks", "ChunkBorders", "TunnelFinder",
     "TargetHUD", "CPSDisplay", "ReachDisplay", "HitParticles",
     "DoubleClicker", "JitterClick", "ButterflyClick", "CPSBoost",
@@ -415,7 +414,7 @@ $cheatStrings = @(
     "novoware", "novoclient",
     "aristois", "impactclient", "azura",
     "pandaware", "skilled", "moonClient", "astolfo",
-    "futureClient", "konas", "rusherhack", "inertia", "sigma", "exhibition"
+    "futureClient", "konas", "rusherhack", "inertia", "exhibition"
 )
 
 # ── Compile patterns once ─────────────────────────────────────────────────────
