@@ -30,8 +30,6 @@ Write-Host "                Made with " -ForegroundColor Gray -NoNewline
 Write-Host "♥ " -ForegroundColor Red -NoNewline
 Write-Host "by " -ForegroundColor Gray -NoNewline
 Write-Host "MeowTonynoh" -ForegroundColor Cyan
-Write-Host "                        " -NoNewline
-Write-Host "v1.5" -ForegroundColor DarkCyan
 Write-Host ""
 Write-Host ("━" * 76) -ForegroundColor DarkCyan
 Write-Host
@@ -488,11 +486,17 @@ function Query-Megabase {
 # Reads the raw bytes of each .class entry and scans both ASCII and UTF-8 passes
 # in a single loop instead of two separate passes over the file.
 
+$fullwidthRegex = [regex]::new(
+    "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]{2,}",
+    [System.Text.RegularExpressions.RegexOptions]::Compiled
+)
+
 function Invoke-ModScan {
     param([string]$FilePath)
 
-    $foundPatterns = [System.Collections.Generic.HashSet[string]]::new()
-    $foundStrings  = [System.Collections.Generic.HashSet[string]]::new()
+    $foundPatterns  = [System.Collections.Generic.HashSet[string]]::new()
+    $foundStrings   = [System.Collections.Generic.HashSet[string]]::new()
+    $foundFullwidth = [System.Collections.Generic.HashSet[string]]::new()
 
     try {
         $archive = [System.IO.Compression.ZipFile]::OpenRead($FilePath)
@@ -537,12 +541,19 @@ function Invoke-ModScan {
                     $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
                     $utf8  = [System.Text.Encoding]::UTF8.GetString($bytes)
 
+                    # Pattern scan (entry names + content)
                     foreach ($m in $patternRegex.Matches($ascii)) { [void]$foundPatterns.Add($m.Value) }
 
-                    # Cheat-string scan (both encodings in one pass)
+                    # Exact cheat-string scan (ASCII + UTF-8)
                     foreach ($s in $cheatStringSet) {
                         if ($ascii.Contains($s)) { [void]$foundStrings.Add($s); continue }
                         if ($utf8.Contains($s))  { [void]$foundStrings.Add($s) }
+                    }
+
+                    # Generic fullwidth scan — catches partial/obfuscated strings
+                    # like ｎｃｈｏｒ, Ａｎｃｈｏｒ, ｕｔｏＣｒｙｓｔａｌ etc.
+                    foreach ($m in $fullwidthRegex.Matches($utf8)) {
+                        [void]$foundFullwidth.Add($m.Value)
                     }
                 } catch { }
             }
@@ -552,7 +563,7 @@ function Invoke-ModScan {
         $archive.Dispose()
     } catch { }
 
-    return @{ Patterns = $foundPatterns; Strings = $foundStrings }
+    return @{ Patterns = $foundPatterns; Strings = $foundStrings; Fullwidth = $foundFullwidth }
 }
 
 # ── Obfuscation analysis (ported & simplified from Yumiko) ───────────────────
@@ -970,6 +981,16 @@ function Write-SuspiciousCard {
         }
     }
 
+    if ($Mod.Fullwidth -and $Mod.Fullwidth.Count -gt 0) {
+        Write-Host "  │" -ForegroundColor DarkRed
+        Write-Host "  │  " -ForegroundColor DarkRed -NoNewline
+        Write-Host "FULLWIDTH UNICODE" -ForegroundColor DarkGray
+        foreach ($fw in ($Mod.Fullwidth | Sort-Object)) {
+            Write-Host "  │    " -ForegroundColor DarkRed -NoNewline
+            Write-Host "FULLWIDTH: $fw" -ForegroundColor Magenta
+        }
+    }
+
     Write-Host "  │" -ForegroundColor DarkRed
     Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkRed
     Write-Host ""
@@ -1118,11 +1139,12 @@ foreach ($jar in $jarFiles) {
 
     $result = Invoke-ModScan -FilePath $jar.FullName
 
-    if ($result.Patterns.Count -gt 0 -or $result.Strings.Count -gt 0) {
+    if ($result.Patterns.Count -gt 0 -or $result.Strings.Count -gt 0 -or $result.Fullwidth.Count -gt 0) {
         $suspiciousMods += [PSCustomObject]@{
             FileName = $jar.Name
             Patterns = $result.Patterns
             Strings  = $result.Strings
+            Fullwidth = $result.Fullwidth
         }
         $verifiedMods = $verifiedMods | Where-Object { $_.FileName -ne $jar.Name }
     }
