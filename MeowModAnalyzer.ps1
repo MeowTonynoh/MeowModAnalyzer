@@ -108,7 +108,7 @@ $suspiciousPatterns = @(
     "org.chainlibs.module.impl.modules.Blatant.bx",
     "org.chainlibs.module.impl.modules.Blatant.cj",
     "org.chainlibs.module.impl.modules.Blatant.dk",
-    "imgui", "imgui.gl3", "imgui.glfw",
+     "imgui.gl3", "imgui.glfw",
     "BowAim", "Criticals", "Fakenick", "FakeItem",
     "invsee", "ItemExploit", "Hellion", "hellion",
     "LicenseCheckMixin", "ClientPlayerInteractionManagerAccessor",
@@ -219,9 +219,6 @@ $cheatStrings = @(
     # ── BaseFinder / invsee / ItemExploit ────────────────────────────────────
     "BaseFinder", "invsee", "ItemExploit",
 
-    # ── NoFall ───────────────────────────────────────────────────────────────
-    "NoFall", "nofall",
-
     # ── Freecam / NoClip / FreezePlayer ─────────────────────────────────────
     "FreezePlayer",
     "Ｆｒｅｅｃａｍ", "Ｍｏｖｅ ｆｒｅｅｌｙ ｔｈｒｏｕｇｈ ｗａｌｌｓ",
@@ -248,7 +245,7 @@ $cheatStrings = @(
     "setBlockBreakingCooldown", "getBlockBreakingCooldown", "blockBreakingCooldown",
     "onBlockBreaking", "setItemUseCooldown",
     "setSelectedSlot", "invokeDoAttack", "invokeDoItemUse", "invokeOnMouseButton",
-    "onTickMovement", "onPushOutOfBlocks", "onIsGlowing",
+     "onPushOutOfBlocks", "onIsGlowing",
 
     # ── Generic cheat strings ────────────────────────────────────────────────
     "Automatically switches to sword when hitting with totem",
@@ -361,7 +358,7 @@ $cheatStrings = @(
     "OffhandTotem", "TotemSwitch", 
     "AutoWeapon", "AutoSword", "AutoCity", "Burrow", "SelfTrap", 
     "HoleFiller", "AntiSurround", "AntiBurrow",
-    "WTap", "AutoW",  "TargetStrafe", "AutoGap", "AutoPearl",
+    "WTap",  "TargetStrafe", "AutoGap", "AutoPearl",
     "FlyHack", "CreativeFlight", "BoatFly", "PacketFly", "AirJump",
     "SpeedHack", "BHop", "BunnyHop",
     "AntiFall", "NoFallDamage", "SafeFall",
@@ -372,7 +369,7 @@ $cheatStrings = @(
      "ElytraSpeed", "InstantElytra",
      "ScaffoldWalk", "FastBridge", "BuildHelper", "AutoBridge",
     "Nuker", "NukerLegit", "InstantBreak",
-    "GhostHand", "GhostBlock", "NoSwing",
+    "GhostHand",  "NoSwing",
     "PlaceAssist", "AirPlace", "AutoPlace", "InstantPlace",
     "PlayerESP", "MobESP", "ItemESP", "StorageESP", "ChestESP",
     "Tracers", "NameTagsHack",
@@ -381,7 +378,7 @@ $cheatStrings = @(
     "NewChunks", "ChunkBorders", "TunnelFinder",
     "TargetHUD",  "ReachDisplay", 
     "DoubleClicker", "JitterClick", "ButterflyClick", "CPSBoost",
-    "ChestStealer", "InvManager", "InventoryManager", "InvMovebypass",
+    "ChestStealer", "InvManager",  "InvMovebypass",
     "AutoSprint", "AntiAFK", "AutoRespawn",
     "FakeNick", "PopSwitch",
     "FakeLatency", "FakePing", "SpoofRotation", "PositionSpoof",
@@ -389,11 +386,11 @@ $cheatStrings = @(
     "Disabler", "GrimBypass", "VulcanBypass", "MatrixBypass",
     "AACBypass", "VerusDisabler", "IntaveBypass", "WatchdogBypass",
     "PacketMine", "PacketWalk", "PacketSneak", "PacketCancel", "PacketDupe", "PacketSpam",
-    "SelfDestruct", "Panic", "HideClient",
+    "SelfDestruct",  "HideClient",
     "SessionStealer", "TokenLogger", "TokenGrabber", "DiscordToken",
     "RemoteAccess", "ReverseShell", "C2Server", "Backdoor", "KeyLogger",
     "StashFinder", "TrailFinder",
-    "imgui-java", "imgui.binding",
+    , "imgui.binding",
     "JNativeHook", "GlobalScreen", "NativeKeyListener",
     "client-refmap.json", "cheat-refmap.json",
     "aHR0cDovL2FwaS5ub3ZhY2xpZW50LmxvbC93ZWJob29rLnR4dA==",
