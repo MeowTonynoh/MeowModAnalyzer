@@ -338,7 +338,7 @@ $cheatStrings = @(
     "FakeNick", "PopSwitch",
     "FakeLatency", "FakePing", "SpoofRotation", "PositionSpoof",
     "GameSpeed", "SpeedTimer",
-    "Disabler", "GrimBypass", "VulcanBypass", "MatrixBypass",
+     "GrimBypass", "VulcanBypass", "MatrixBypass",
     "AACBypass", "VerusDisabler", "IntaveBypass", "WatchdogBypass",
     "PacketMine", "PacketWalk", "PacketSneak", "PacketCancel", "PacketDupe", "PacketSpam",
     "SelfDestruct", "HideClient",
