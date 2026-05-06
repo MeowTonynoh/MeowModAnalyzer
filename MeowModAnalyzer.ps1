@@ -134,7 +134,7 @@ $cheatStrings = @(
     "ＡｕｔｏＣｒｙｓｔａｌ", "Ａｕｔｏ Ｃｒｙｓｔａｌ",
     "ＡｕｔｏＨｉｔＣｒｙｓｔａｌ",
     "AutoAnchor", "autoanchor", "auto anchor", "DoubleAnchor",
-    "hasGlowstone", "HasAnchor", "anchortweaks", "anchor macro", "safe anchor", "safeanchor",
+     "HasAnchor", "anchortweaks", "anchor macro", "safe anchor", "safeanchor",
     "SafeAnchor", "AirAnchor",
     "ＡｕｔｏＡｎｃｈｏｒ", "Ａｕｔｏ Ａｎｃｈｏｒ",
     "ＤｏｕｂｌｅＡｎｃｈｏｒ", "Ｄｏｕｂｌｅ Ａｎｃｈｏｒ",
