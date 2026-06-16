@@ -230,7 +230,7 @@ $cheatStrings = @(
     "Ｒｅｍｏｖｅｓ ｔｈｅ ｃｒｙｓｔａｌ ｂｏｕｎｃｅ ａｎｉｍａｔｉｏｎ",
     "Place Delay", "Ｐｌａｃｅ Ｄｅｌａｙ",
     "Break Delay", "Ｂｒｅａｋ Ｄｅｌａｙ",
-    "Fast Mode", "Ｆａｓｔ Ｍｏｄｅ",
+     "Ｆａｓｔ Ｍｏｄｅ",
     "Place Chance", "Ｐｌａｃｅ Ｃｈａｎｃｅ",
     "Break Chance", "Ｂｒｅａｋ Ｃｈａｎｃｅ",
     "Stop On Kill", "Ｓｔｏｐ Ｏｎ Ｋｉｌｌ",
