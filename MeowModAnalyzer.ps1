@@ -104,7 +104,7 @@ $suspiciousPatterns = @(
     "MaceSwap", "Macro198", "StunSlam", "SafeAnchor", "DoubleAnchor", "AutoTPA", "BaseFinder", "Xenon", "gypsy",
     "AutoPotRefill", "WalksyOptimizer", "KeyPearl", "AimAssist", "AutoNethPot", "AutoDtap",
     "TriggerBot", "AutoWeb", "AnchorAction",
-    "Grim", "grim",
+    
     "org.chainlibs.module.impl.modules.Crystal.Y",
     "org.chainlibs.module.impl.modules.Crystal.bF",
     "org.chainlibs.module.impl.modules.Crystal.bM",
@@ -194,7 +194,7 @@ $cheatStrings = @(
     "AntiWeb", "AutoWeb",
     "Ａｎｔｉ Ｗｅｂ", "ＡｕｔｏＷｅｂ",
     "Ｐｌａｃｅｓ Ｗｅｂｓ Ｏｎ Ｅｎｅｍｉｅｓ",
-    "lvstrng", "dqrkis", "selfdestruct", "self destruct",
+    "lvstrng",  "selfdestruct", "self destruct",
     "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer",
     "Ｗａｌｋｓｙ Ｏｐｔｉｍｉｚｅｒ",
     "autoCrystalPlaceClock",
@@ -385,9 +385,9 @@ $cheatStrings = @(
     "dev.zprestige.prestige", "dev/zprestige/prestige", "prestigeclient.vip",
     "gypsy", "GypsyClient", "gypsy client",
     "Xenon", "XenonClient", "xenon client",
-    "Grim", "grim", "GrimClient", "grim client",
+     "GrimClient", "grim client",
     "phantom-refmap.json",
-    "dqrkis", "Dqrkis", "dqrkis.xyz", "Dqrkis Client"
+     "dqrkis.xyz", "Dqrkis Client"
 )
 
 $patternRegex = [regex]::new(
@@ -586,9 +586,9 @@ $clientSignatures = @(
     @{ Name = "Prestige Client"; Indicators = @("dev.zprestige.prestige","dev/zprestige/prestige","prestigeclient.vip") },
     @{ Name = "Gypsy Client";    Indicators = @("gypsy","GypsyClient","gypsy client") },
     @{ Name = "Xenon Client";    Indicators = @("Xenon","XenonClient","xenon client") },
-    @{ Name = "Grim Client";     Indicators = @("Grim","grim","GrimClient","grim client") },
+    @{ Name = "Grim Client";     Indicators = @("GrimClient","grim client") },
     @{ Name = "Phantom Client";  Indicators = @("phantom-refmap.json") },
-    @{ Name = "Dqrkis Client";   Indicators = @("dqrkis","Dqrkis","dqrkis.xyz","Dqrkis Client") },
+    @{ Name = "Dqrkis Client";   Indicators = @("dqrkis.xyz","Dqrkis Client") },
     @{ Name = "Doomsday Client"; Indicators = @("doomsdayclient","DoomsdayClient","doomsday.jar") },
     @{ Name = "Nova Client";     Indicators = @("novaclient","api.novaclient.lol","novoware","novoclient") },
     @{ Name = "Vape Client";     Indicators = @("vape.gg","vapeclient","VapeClient","VapeLite") },
@@ -623,7 +623,7 @@ function Invoke-ClientDetection {
 
     if ($DownloadSource -eq "DoomsdayClient") { [void]$allFound.Add("doomsdayclient") }
     if ($DownloadSource -eq "PrestigeClient") { [void]$allFound.Add("prestigeclient.vip") }
-    if ($DownloadSource -eq "Dqrkis")         { [void]$allFound.Add("dqrkis") }
+    if ($DownloadSource -eq "DqrkisClient")         { [void]$allFound.Add("dqrkis.xyz") }
 
     foreach ($client in $clientSignatures) {
         foreach ($ind in $client.Indicators) {
