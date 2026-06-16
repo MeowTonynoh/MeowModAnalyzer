@@ -567,7 +567,7 @@ function Invoke-ModScan {
                     foreach ($b in $dqChars) {
                         if ($bytes -notcontains $b) { $found = $false; break }
                     }
-                    if ($found) { [void]$foundStrings.Add("dqrkis"); break }
+                    if ($found) { [void]$foundStrings.Add(""); break }
                 }
             } catch { }
         }
