@@ -87,7 +87,6 @@ if ($mcProcess) {
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-
 $suspiciousPatterns = @(
     "AimAssist", "AnchorTweaks", "AutoAnchor", "AutoCrystal", "AutoDoubleHand",
     "AutoHitCrystal", "AutoPot", "AutoTotem", "AutoArmor", "InventoryTotem",
@@ -98,12 +97,14 @@ $suspiciousPatterns = @(
     "ShieldDisabler", "SilentAim", "Totem Hit", "Wtap", "FakeLag",
     "BlockESP", "dev.krypton", "Virgin", "AntiMissClick",
     "LagReach", "PopSwitch", "SprintReset", "ChestSteal", "AntiBot",
-    "ElytraSwap", "FastXP", "FastExp", "Refill", "AirAnchor",
+    "ElytraSwap", "FastXP", "FastExp", "Refill",  "AirAnchor",
     "jnativehook", "FakeInv", "HoverTotem", "AutoClicker", "AutoFirework",
     "PackSpoof", "Antiknockback", "catlean", "Argon",
     "AuthBypass", "Asteria", "Prestige", "AutoEat", "AutoMine",
-    "MaceSwap", "DoubleAnchor", "AutoTPA", "BaseFinder", "Xenon", "gypsy",
-    "Grim", "grim", "AnchorAction", "StunSlam", "QuickStrike",
+    "MaceSwap", "QuickStrike", "Macro198", "StunSlam", "SafeAnchor", "DoubleAnchor", "AutoTPA", "BaseFinder", "Xenon", "gypsy",
+    "AutoPotRefill", "WalksyOptimizer", "KeyPearl", "AimAssist", "AutoNethPot", "AutoDtap",
+    "TriggerBot", "AutoWeb", "AnchorAction",
+    "Grim", "grim",
     "org.chainlibs.module.impl.modules.Crystal.Y",
     "org.chainlibs.module.impl.modules.Crystal.bF",
     "org.chainlibs.module.impl.modules.Crystal.bM",
@@ -129,24 +130,13 @@ $suspiciousPatterns = @(
 )
 
 $cheatStrings = @(
-    "mace_swap", "quick_strike", "macro_198", "stun_slam",
-    "safe_anchor", "double_anchor", "auto_pot_refill", "walksy_optimizer",
-    "key_pearl", "aim_assist", "auto_neth_pot", "auto_dtap",
-    "trigger_bot", "auto_web",
-    "DOUBLE_ESCAPE", "DOUBLE_RIGHTCLICK_FIRST", "DOUBLE_RIGHTCLICK_SECOND",
-    "POST_CYCLE_DELAY",
-    "PLACE_OBI", "WAIT_OBI", "PLACE_CRYSTAL", "BREAK_CRYSTAL",
-    "ROTATING_DOWN", "ROTATING_BACK", "REFILLING",
-    "PLANTING", "BONEMEALING",
-    "AnchorAction", "P.laces two anchors for massive damage",
-    "REOFFHAND_TOTEM",
     "AutoCrystal", "autocrystal", "auto crystal", "cw crystal",
     "dontPlaceCrystal", "dontBreakCrystal",
     "AutoHitCrystal", "autohitcrystal", "canPlaceCrystalServer", "healPotSlot",
     "ＡｕｔｏＣｒｙｓｔａｌ", "Ａｕｔｏ Ｃｒｙｓｔａｌ",
     "ＡｕｔｏＨｉｔＣｒｙｓｔａｌ",
     "AutoAnchor", "autoanchor", "auto anchor", "DoubleAnchor",
-    "HasAnchor", "anchortweaks", "anchor macro", "safe anchor", "safeanchor",
+     "HasAnchor", "anchortweaks", "anchor macro", "safe anchor", "safeanchor",
     "SafeAnchor", "AirAnchor",
     "ＡｕｔｏＡｎｃｈｏｒ", "Ａｕｔｏ Ａｎｃｈｏｒ",
     "ＤｏｕｂｌｅＡｎｃｈｏｒ", "Ｄｏｕｂｌｅ Ａｎｃｈｏｒ",
@@ -191,6 +181,15 @@ $cheatStrings = @(
     "ＦａｋｅＬａｇ", "Ｆａｋｅ Ｌａｇ",
     "fakePunch", "Fake Punch",
     "Ｆａｋｅ Ｐｕｎｃｈ",
+    "mace_swap", "quick_strike", "macro_198", "stun_slam",
+    "safe_anchor", "double_anchor", "auto_pot_refill",
+    "walksy_optimizer", "key_pearl", "aim_assist",
+    "auto_neth_pot", "auto_dtap", "trigger_bot", "auto_web",
+    "DOUBLE_ESCAPE", "DOUBLE_RIGHTCLICK_FIRST", "DOUBLE_RIGHTCLICK_SECOND",
+    "POST_CYCLE_DELAY", "PLACE_OBI", "WAIT_OBI", "PLACE_CRYSTAL", "BREAK_CRYSTAL",
+    "ROTATING_DOWN", "ROTATING_BACK", "REFILLING", "PLANTING", "BONEMEALING",
+    "AnchorAction", "Places two anchors for massive damage",
+    "REOFFHAND_TOTEM",
     "webmacro", "web macro",
     "AntiWeb", "AutoWeb",
     "Ａｎｔｉ Ｗｅｂ", "ＡｕｔｏＷｅｂ",
@@ -350,7 +349,7 @@ $cheatStrings = @(
     "FakeNick", "PopSwitch",
     "FakeLatency", "FakePing", "SpoofRotation", "PositionSpoof",
     "GameSpeed", "SpeedTimer",
-    "GrimBypass", "VulcanBypass", "MatrixBypass",
+     "GrimBypass", "VulcanBypass", "MatrixBypass",
     "AACBypass", "VerusDisabler", "IntaveBypass", "WatchdogBypass",
     "PacketMine", "PacketWalk", "PacketSneak", "PacketCancel", "PacketDupe", "PacketSpam",
     "SelfDestruct", "HideClient",
@@ -380,7 +379,6 @@ $cheatStrings = @(
     "futureClient", "konas", "rusherhack", "inertia", "exhibition"
 )
 
-
 $patternRegex = [regex]::new(
     '(?<![A-Za-z])(' + ($suspiciousPatterns -join '|') + ')(?![A-Za-z])',
     [System.Text.RegularExpressions.RegexOptions]::Compiled
@@ -388,16 +386,6 @@ $patternRegex = [regex]::new(
 
 $cheatStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
 foreach ($s in $cheatStrings) { [void]$cheatStringSet.Add($s) }
-
-$fullwidthRegex = [regex]::new(
-    "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]{2,}",
-    [System.Text.RegularExpressions.RegexOptions]::Compiled
-)
-
-$fwCheatPool = @($cheatStrings | Where-Object {
-    $_ -cmatch "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]"
-})
-
 
 function Get-FileSHA1 {
     param([string]$Path)
@@ -430,32 +418,16 @@ function Get-DownloadSource {
     return $null
 }
 
-function Query-ModrinthBatch {
-    param([string[]]$Hashes)
-    $results = @{}
-    if ($Hashes.Count -eq 0) { return $results }
+function Query-Modrinth {
+    param([string]$Hash)
     try {
-        $body    = '{"algorithm":"sha1","hashes":' + (($Hashes | ForEach-Object { '"' + $_ + '"' }) -join ',' | ForEach-Object { "[$_]" }) + '}'
-        $hashArr = ($Hashes | ForEach-Object { "`"$_`"" }) -join ","
-        $body    = "{`"algorithm`":`"sha1`",`"hashes`":[$hashArr]}"
-        $resp    = Invoke-RestMethod -Uri "https://api.modrinth.com/v2/version_files" `
-                       -Method Post -ContentType "application/json" -Body $body `
-                       -UseBasicParsing -ErrorAction Stop
-        if ($resp -is [hashtable] -or $resp.PSObject.Properties) {
-            foreach ($prop in $resp.PSObject.Properties) {
-                $hash    = $prop.Name
-                $version = $prop.Value
-                if ($version.project_id) {
-                    try {
-                        $proj = Invoke-RestMethod -Uri "https://api.modrinth.com/v2/project/$($version.project_id)" `
-                                    -Method Get -UseBasicParsing -ErrorAction Stop
-                        $results[$hash] = @{ Name = $proj.title; Slug = $proj.slug }
-                    } catch { $results[$hash] = @{ Name = $version.project_id; Slug = $version.project_id } }
-                }
-            }
+        $versionInfo = Invoke-RestMethod -Uri "https://api.modrinth.com/v2/version_file/$Hash" -Method Get -UseBasicParsing -ErrorAction Stop
+        if ($versionInfo.project_id) {
+            $projectInfo = Invoke-RestMethod -Uri "https://api.modrinth.com/v2/project/$($versionInfo.project_id)" -Method Get -UseBasicParsing -ErrorAction Stop
+            return @{ Name = $projectInfo.title; Slug = $projectInfo.slug }
         }
     } catch { }
-    return $results
+    return @{ Name = ""; Slug = "" }
 }
 
 function Query-Megabase {
@@ -467,15 +439,13 @@ function Query-Megabase {
     return $null
 }
 
+$fullwidthRegex = [regex]::new(
+    "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]{2,}",
+    [System.Text.RegularExpressions.RegexOptions]::Compiled
+)
 
 function Invoke-ModScan {
-    param(
-        [string]$FilePath,
-        [regex]$PatternRx,
-        [System.Collections.Generic.HashSet[string]]$StringSet,
-        [regex]$FwRx,
-        [string[]]$FwPool
-    )
+    param([string]$FilePath)
 
     $foundPatterns  = [System.Collections.Generic.HashSet[string]]::new()
     $foundStrings   = [System.Collections.Generic.HashSet[string]]::new()
@@ -485,7 +455,7 @@ function Invoke-ModScan {
         $archive = [System.IO.Compression.ZipFile]::OpenRead($FilePath)
 
         foreach ($entry in $archive.Entries) {
-            foreach ($m in $PatternRx.Matches($entry.FullName)) {
+            foreach ($m in $patternRegex.Matches($entry.FullName)) {
                 [void]$foundPatterns.Add($m.Value)
             }
         }
@@ -507,60 +477,65 @@ function Invoke-ModScan {
             } catch { }
         }
 
-        $targetEntries = $allEntries | Where-Object {
-            $_.FullName -match '\.(class|json)$' -or $_.FullName -match 'MANIFEST\.MF'
-        }
+        foreach ($entry in $allEntries) {
+            $name = $entry.FullName
 
-        foreach ($entry in $targetEntries) {
-            if ($entry.Length -gt 2MB) { continue }
-            try {
-                $st  = $entry.Open()
-                $ms2 = New-Object System.IO.MemoryStream([int]([math]::Min($entry.Length + 16, 2MB)))
-                $st.CopyTo($ms2); $st.Close()
-                $bytes = $ms2.ToArray(); $ms2.Dispose()
+            if ($name -match '\.(class|json)$' -or $name -match 'MANIFEST\.MF') {
+                try {
+                    $st = $entry.Open()
+                    $ms2 = New-Object System.IO.MemoryStream
+                    $st.CopyTo($ms2); $st.Close()
+                    $bytes = $ms2.ToArray(); $ms2.Dispose()
 
-                $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
-                $utf8  = [System.Text.Encoding]::UTF8.GetString($bytes)
+                    $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
+                    $utf8  = [System.Text.Encoding]::UTF8.GetString($bytes)
 
-                foreach ($m in $PatternRx.Matches($ascii)) { [void]$foundPatterns.Add($m.Value) }
+                    foreach ($m in $patternRegex.Matches($ascii)) { [void]$foundPatterns.Add($m.Value) }
 
-                foreach ($s in $StringSet) {
-                    if ($ascii.IndexOf($s, [System.StringComparison]::Ordinal) -ge 0) {
-                        [void]$foundStrings.Add($s); continue
+                    foreach ($s in $cheatStringSet) {
+                        if ($ascii.Contains($s)) { [void]$foundStrings.Add($s); continue }
+                        if ($utf8.Contains($s))  { [void]$foundStrings.Add($s) }
                     }
-                    if ($utf8.IndexOf($s, [System.StringComparison]::Ordinal) -ge 0) {
-                        [void]$foundStrings.Add($s)
-                    }
-                }
 
-                foreach ($m in $FwRx.Matches($utf8)) {
-                    [void]$foundFullwidth.Add($m.Value)
-                }
-            } catch { }
+                    foreach ($m in $fullwidthRegex.Matches($utf8)) {
+                        [void]$foundFullwidth.Add($m.Value)
+                    }
+                } catch { }
+            }
         }
 
         foreach ($ia in $innerArchives) { try { $ia.Dispose() } catch { } }
         $archive.Dispose()
     } catch { }
 
+    $fwCheatPool = @($script:cheatStrings | Where-Object {
+        $_ -cmatch "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]"
+    })
     $resolvedFullwidth = [System.Collections.Generic.HashSet[string]]::new()
     foreach ($fw in @($foundFullwidth)) {
         if ($fw.Length -lt 3) { continue }
         $bestMatch = $null
-        foreach ($cs in $FwPool) {
+        foreach ($cs in $fwCheatPool) {
             if ($cs.Contains($fw)) {
-                if ($null -eq $bestMatch -or $cs.Length -lt $bestMatch.Length) { $bestMatch = $cs }
+                if ($null -eq $bestMatch -or $cs.Length -lt $bestMatch.Length) {
+                    $bestMatch = $cs
+                }
             }
         }
-        if ($null -ne $bestMatch) { [void]$resolvedFullwidth.Add($bestMatch) }
-        elseif ($fw.Length -ge 6)  { [void]$resolvedFullwidth.Add($fw) }
+        if ($null -ne $bestMatch) {
+            [void]$resolvedFullwidth.Add($bestMatch)
+        } elseif ($fw.Length -ge 6) {
+            [void]$resolvedFullwidth.Add($fw)
+        }
     }
     $resolved = @($resolvedFullwidth)
     $finalFullwidth = [System.Collections.Generic.HashSet[string]]::new()
     foreach ($fw in $resolved) {
         $isRedundant = $false
         foreach ($other in $resolved) {
-            if ($fw.Length -lt $other.Length -and $other.Contains($fw)) { $isRedundant = $true; break }
+            if ($fw.Length -lt $other.Length -and $other.Contains($fw)) {
+                $isRedundant = $true; break
+            }
         }
         if (-not $isRedundant) { [void]$finalFullwidth.Add($fw) }
     }
@@ -576,11 +551,11 @@ function Invoke-ObfuscationScan {
     try {
         $archive = [System.IO.Compression.ZipFile]::OpenRead($FilePath)
 
-        $totalClass     = 0
-        $numericCount   = 0
-        $unicodeCount   = 0
-        $fullwidthCount = 0
-        $japaneseCount  = 0
+        $totalClass    = 0
+        $numericCount  = 0
+        $unicodeCount  = 0
+        $fullwidthCount= 0
+        $japaneseCount = 0
         $singleLetterCount = 0
         $twoLetterCount    = 0
         $gibberishCount    = 0
@@ -609,41 +584,42 @@ function Invoke-ObfuscationScan {
 
         foreach ($entry in $archive.Entries) {
             $name = $entry.FullName
-            if (-not ($name -match "\.class$")) { continue }
 
-            $totalClass++
-            $className = [System.IO.Path]::GetFileNameWithoutExtension(($name -split "/")[-1])
+            if ($name -match "\.class$") {
+                $totalClass++
+                $className = [System.IO.Path]::GetFileNameWithoutExtension(($name -split "/")[-1])
 
-            if ($className -match "^\d+$")                                                          { $numericCount++ }
-            if ($className -match "[^\x00-\x7F]")                                                   { $unicodeCount++ }
-            if ($className -match "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]")                     { $fullwidthCount++ }
-            if ($className -match "[\u3040-\u309F\u30A0-\u30FF]")                                  { $japaneseCount++ }
-            if ($className -match "^[a-zA-Z]$")                                                     { $singleLetterCount++ }
-            if ($className -match "^[a-zA-Z]{2}$")                                                  { $twoLetterCount++ }
-            if ($className -match "^[Il1O0]+$" -or $className -match "^[_]+$")                     { $confusionCount++ }
+                if ($className -match "^\d+$")                          { $numericCount++ }
+                if ($className -match "[^\x00-\x7F]")                   { $unicodeCount++ }
+                if ($className -match "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]") { $fullwidthCount++ }
+                if ($className -match "[\u3040-\u309F\u30A0-\u30FF]")  { $japaneseCount++ }
+                if ($className -match "^[a-zA-Z]$")                     { $singleLetterCount++ }
+                if ($className -match "^[a-zA-Z]{2}$")                  { $twoLetterCount++ }
+                if ($className -match "^[Il1O0]+$" -or $className -match "^[_]+$") { $confusionCount++ }
 
-            if ($className.Length -ge 3 -and $className.Length -le 8 -and $className -match "^[a-zA-Z]+$") {
-                $vowels = ($className.ToCharArray() | Where-Object { $_ -match "[aeiouAEIOU]" }).Count
-                if ($vowels -eq 0) { $noVowelCount++ }
-                $hasCluster = $className -match "[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{3,}"
-                if ($hasCluster -and ($vowels / $className.Length) -lt 0.3) { $gibberishCount++ }
-            }
+                if ($className.Length -ge 3 -and $className.Length -le 8 -and $className -match "^[a-zA-Z]+$") {
+                    $vowels = ($className.ToCharArray() | Where-Object { $_ -match "[aeiouAEIOU]" }).Count
+                    if ($vowels -eq 0) { $noVowelCount++ }
+                    $hasCluster = $className -match "[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{3,}"
+                    if ($hasCluster -and ($vowels / $className.Length) -lt 0.3) { $gibberishCount++ }
+                }
 
-            $segs = ($name -replace "\.class$", "") -split "/"
-            foreach ($seg in $segs[0..($segs.Count - 2)]) {
-                if ($seg.Length -eq 1) { $singleCharPkg++ }
-            }
+                $segs = ($name -replace "\.class$", "") -split "/"
+                foreach ($seg in $segs[0..($segs.Count - 2)]) {
+                    if ($seg.Length -eq 1) { $singleCharPkg++ }
+                }
 
-            if ($sampleSize -lt 150000 -and $entry.Length -lt 100000 -and $entry.Length -gt 100) {
-                try {
-                    $st  = $entry.Open()
-                    $ms  = New-Object System.IO.MemoryStream
-                    $st.CopyTo($ms); $st.Close()
-                    $ascii = [System.Text.Encoding]::ASCII.GetString($ms.ToArray())
-                    $ms.Dispose()
-                    [void]$contentSample.Append($ascii)
-                    $sampleSize += $ascii.Length
-                } catch { }
+                if ($sampleSize -lt 150000 -and $entry.Length -lt 100000 -and $entry.Length -gt 100) {
+                    try {
+                        $st = $entry.Open()
+                        $ms = New-Object System.IO.MemoryStream
+                        $st.CopyTo($ms); $st.Close()
+                        $ascii = [System.Text.Encoding]::ASCII.GetString($ms.ToArray())
+                        $ms.Dispose()
+                        [void]$contentSample.Append($ascii)
+                        $sampleSize += $ascii.Length
+                    } catch { }
+                }
             }
         }
 
@@ -653,25 +629,25 @@ function Invoke-ObfuscationScan {
 
         $pct = { param($n) [math]::Round(($n / $totalClass) * 100) }
 
-        $numPct  = & $pct $numericCount
-        $uniPct  = & $pct $unicodeCount
-        $fwPct   = & $pct $fullwidthCount
-        $jpPct   = & $pct $japaneseCount
-        $s1Pct   = & $pct $singleLetterCount
-        $s2Pct   = & $pct $twoLetterCount
-        $gibPct  = & $pct $gibberishCount
-        $novPct  = & $pct $noVowelCount
-        $confPct = & $pct $confusionCount
+        $numPct   = & $pct $numericCount
+        $uniPct   = & $pct $unicodeCount
+        $fwPct    = & $pct $fullwidthCount
+        $jpPct    = & $pct $japaneseCount
+        $s1Pct    = & $pct $singleLetterCount
+        $s2Pct    = & $pct $twoLetterCount
+        $gibPct   = & $pct $gibberishCount
+        $novPct   = & $pct $noVowelCount
+        $confPct  = & $pct $confusionCount
 
-        if ($numPct  -ge 20) { $flags.Add("Numeric class names — $numPct% of classes have numeric-only names") }
-        if ($uniPct  -ge 10) { $flags.Add("Unicode class names — $uniPct% of classes use non-ASCII characters") }
-        if ($fwPct   -gt  0) { $flags.Add("Fullwidth Unicode class names — $fwPct% use ａｂｃ/ＡＢＣ/０１２ chars ($fullwidthCount classes)") }
-        if ($jpPct   -gt  0) { $flags.Add("Japanese obfuscation — $jpPct% use hiragana/katakana class names ($japaneseCount classes)") }
-        if ($s1Pct   -ge 15) { $flags.Add("Single-letter class names — $s1Pct% ($singleLetterCount classes)") }
-        if ($s2Pct   -ge 20) { $flags.Add("Two-letter class names — $s2Pct% ($twoLetterCount classes)") }
-        if ($gibPct  -ge  5) { $flags.Add("Gibberish class names — $gibPct% have no vowels / consonant clusters ($gibberishCount classes)") }
-        if ($novPct  -ge  8) { $flags.Add("No-vowel class names — $novPct% ($noVowelCount classes)") }
-        if ($confPct -ge  3) { $flags.Add("Confusion-char names (Il1O0/_) — $confPct% ($confusionCount classes)") }
+        if ($numPct   -ge 20) { $flags.Add("Numeric class names — $numPct% of classes have numeric-only names") }
+        if ($uniPct   -ge 10) { $flags.Add("Unicode class names — $uniPct% of classes use non-ASCII characters") }
+        if ($fwPct    -gt  0) { $flags.Add("Fullwidth Unicode class names — $fwPct% use ａｂｃ/ＡＢＣ/０１２ chars ($fullwidthCount classes)") }
+        if ($jpPct    -gt  0) { $flags.Add("Japanese obfuscation — $jpPct% use hiragana/katakana class names ($japaneseCount classes)") }
+        if ($s1Pct    -ge 15) { $flags.Add("Single-letter class names — $s1Pct% ($singleLetterCount classes)") }
+        if ($s2Pct    -ge 20) { $flags.Add("Two-letter class names — $s2Pct% ($twoLetterCount classes)") }
+        if ($gibPct   -ge  5) { $flags.Add("Gibberish class names — $gibPct% have no vowels / consonant clusters ($gibberishCount classes)") }
+        if ($novPct   -ge  8) { $flags.Add("No-vowel class names — $novPct% ($noVowelCount classes)") }
+        if ($confPct  -ge  3) { $flags.Add("Confusion-char names (Il1O0/_) — $confPct% ($confusionCount classes)") }
         if ($singleCharPkg -ge 6) { $flags.Add("Single-char package paths — $singleCharPkg path segments like a/b/c") }
 
         $fwStringMatches = [regex]::Matches($contentSample.ToString(), "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]{2,}")
@@ -708,11 +684,11 @@ function Invoke-BypassScan {
     function Test-SuspiciousJarName {
         param([string]$JarName)
         $base = [System.IO.Path]::GetFileNameWithoutExtension($JarName)
-        if ($base -match '\d') { return $false }
+        if ($base -match '\d')                                          { return $false }
         foreach ($pfx in $mavenPrefixes) {
-            if ($base.ToLower().StartsWith($pfx)) { return $false }
+            if ($base.ToLower().StartsWith($pfx))                       { return $false }
         }
-        if ($base.Length -gt 20) { return $false }
+        if ($base.Length -gt 20)                                        { return $false }
         return $true
     }
 
@@ -725,7 +701,9 @@ function Invoke-BypassScan {
         $suspiciousNestedJars = @()
         foreach ($nj in $nestedJars) {
             $njBase = [System.IO.Path]::GetFileName($nj.FullName)
-            if (Test-SuspiciousJarName -JarName $njBase) { $suspiciousNestedJars += $njBase }
+            if (Test-SuspiciousJarName -JarName $njBase) {
+                $suspiciousNestedJars += $njBase
+            }
         }
         foreach ($sj in $suspiciousNestedJars) {
             $flags.Add("Suspicious nested JAR — no version, unknown dependency: $sj")
@@ -747,7 +725,7 @@ function Invoke-BypassScan {
             } catch { }
         }
 
-        $allEntries = [System.Collections.Generic.List[object]]::new()
+        $allEntries    = [System.Collections.Generic.List[object]]::new()
         foreach ($e in $zip.Entries) { $allEntries.Add($e) }
 
         $innerZips = [System.Collections.Generic.List[object]]::new()
@@ -771,48 +749,59 @@ function Invoke-BypassScan {
         $unicodeClassCount = 0
         $totalClassCount   = 0
 
-        foreach ($entry in ($allEntries | Where-Object { $_.FullName -match "\.class$" })) {
-            $totalClassCount++
-            $className = [System.IO.Path]::GetFileNameWithoutExtension(($entry.FullName -split "/")[-1])
+        foreach ($entry in $allEntries) {
+            $name = $entry.FullName
 
-            if ($className -match "^\d+$")        { $numericClassCount++ }
-            if ($className -match "[^\x00-\x7F]") { $unicodeClassCount++ }
+            if ($name -match "\.class$") {
+                $totalClassCount++
+                $className = [System.IO.Path]::GetFileNameWithoutExtension(($name -split "/")[-1])
 
-            $segs = ($entry.FullName -replace "\.class$","") -split "/"
-            $consecutiveSingle = 0; $maxConsecutive = 0
-            foreach ($seg in $segs) {
-                if ($seg.Length -eq 1) {
-                    $consecutiveSingle++
-                    if ($consecutiveSingle -gt $maxConsecutive) { $maxConsecutive = $consecutiveSingle }
-                } else { $consecutiveSingle = 0 }
+                if ($className -match "^\d+$") { $numericClassCount++ }
+                if ($className -match "[^\x00-\x7F]") { $unicodeClassCount++ }
+
+                $segs = ($name -replace "\.class$","") -split "/"
+                $consecutiveSingle = 0
+                $maxConsecutive    = 0
+                foreach ($seg in $segs) {
+                    if ($seg.Length -eq 1) {
+                        $consecutiveSingle++
+                        if ($consecutiveSingle -gt $maxConsecutive) { $maxConsecutive = $consecutiveSingle }
+                    } else {
+                        $consecutiveSingle = 0
+                    }
+                }
+                if ($maxConsecutive -ge 3) { $obfuscatedCount++ }
+
+                try {
+                    $st = $entry.Open()
+                    $ms2 = New-Object System.IO.MemoryStream
+                    $st.CopyTo($ms2)
+                    $st.Close()
+                    $rawBytes = $ms2.ToArray()
+                    $ms2.Dispose()
+                    $ct = [System.Text.Encoding]::ASCII.GetString($rawBytes)
+
+                    if ($ct -match "java/lang/Runtime" -and
+                        $ct -match "getRuntime" -and
+                        $ct -match "exec") {
+                        $runtimeExecFound = $true
+                    }
+
+                    if ($ct -match "openConnection" -and
+                        $ct -match "HttpURLConnection" -and
+                        $ct -match "FileOutputStream") {
+                        $httpDownloadFound = $true
+                    }
+
+                    if ($ct -match "openConnection" -and
+                        $ct -match "setDoOutput" -and
+                        $ct -match "getOutputStream" -and
+                        $ct -match "getProperty") {
+                        $httpExfilFound = $true
+                    }
+
+                } catch { }
             }
-            if ($maxConsecutive -ge 3) { $obfuscatedCount++ }
-
-            if ($entry.Length -gt 1MB) { continue }   # skip huge classes
-            try {
-                $st  = $entry.Open()
-                $ms2 = New-Object System.IO.MemoryStream
-                $st.CopyTo($ms2); $st.Close()
-                $rawBytes = $ms2.ToArray(); $ms2.Dispose()
-                $ct = [System.Text.Encoding]::ASCII.GetString($rawBytes)
-
-                if (-not $runtimeExecFound -and
-                    $ct -match "java/lang/Runtime" -and
-                    $ct -match "getRuntime" -and
-                    $ct -match "exec") { $runtimeExecFound = $true }
-
-                if (-not $httpDownloadFound -and
-                    $ct -match "openConnection" -and
-                    $ct -match "HttpURLConnection" -and
-                    $ct -match "FileOutputStream") { $httpDownloadFound = $true }
-
-                if (-not $httpExfilFound -and
-                    $ct -match "openConnection" -and
-                    $ct -match "setDoOutput" -and
-                    $ct -match "getOutputStream" -and
-                    $ct -match "getProperty") { $httpExfilFound = $true }
-
-            } catch { }
         }
 
         foreach ($iz in $innerZips) { try { $iz.Dispose() } catch { } }
@@ -822,12 +811,24 @@ function Invoke-BypassScan {
         $numPct = if ($totalClassCount -ge 5)  { [math]::Round(($numericClassCount / $totalClassCount) * 100) } else { 0 }
         $uniPct = if ($totalClassCount -ge 5)  { [math]::Round(($unicodeClassCount / $totalClassCount) * 100) } else { 0 }
 
-        if ($runtimeExecFound -and $obfPct -ge 25)    { $flags.Add("Runtime.exec() in obfuscated code — can run arbitrary OS commands") }
-        if ($httpDownloadFound)                        { $flags.Add("HTTP file download — fetches and writes files from a remote server at runtime") }
-        if ($httpExfilFound)                           { $flags.Add("HTTP POST exfiltration — sends system data to an external server") }
-        if ($totalClassCount -ge 10 -and $obfPct -ge 25) { $flags.Add("Heavy obfuscation — $obfPct% of classes use single-letter path segments (a/b/c style)") }
-        if ($numPct -ge 20)                            { $flags.Add("Numeric class names — $numPct% of classes have numeric-only names (e.g. 1234.class)") }
-        if ($uniPct -ge 10)                            { $flags.Add("Unicode class names — $uniPct% of classes use non-ASCII characters") }
+        if ($runtimeExecFound -and $obfPct -ge 25) {
+            $flags.Add("Runtime.exec() in obfuscated code — can run arbitrary OS commands")
+        }
+        if ($httpDownloadFound) {
+            $flags.Add("HTTP file download — fetches and writes files from a remote server at runtime")
+        }
+        if ($httpExfilFound) {
+            $flags.Add("HTTP POST exfiltration — sends system data to an external server")
+        }
+        if ($totalClassCount -ge 10 -and $obfPct -ge 25) {
+            $flags.Add("Heavy obfuscation — $obfPct% of classes use single-letter path segments (a/b/c style)")
+        }
+        if ($numPct -ge 20) {
+            $flags.Add("Numeric class names — $numPct% of classes have numeric-only names (e.g. 1234.class)")
+        }
+        if ($uniPct -ge 10) {
+            $flags.Add("Unicode class names — $uniPct% of classes use non-ASCII characters")
+        }
 
         $knownLegitModIds = @(
             "vmp-fabric","vmp","lithium","sodium","iris","fabric-api",
@@ -868,7 +869,9 @@ function Invoke-JvmScan {
                 $legitAgents = @("jmxremote","yjp","jrebel","newrelic","jacoco","theseus")
                 $isLegit = $false
                 foreach ($la in $legitAgents) { if ($agentName -match $la) { $isLegit = $true; break } }
-                if (-not $isLegit) { $results.Add("JVM Agent — -javaagent:$agentName (path: $agentPath)") }
+                if (-not $isLegit) {
+                    $results.Add("JVM Agent — -javaagent:$agentName (path: $agentPath)")
+                }
             }
 
             $suspiciousFlags = @(
@@ -888,14 +891,18 @@ function Invoke-JvmScan {
     return $results
 }
 
-
 function Write-Rule {
     param([string]$Char = "─", [int]$Width = 76, [ConsoleColor]$Color = "DarkGray")
     Write-Host ($Char * $Width) -ForegroundColor $Color
 }
 
 function Write-SectionHeader {
-    param([string]$Title, [int]$Count, [ConsoleColor]$DotColor, [ConsoleColor]$CountColor)
+    param(
+        [string]$Title,
+        [int]$Count,
+        [ConsoleColor]$DotColor,
+        [ConsoleColor]$CountColor
+    )
     Write-Host ""
     Write-Host "  " -NoNewline
     Write-Host "●" -ForegroundColor $DotColor -NoNewline
@@ -906,6 +913,7 @@ function Write-SectionHeader {
 
 function Write-SuspiciousCard {
     param($Mod)
+
     Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkRed
     Write-Host "  │ " -ForegroundColor DarkRed -NoNewline
     Write-Host " FLAGGED " -ForegroundColor White -BackgroundColor DarkRed -NoNewline
@@ -951,6 +959,7 @@ function Write-SuspiciousCard {
 
 function Write-InjectionCard {
     param($Mod)
+
     Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkMagenta
     Write-Host "  │ " -ForegroundColor DarkMagenta -NoNewline
     Write-Host " INJECTION " -ForegroundColor White -BackgroundColor DarkMagenta -NoNewline
@@ -959,12 +968,19 @@ function Write-InjectionCard {
     Write-Host ("  │ " + ("─" * 66)) -ForegroundColor DarkMagenta
 
     foreach ($flag in $Mod.Flags) {
-        $flagTitle = $flag; $flagDesc = ""
-        if ($flag -match "^(.+?) — (.+)$") { $flagTitle = $matches[1]; $flagDesc = $matches[2] }
+        if ($flag -match "^(.+?) — (.+)$") {
+            $flagTitle = $matches[1]
+            $flagDesc  = $matches[2]
+        } else {
+            $flagTitle = $flag
+            $flagDesc  = ""
+        }
+
         Write-Host "  │" -ForegroundColor DarkMagenta
         Write-Host "  │  " -ForegroundColor DarkMagenta -NoNewline
         Write-Host "◉ " -ForegroundColor Magenta -NoNewline
         Write-Host $flagTitle -ForegroundColor White
+
         if ($flagDesc -ne "") {
             Write-Host "  │    " -ForegroundColor DarkMagenta -NoNewline
             Write-Host $flagDesc -ForegroundColor Gray
@@ -978,6 +994,7 @@ function Write-InjectionCard {
 
 function Write-ObfuscationCard {
     param($Mod)
+
     Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkYellow
     Write-Host "  │ " -ForegroundColor DarkYellow -NoNewline
     Write-Host " OBFUSCATED " -ForegroundColor Black -BackgroundColor DarkYellow -NoNewline
@@ -986,12 +1003,19 @@ function Write-ObfuscationCard {
     Write-Host ("  │ " + ("─" * 66)) -ForegroundColor DarkYellow
 
     foreach ($flag in $Mod.Flags) {
-        $flagTitle = $flag; $flagDesc = ""
-        if ($flag -match "^(.+?) — (.+)$") { $flagTitle = $matches[1]; $flagDesc = $matches[2] }
+        if ($flag -match "^(.+?) — (.+)$") {
+            $flagTitle = $matches[1]
+            $flagDesc  = $matches[2]
+        } else {
+            $flagTitle = $flag
+            $flagDesc  = ""
+        }
+
         Write-Host "  │" -ForegroundColor DarkYellow
         Write-Host "  │  " -ForegroundColor DarkYellow -NoNewline
         Write-Host "⚑ " -ForegroundColor Yellow -NoNewline
         Write-Host $flagTitle -ForegroundColor White
+
         if ($flagDesc -ne "") {
             Write-Host "  │    " -ForegroundColor DarkYellow -NoNewline
             Write-Host $flagDesc -ForegroundColor Gray
@@ -1003,12 +1027,11 @@ function Write-ObfuscationCard {
     Write-Host ""
 }
 
-
-$verifiedMods   = [System.Collections.Concurrent.ConcurrentBag[object]]::new()
-$unknownMods    = [System.Collections.Concurrent.ConcurrentBag[object]]::new()
-$suspiciousMods = [System.Collections.Concurrent.ConcurrentBag[object]]::new()
-$bypassMods     = [System.Collections.Concurrent.ConcurrentBag[object]]::new()
-$obfuscatedMods = [System.Collections.Concurrent.ConcurrentBag[object]]::new()
+$verifiedMods    = @()
+$unknownMods     = @()
+$suspiciousMods  = @()
+$bypassMods      = @()
+$obfuscatedMods  = @()
 
 try {
     $jarFiles = Get-ChildItem -Path $modsPath -Filter *.jar -ErrorAction Stop
@@ -1032,101 +1055,131 @@ Write-Host
 
 $spinnerFrames = @("⣾","⣽","⣻","⢿","⡿","⣟","⣯","⣷")
 $totalFiles    = $jarFiles.Count
+$idx           = 0
 
-Write-Host "🔍 Pass 1 — Computing hashes..." -ForegroundColor Cyan
-
-$hashMap = @{}   # fileName -> sha1
-$idx = 0
-foreach ($jar in $jarFiles) {
-    $idx++
-    $sp = $spinnerFrames[$idx % $spinnerFrames.Length]
-    Write-Host "`r[$sp] Hashing: $idx/$totalFiles - $($jar.Name)" -ForegroundColor Yellow -NoNewline
-    $hashMap[$jar.Name] = Get-FileSHA1 -Path $jar.FullName
-}
-Write-Host "`r$(' ' * 100)`r" -NoNewline
-
-Write-Host "🌐 Pass 1b — Batch Modrinth verification..." -ForegroundColor Cyan
-
-$allHashes     = @($hashMap.Values | Where-Object { $_ })
-$modrinthBatch = Query-ModrinthBatch -Hashes $allHashes
-
-$verifiedSet   = [System.Collections.Generic.HashSet[string]]::new()   # filenames verificati
+Write-Host "🔍 Pass 1 — Hash verification (Modrinth + Megabase)..." -ForegroundColor Cyan
 
 foreach ($jar in $jarFiles) {
-    $hash = $hashMap[$jar.Name]
-    if ($hash -and $modrinthBatch.ContainsKey($hash)) {
-        $info = $modrinthBatch[$hash]
-        $verifiedMods.Add([PSCustomObject]@{ ModName = $info.Name; FileName = $jar.Name; FilePath = $jar.FullName })
-        [void]$verifiedSet.Add($jar.Name)
-    }
-}
-
-$unverifiedJars = $jarFiles | Where-Object { -not $verifiedSet.Contains($_.Name) }
-$idx = 0
-foreach ($jar in $unverifiedJars) {
     $idx++
-    $sp = $spinnerFrames[$idx % $spinnerFrames.Length]
-    Write-Host "`r[$sp] Megabase: $idx/$($unverifiedJars.Count) - $($jar.Name)" -ForegroundColor Yellow -NoNewline
+    $spinner = $spinnerFrames[$idx % $spinnerFrames.Length]
+    Write-Host "`r[$spinner] Verifying: $idx/$totalFiles - $($jar.Name)" -ForegroundColor Yellow -NoNewline
 
-    $hash = $hashMap[$jar.Name]
+    $hash = Get-FileSHA1 -Path $jar.FullName
+
     if ($hash) {
-        $mb = Query-Megabase -Hash $hash
-        if ($mb -and $mb.name) {
-            $verifiedMods.Add([PSCustomObject]@{ ModName = $mb.name; FileName = $jar.Name; FilePath = $jar.FullName })
-            [void]$verifiedSet.Add($jar.Name)
+        $modrinthData = Query-Modrinth -Hash $hash
+        if ($modrinthData.Slug) {
+
+            $modrinthWhitelistedSlugs = @("viafabricplus", "viafabricversion")
+            $isModrinthWhitelisted = $modrinthWhitelistedSlugs -contains $modrinthData.Slug.ToLower()
+
+            $verifiedMods += [PSCustomObject]@{
+                ModName             = $modrinthData.Name
+                FileName            = $jar.Name
+                FilePath            = $jar.FullName
+                ModrinthWhitelisted = $isModrinthWhitelisted
+            }
+            continue
+        }
+        $megabaseData = Query-Megabase -Hash $hash
+        if ($megabaseData.name) {
+            $verifiedMods += [PSCustomObject]@{
+                ModName             = $megabaseData.Name
+                FileName            = $jar.Name
+                FilePath            = $jar.FullName
+                ModrinthWhitelisted = $false
+            }
             continue
         }
     }
+
     $src = Get-DownloadSource $jar.FullName
-    $unknownMods.Add([PSCustomObject]@{ FileName = $jar.Name; FilePath = $jar.FullName; DownloadSource = $src })
+    $unknownMods += [PSCustomObject]@{ FileName = $jar.Name; FilePath = $jar.FullName; DownloadSource = $src }
 }
+
 Write-Host "`r$(' ' * 100)`r" -NoNewline
 
 $modWord = if ($totalFiles -eq 1) { "mod" } else { "mods" }
-Write-Host "🔬 Pass 2-4 — Deep scan (cheat + bypass + obfuscation) su $totalFiles $modWord..." -ForegroundColor Cyan
-
-$_patternRegex  = $patternRegex
-$_cheatStringSet= $cheatStringSet
-$_fullwidthRegex= $fullwidthRegex
-$_fwCheatPool   = $fwCheatPool
-
+Write-Host "🔬 Pass 2 — Deep-scanning all $totalFiles $modWord..." -ForegroundColor Cyan
 $idx = 0
+
 foreach ($jar in $jarFiles) {
     $idx++
-    $sp = $spinnerFrames[$idx % $spinnerFrames.Length]
-    Write-Host "`r[$sp] Scanning: $idx/$totalFiles - $($jar.Name)" -ForegroundColor Yellow -NoNewline
+    $spinner = $spinnerFrames[$idx % $spinnerFrames.Length]
+    Write-Host "`r[$spinner] Scanning: $idx/$totalFiles - $($jar.Name)" -ForegroundColor Yellow -NoNewline
 
-    $scanResult  = Invoke-ModScan -FilePath $jar.FullName `
-                       -PatternRx $_patternRegex `
-                       -StringSet $_cheatStringSet `
-                       -FwRx      $_fullwidthRegex `
-                       -FwPool    $_fwCheatPool
 
-    $isCheat = ($scanResult.Patterns.Count -gt 0 -or
-                $scanResult.Strings.Count  -gt 0 -or
-                $scanResult.Fullwidth.Count -gt 0)
+    $verifiedEntry = $verifiedMods | Where-Object { $_.FileName -eq $jar.Name } | Select-Object -First 1
+    if ($verifiedEntry -and $verifiedEntry.ModrinthWhitelisted -eq $true) {
+        continue
+    }
 
-    if ($isCheat) {
-        $suspiciousMods.Add([PSCustomObject]@{
-            FileName  = $jar.Name
-            Patterns  = $scanResult.Patterns
-            Strings   = $scanResult.Strings
-            Fullwidth = $scanResult.Fullwidth
-        })
+    $result = Invoke-ModScan -FilePath $jar.FullName
+
+    if ($result.Patterns.Count -gt 0 -or $result.Strings.Count -gt 0 -or $result.Fullwidth.Count -gt 0) {
+        $suspiciousMods += [PSCustomObject]@{
+            FileName = $jar.Name
+            Patterns = $result.Patterns
+            Strings  = $result.Strings
+            Fullwidth = $result.Fullwidth
+        }
+        $verifiedMods = $verifiedMods | Where-Object { $_.FileName -ne $jar.Name }
+    }
+}
+
+Write-Host "`r$(' ' * 100)`r" -NoNewline
+
+Write-Host "🛡️  Pass 3 — Bypass/injection scan on all $totalFiles $modWord..." -ForegroundColor Magenta
+$idx = 0
+
+foreach ($jar in $jarFiles) {
+    $idx++
+    $spinner = $spinnerFrames[$idx % $spinnerFrames.Length]
+    Write-Host "`r[$spinner] Bypass scan: $idx/$totalFiles - $($jar.Name)" -ForegroundColor Yellow -NoNewline
+
+
+    $verifiedEntry = $verifiedMods | Where-Object { $_.FileName -eq $jar.Name } | Select-Object -First 1
+    if ($verifiedEntry -and $verifiedEntry.ModrinthWhitelisted -eq $true) {
+        continue
     }
 
     $bypassFlags = Invoke-BypassScan -FilePath $jar.FullName
-    if ($bypassFlags.Count -gt 0) {
-        $bypassMods.Add([PSCustomObject]@{ FileName = $jar.Name; Flags = $bypassFlags })
-    }
 
-    if (-not $isCheat -and $bypassFlags.Count -eq 0) {
-        $obfFlags = Invoke-ObfuscationScan -FilePath $jar.FullName
-        if ($obfFlags.Count -gt 0) {
-            $obfuscatedMods.Add([PSCustomObject]@{ FileName = $jar.Name; Flags = $obfFlags })
+    if ($bypassFlags.Count -gt 0) {
+        $bypassMods += [PSCustomObject]@{
+            FileName = $jar.Name
+            Flags    = $bypassFlags
+        }
+        $verifiedMods = $verifiedMods | Where-Object { $_.FileName -ne $jar.Name }
+        $unknownMods  = $unknownMods  | Where-Object { $_.FileName -ne $jar.Name }
+    }
+}
+
+Write-Host "`r$(' ' * 100)`r" -NoNewline
+
+Write-Host "🔎 Pass 4 — Obfuscation analysis on all $totalFiles $modWord..." -ForegroundColor DarkCyan
+$idx = 0
+
+foreach ($jar in $jarFiles) {
+    $idx++
+    $spinner = $spinnerFrames[$idx % $spinnerFrames.Length]
+    Write-Host "`r[$spinner] Obf scan: $idx/$totalFiles - $($jar.Name)" -ForegroundColor Yellow -NoNewline
+
+    $obfFlags = Invoke-ObfuscationScan -FilePath $jar.FullName
+
+    if ($obfFlags.Count -gt 0) {
+        $alreadyFlagged = ($suspiciousMods | Where-Object { $_.FileName -eq $jar.Name }).Count -gt 0 -or
+                          ($bypassMods     | Where-Object { $_.FileName -eq $jar.Name }).Count -gt 0
+        if (-not $alreadyFlagged) {
+            $obfuscatedMods += [PSCustomObject]@{
+                FileName = $jar.Name
+                Flags    = $obfFlags
+            }
+            $verifiedMods = $verifiedMods | Where-Object { $_.FileName -ne $jar.Name }
         }
     }
 }
+
 Write-Host "`r$(' ' * 100)`r" -NoNewline
 
 $jvmFlags = @()
@@ -1138,22 +1191,12 @@ if ($jvmFlags.Count -gt 0) {
     Write-Host "   ✓  JVM looks clean" -ForegroundColor DarkGray
 }
 
-$flaggedFiles = [System.Collections.Generic.HashSet[string]]::new()
-foreach ($m in $suspiciousMods) { [void]$flaggedFiles.Add($m.FileName) }
-foreach ($m in $bypassMods)     { [void]$flaggedFiles.Add($m.FileName) }
-foreach ($m in $obfuscatedMods) { [void]$flaggedFiles.Add($m.FileName) }
+Write-Host "`r$(' ' * 100)`r" -NoNewline
 
-$verifiedModsFinal   = @($verifiedMods   | Where-Object { -not $flaggedFiles.Contains($_.FileName) })
-$unknownModsFinal    = @($unknownMods    | Where-Object { -not $flaggedFiles.Contains($_.FileName) })
-$suspiciousModsFinal = @($suspiciousMods)
-$bypassModsFinal     = @($bypassMods)
-$obfuscatedModsFinal = @($obfuscatedMods)
-
-
-if ($verifiedModsFinal.Count -gt 0) {
-    Write-SectionHeader -Title "VERIFIED MODS" -Count $verifiedModsFinal.Count -DotColor Green -CountColor Green
+if ($verifiedMods.Count -gt 0) {
+    Write-SectionHeader -Title "VERIFIED MODS" -Count $verifiedMods.Count -DotColor Green -CountColor Green
     Write-Rule "─" 76 DarkGray
-    foreach ($mod in $verifiedModsFinal) {
+    foreach ($mod in $verifiedMods) {
         Write-Host "  ✓ " -ForegroundColor Green -NoNewline
         Write-Host "$($mod.ModName)" -ForegroundColor White -NoNewline
         Write-Host " → " -ForegroundColor Gray -NoNewline
@@ -1162,10 +1205,10 @@ if ($verifiedModsFinal.Count -gt 0) {
     Write-Host ""
 }
 
-if ($unknownModsFinal.Count -gt 0) {
-    Write-SectionHeader -Title "UNKNOWN MODS" -Count $unknownModsFinal.Count -DotColor Yellow -CountColor Yellow
+if ($unknownMods.Count -gt 0) {
+    Write-SectionHeader -Title "UNKNOWN MODS" -Count $unknownMods.Count -DotColor Yellow -CountColor Yellow
     Write-Rule "─" 76 DarkGray
-    foreach ($mod in $unknownModsFinal) {
+    foreach ($mod in $unknownMods) {
         $name = $mod.FileName
         if ($name.Length -gt 50) { $name = $name.Substring(0,47) + "..." }
         $topLine    = "  ╔═ ? " + $name + " " + ("═" * (65 - $name.Length)) + "╗"
@@ -1177,25 +1220,31 @@ if ($unknownModsFinal.Count -gt 0) {
     }
 }
 
-if ($suspiciousModsFinal.Count -gt 0) {
-    Write-SectionHeader -Title "SUSPICIOUS MODS" -Count $suspiciousModsFinal.Count -DotColor Red -CountColor Red
+if ($suspiciousMods.Count -gt 0) {
+    Write-SectionHeader -Title "SUSPICIOUS MODS" -Count $suspiciousMods.Count -DotColor Red -CountColor Red
     Write-Rule "─" 76 DarkGray
     Write-Host ""
-    foreach ($mod in $suspiciousModsFinal) { Write-SuspiciousCard -Mod $mod }
+    foreach ($mod in $suspiciousMods) {
+        Write-SuspiciousCard -Mod $mod
+    }
 }
 
-if ($bypassModsFinal.Count -gt 0) {
-    Write-SectionHeader -Title "BYPASS / INJECTION DETECTED" -Count $bypassModsFinal.Count -DotColor Magenta -CountColor Magenta
+if ($bypassMods.Count -gt 0) {
+    Write-SectionHeader -Title "BYPASS / INJECTION DETECTED" -Count $bypassMods.Count -DotColor Magenta -CountColor Magenta
     Write-Rule "─" 76 DarkGray
     Write-Host ""
-    foreach ($mod in $bypassModsFinal) { Write-InjectionCard -Mod $mod }
+    foreach ($mod in $bypassMods) {
+        Write-InjectionCard -Mod $mod
+    }
 }
 
-if ($obfuscatedModsFinal.Count -gt 0) {
-    Write-SectionHeader -Title "OBFUSCATED MODS" -Count $obfuscatedModsFinal.Count -DotColor DarkYellow -CountColor Yellow
+if ($obfuscatedMods.Count -gt 0) {
+    Write-SectionHeader -Title "OBFUSCATED MODS" -Count $obfuscatedMods.Count -DotColor DarkYellow -CountColor Yellow
     Write-Rule "─" 76 DarkGray
     Write-Host ""
-    foreach ($mod in $obfuscatedModsFinal) { Write-ObfuscationCard -Mod $mod }
+    foreach ($mod in $obfuscatedMods) {
+        Write-ObfuscationCard -Mod $mod
+    }
 }
 
 if ($jvmFlags.Count -gt 0) {
@@ -1209,8 +1258,11 @@ if ($jvmFlags.Count -gt 0) {
     Write-Host ("  │ " + ("─" * 66)) -ForegroundColor DarkYellow
     foreach ($flag in $jvmFlags) {
         $ft = $flag; $fd = ""; $fpath = ""
-        if ($flag -match "^(.+?) — (.+) \(path: (.+)\)$") { $ft = $matches[1]; $fd = $matches[2]; $fpath = $matches[3] }
-        elseif ($flag -match "^(.+?) — (.+)$")            { $ft = $matches[1]; $fd = $matches[2] }
+        if ($flag -match "^(.+?) — (.+) \(path: (.+)\)$") {
+            $ft = $matches[1]; $fd = $matches[2]; $fpath = $matches[3]
+        } elseif ($flag -match "^(.+?) — (.+)$") {
+            $ft = $matches[1]; $fd = $matches[2]
+        }
         Write-Host "  │" -ForegroundColor DarkYellow
         Write-Host "  │  " -ForegroundColor DarkYellow -NoNewline
         Write-Host "◉ " -ForegroundColor Yellow -NoNewline
@@ -1232,13 +1284,13 @@ if ($jvmFlags.Count -gt 0) {
 
 Write-Host "📊 SUMMARY" -ForegroundColor Cyan
 Write-Rule "━" 76 Blue
-Write-Host "  Total files scanned: " -ForegroundColor Gray -NoNewline; Write-Host "$totalFiles"                         -ForegroundColor White
-Write-Host "  Verified mods:       " -ForegroundColor Gray -NoNewline; Write-Host "$($verifiedModsFinal.Count)"         -ForegroundColor Green
-Write-Host "  Unknown mods:        " -ForegroundColor Gray -NoNewline; Write-Host "$($unknownModsFinal.Count)"          -ForegroundColor Yellow
-Write-Host "  Suspicious mods:     " -ForegroundColor Gray -NoNewline; Write-Host "$($suspiciousModsFinal.Count)"       -ForegroundColor Red
-Write-Host "  Bypass/Injected:     " -ForegroundColor Gray -NoNewline; Write-Host "$($bypassModsFinal.Count)"           -ForegroundColor Magenta
-Write-Host "  Obfuscated mods:     " -ForegroundColor Gray -NoNewline; Write-Host "$($obfuscatedModsFinal.Count)"       -ForegroundColor Yellow
-Write-Host "  JVM issues:          " -ForegroundColor Gray -NoNewline; Write-Host "$($jvmFlags.Count)"                  -ForegroundColor Yellow
+Write-Host "  Total files scanned: " -ForegroundColor Gray -NoNewline; Write-Host "$totalFiles"                   -ForegroundColor White
+Write-Host "  Verified mods:       " -ForegroundColor Gray -NoNewline; Write-Host "$($verifiedMods.Count)"        -ForegroundColor Green
+Write-Host "  Unknown mods:        " -ForegroundColor Gray -NoNewline; Write-Host "$($unknownMods.Count)"         -ForegroundColor Yellow
+Write-Host "  Suspicious mods:     " -ForegroundColor Gray -NoNewline; Write-Host "$($suspiciousMods.Count)"      -ForegroundColor Red
+Write-Host "  Bypass/Injected:     " -ForegroundColor Gray -NoNewline; Write-Host "$($bypassMods.Count)"          -ForegroundColor Magenta
+Write-Host "  Obfuscated mods:     " -ForegroundColor Gray -NoNewline; Write-Host "$($obfuscatedMods.Count)"      -ForegroundColor Yellow
+Write-Host "  JVM issues:          " -ForegroundColor Gray -NoNewline; Write-Host "$($jvmFlags.Count)"            -ForegroundColor Yellow
 Write-Host
 Write-Rule "━" 76 Blue
 Write-Host ""
