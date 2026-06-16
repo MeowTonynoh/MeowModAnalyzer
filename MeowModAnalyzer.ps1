@@ -99,7 +99,7 @@ $suspiciousPatterns = @(
     "LagReach", "PopSwitch", "SprintReset", "ChestSteal", "AntiBot",
     "ElytraSwap", "FastXP", "FastExp", "Refill",  "AirAnchor",
     "jnativehook", "FakeInv", "HoverTotem", "AutoClicker", "AutoFirework",
-    "PackSpoof", "Antiknockback", "catlean", "Argon",
+    "PackSpoof", "Antiknockback", "catlean",
     "AuthBypass", "Asteria", "Prestige", "AutoEat", "AutoMine",
     "MaceSwap", "Macro198", "StunSlam", "SafeAnchor", "DoubleAnchor", "AutoTPA", "BaseFinder", "Xenon", "gypsy",
     "AutoPotRefill", "WalksyOptimizer", "KeyPearl", "AimAssist", "AutoNethPot", "AutoDtap",
@@ -380,7 +380,7 @@ $cheatStrings = @(
     "dev.krypton", "dev/krypton", "skid.krypton", "skid/krypton",
     "Virgin", "VirginClient", "virgin client",
     "catlean", "CatleanClient", "catlean client",
-    "Argon", "ArgonClient", "argon client",
+    "dev.lvstrng.argon", "lvstrng.argon", "dev/lvstrng/argon",
     "Asteria", "AsteriaClient", "asteria client",
     "Prestige", "PrestigeClient", "prestige client", "prestigeclient.vip",
     "gypsy", "GypsyClient", "gypsy client",
@@ -558,7 +558,7 @@ $clientSignatures = @(
     @{ Name = "Krypton Client";  Indicators = @("dev.krypton","dev/krypton","skid.krypton","skid/krypton") },
     @{ Name = "Virgin Client";   Indicators = @("Virgin","VirginClient","virgin client") },
     @{ Name = "Catlean Client";  Indicators = @("catlean","CatleanClient","catlean client") },
-    @{ Name = "Argon Client";    Indicators = @("Argon","ArgonClient","argon client") },
+    @{ Name = "Argon Client";    Indicators = @("dev.lvstrng.argon","lvstrng.argon","dev/lvstrng/argon") },
     @{ Name = "Asteria Client";  Indicators = @("Asteria","AsteriaClient","asteria client") },
     @{ Name = "Prestige Client"; Indicators = @("Prestige","PrestigeClient","prestige client","prestigeclient.vip") },
     @{ Name = "Gypsy Client";    Indicators = @("gypsy","GypsyClient","gypsy client") },
@@ -618,20 +618,17 @@ function Invoke-ClientDetection {
 
 function Write-ClientDetectionCard {
     param($Mod)
-    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkCyan
-    Write-Host "  │ " -ForegroundColor DarkCyan -NoNewline
-    Write-Host " CLIENT DETECTED " -ForegroundColor White -BackgroundColor DarkCyan -NoNewline
-    Write-Host "  " -NoNewline
-    Write-Host $Mod.FileName -ForegroundColor Yellow
-    Write-Host ("  │ " + ("─" * 66)) -ForegroundColor DarkCyan
+    $name = $Mod.FileName
+    if ($name.Length -gt 48) { $name = $name.Substring(0,45) + "..." }
+    $topLine = "  ╔═ ⚠ " + $name + " " + ("═" * (63 - $name.Length)) + "╗"
+    Write-Host $topLine -ForegroundColor Cyan
     foreach ($c in $Mod.Clients) {
-        Write-Host "  │" -ForegroundColor DarkCyan
-        Write-Host "  │  " -ForegroundColor DarkCyan -NoNewline
-        Write-Host "⚠ " -ForegroundColor Red -NoNewline
-        Write-Host $c -ForegroundColor White
+        $clientText = "Client: $c"
+        $midLine = "  ╠═ " + $clientText + " " + ("═" * (67 - $clientText.Length)) + "╣"
+        Write-Host $midLine -ForegroundColor Cyan
     }
-    Write-Host "  │" -ForegroundColor DarkCyan
-    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkCyan
+    $bottomLine = "  ╚" + ("═" * 71) + "╝"
+    Write-Host $bottomLine -ForegroundColor Cyan
     Write-Host ""
 }
 
