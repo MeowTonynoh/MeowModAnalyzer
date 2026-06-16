@@ -551,6 +551,22 @@ function Invoke-ModScan {
         if (-not $isRedundant) { [void]$finalFullwidth.Add($fw) }
     }
 
+    $dqrkisClasses = @('d','q','r','k','i','s')
+    $allClassNames = [System.Collections.Generic.HashSet[string]]::new()
+    try {
+        $archCheck = [System.IO.Compression.ZipFile]::OpenRead($FilePath)
+        foreach ($e in $archCheck.Entries) {
+            if ($e.FullName -match "\.class$") {
+                $cn = [System.IO.Path]::GetFileNameWithoutExtension(($e.FullName -split "/")[-1])
+                [void]$allClassNames.Add($cn)
+            }
+        }
+        $archCheck.Dispose()
+    } catch { }
+    $dqrkisFound = $true
+    foreach ($letter in $dqrkisClasses) { if (-not $allClassNames.Contains($letter)) { $dqrkisFound = $false; break } }
+    if ($dqrkisFound) { [void]$foundStrings.Add("dqrkis") }
+
     return @{ Patterns = $foundPatterns; Strings = $foundStrings; Fullwidth = $finalFullwidth }
 }
 
@@ -618,22 +634,20 @@ function Invoke-ClientDetection {
 
 function Write-ClientDetectionCard {
     param($Mod)
-    $totalWidth = 72
+    $boxWidth = 76
     $name = $Mod.FileName
     if ($name.Length -gt 46) { $name = $name.Substring(0,43) + "..." }
-    $topFill = $totalWidth - 6 - $name.Length - 2
-    if ($topFill -lt 0) { $topFill = 0 }
-    $topLine = "  ╔═ ! " + $name + " " + ("═" * $topFill) + "╗"
-    Write-Host $topLine -ForegroundColor Cyan
+    $topPrefix  = "  ╔═ ! " + $name + " "
+    $topFill    = $boxWidth - $topPrefix.Length - 1
+    if ($topFill -lt 1) { $topFill = 1 }
+    Write-Host ($topPrefix + ("═" * $topFill) + "╗") -ForegroundColor Cyan
     foreach ($c in $Mod.Clients) {
-        $clientText = "Client: $c"
-        $midFill = $totalWidth - 4 - $clientText.Length - 2
-        if ($midFill -lt 0) { $midFill = 0 }
-        $midLine = "  ╠═ " + $clientText + " " + ("═" * $midFill) + "╣"
-        Write-Host $midLine -ForegroundColor Cyan
+        $midPrefix = "  ╠═ Client: " + $c + " "
+        $midFill   = $boxWidth - $midPrefix.Length - 1
+        if ($midFill -lt 1) { $midFill = 1 }
+        Write-Host ($midPrefix + ("═" * $midFill) + "╣") -ForegroundColor Cyan
     }
-    $bottomLine = "  ╚" + ("═" * ($totalWidth - 2)) + "╝"
-    Write-Host $bottomLine -ForegroundColor Cyan
+    Write-Host ("  ╚" + ("═" * ($boxWidth - 4)) + "╝") -ForegroundColor Cyan
     Write-Host ""
 }
 
