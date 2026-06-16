@@ -1024,102 +1024,120 @@ function Write-SectionHeader {
     Write-Host ""
 }
 
-function Write-BoxTop {
-    param([string]$Label, [string]$Name, [ConsoleColor]$Color)
-    $W = 68
-    $name = $Name
-    if ($name.Length -gt 44) { $name = $name.Substring(0,41) + "..." }
-    $inner = "= $Label : " + $name + " "
-    $fill  = [Math]::Max(1, $W - $inner.Length - 1)
-    Write-Host ("  ╔" + $inner + ("═" * $fill) + "╗") -ForegroundColor $Color
-}
-function Write-BoxRow {
-    param([string]$Text, [ConsoleColor]$BoxColor, [ConsoleColor]$TextColor, [string]$Prefix = "  ")
-    $W = 68
-    Write-Host "  ║ " -ForegroundColor $BoxColor -NoNewline
-    $content = $Prefix + $Text
-    $pad = [Math]::Max(0, $W - 4 - $content.Length)
-    Write-Host ($content + (" " * $pad)) -ForegroundColor $TextColor -NoNewline
-    Write-Host "║" -ForegroundColor $BoxColor
-}
-function Write-BoxDivider {
-    param([string]$Label, [ConsoleColor]$Color)
-    $W = 68
-    $inner = "= $Label "
-    $fill  = [Math]::Max(1, $W - $inner.Length - 1)
-    Write-Host ("  ╠" + $inner + ("═" * $fill) + "╣") -ForegroundColor $Color
-}
-function Write-BoxBottom {
-    param([ConsoleColor]$Color)
-    Write-Host ("  ╚" + ("═" * 67) + "╝") -ForegroundColor $Color
-    Write-Host ""
-}
-
 function Write-SuspiciousCard {
     param($Mod)
-    Write-BoxTop -Label "FLAGGED" -Name $Mod.FileName -Color DarkRed
+
+    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkRed
+    Write-Host "  │ " -ForegroundColor DarkRed -NoNewline
+    Write-Host " FLAGGED " -ForegroundColor White -BackgroundColor DarkRed -NoNewline
+    Write-Host "  " -NoNewline
+    Write-Host $Mod.FileName -ForegroundColor Yellow
+    Write-Host ("  │ " + ("─" * 66)) -ForegroundColor DarkRed
 
     if ($Mod.Patterns.Count -gt 0) {
-        Write-BoxDivider -Label "PATTERNS" -Color DarkRed
+        Write-Host "  │" -ForegroundColor DarkRed
+        Write-Host "  │  " -ForegroundColor DarkRed -NoNewline
+        Write-Host "PATTERNS" -ForegroundColor DarkGray
         foreach ($p in ($Mod.Patterns | Sort-Object)) {
-            Write-BoxRow -Text $p -BoxColor DarkRed -TextColor Red
+            Write-Host "  │    " -ForegroundColor DarkRed -NoNewline
+            Write-Host $p -ForegroundColor Red
         }
     }
 
     $uniqueStrings = $Mod.Strings | Where-Object { $Mod.Patterns -notcontains $_ } | Sort-Object
     if ($uniqueStrings.Count -gt 0) {
-        Write-BoxDivider -Label "STRINGS" -Color DarkRed
+        Write-Host "  │" -ForegroundColor DarkRed
+        Write-Host "  │  " -ForegroundColor DarkRed -NoNewline
+        Write-Host "STRINGS" -ForegroundColor DarkGray
         foreach ($s in $uniqueStrings) {
-            Write-BoxRow -Text $s -BoxColor DarkRed -TextColor Yellow
+            Write-Host "  │    " -ForegroundColor DarkRed -NoNewline
+            Write-Host $s -ForegroundColor DarkYellow
         }
     }
 
     if ($Mod.Fullwidth -and $Mod.Fullwidth.Count -gt 0) {
-        Write-BoxDivider -Label "FULLWIDTH UNICODE" -Color DarkRed
+        Write-Host "  │" -ForegroundColor DarkRed
+        Write-Host "  │  " -ForegroundColor DarkRed -NoNewline
+        Write-Host "FULLWIDTH UNICODE" -ForegroundColor DarkGray
         foreach ($fw in ($Mod.Fullwidth | Sort-Object)) {
-            Write-BoxRow -Text $fw -BoxColor DarkRed -TextColor Cyan
+            Write-Host "  │    " -ForegroundColor DarkRed -NoNewline
+            Write-Host "FULLWIDTH: $fw" -ForegroundColor Cyan
         }
     }
 
-    Write-BoxBottom -Color DarkRed
+    Write-Host "  │" -ForegroundColor DarkRed
+    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkRed
+    Write-Host ""
 }
 
 function Write-InjectionCard {
     param($Mod)
-    Write-BoxTop -Label "INJECTION" -Name $Mod.FileName -Color DarkMagenta
+
+    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkMagenta
+    Write-Host "  │ " -ForegroundColor DarkMagenta -NoNewline
+    Write-Host " INJECTION " -ForegroundColor White -BackgroundColor DarkMagenta -NoNewline
+    Write-Host "  " -NoNewline
+    Write-Host $Mod.FileName -ForegroundColor Yellow
+    Write-Host ("  │ " + ("─" * 66)) -ForegroundColor DarkMagenta
 
     foreach ($flag in $Mod.Flags) {
         if ($flag -match "^(.+?) — (.+)$") {
-            $flagTitle = $matches[1]; $flagDesc = $matches[2]
+            $flagTitle = $matches[1]
+            $flagDesc  = $matches[2]
         } else {
-            $flagTitle = $flag; $flagDesc = ""
+            $flagTitle = $flag
+            $flagDesc  = ""
         }
-        Write-BoxDivider -Label $flagTitle -Color DarkMagenta
+
+        Write-Host "  │" -ForegroundColor DarkMagenta
+        Write-Host "  │  " -ForegroundColor DarkMagenta -NoNewline
+        Write-Host "◉ " -ForegroundColor Magenta -NoNewline
+        Write-Host $flagTitle -ForegroundColor White
+
         if ($flagDesc -ne "") {
-            Write-BoxRow -Text $flagDesc -BoxColor DarkMagenta -TextColor Gray
+            Write-Host "  │    " -ForegroundColor DarkMagenta -NoNewline
+            Write-Host $flagDesc -ForegroundColor Gray
         }
     }
 
-    Write-BoxBottom -Color DarkMagenta
+    Write-Host "  │" -ForegroundColor DarkMagenta
+    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkMagenta
+    Write-Host ""
 }
 
 function Write-ObfuscationCard {
     param($Mod)
-    Write-BoxTop -Label "OBFUSCATED" -Name $Mod.FileName -Color DarkYellow
+
+    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkYellow
+    Write-Host "  │ " -ForegroundColor DarkYellow -NoNewline
+    Write-Host " OBFUSCATED " -ForegroundColor Black -BackgroundColor DarkYellow -NoNewline
+    Write-Host "  " -NoNewline
+    Write-Host $Mod.FileName -ForegroundColor Yellow
+    Write-Host ("  │ " + ("─" * 66)) -ForegroundColor DarkYellow
 
     foreach ($flag in $Mod.Flags) {
         if ($flag -match "^(.+?) — (.+)$") {
-            $flagTitle = $matches[1]; $flagDesc = $matches[2]
+            $flagTitle = $matches[1]
+            $flagDesc  = $matches[2]
         } else {
-            $flagTitle = $flag; $flagDesc = ""
+            $flagTitle = $flag
+            $flagDesc  = ""
         }
-        Write-BoxDivider -Label $flagTitle -Color DarkYellow
+
+        Write-Host "  │" -ForegroundColor DarkYellow
+        Write-Host "  │  " -ForegroundColor DarkYellow -NoNewline
+        Write-Host "⚑ " -ForegroundColor Yellow -NoNewline
+        Write-Host $flagTitle -ForegroundColor White
+
         if ($flagDesc -ne "") {
-            Write-BoxRow -Text $flagDesc -BoxColor DarkYellow -TextColor Gray
+            Write-Host "  │    " -ForegroundColor DarkYellow -NoNewline
+            Write-Host $flagDesc -ForegroundColor Gray
         }
     }
 
-    Write-BoxBottom -Color DarkYellow
+    Write-Host "  │" -ForegroundColor DarkYellow
+    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkYellow
+    Write-Host ""
 }
 
 $verifiedMods       = @()
@@ -1365,10 +1383,11 @@ if ($jvmFlags.Count -gt 0) {
     Write-SectionHeader -Title "JVM / RUNTIME INJECTION" -Count $jvmFlags.Count -DotColor Yellow -CountColor Yellow
     Write-Rule "─" 76 DarkGray
     Write-Host ""
-    $W = 68
-    $jvmHeader = "= JVM : javaw / java process "
-    $jvmFill   = [Math]::Max(1, $W - $jvmHeader.Length - 1)
-    Write-Host ("  ╔" + $jvmHeader + ("═" * $jvmFill) + "╗") -ForegroundColor DarkYellow
+    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkYellow
+    Write-Host "  │ " -ForegroundColor DarkYellow -NoNewline
+    Write-Host " JVM " -ForegroundColor Black -BackgroundColor Yellow -NoNewline
+    Write-Host "  javaw / java process" -ForegroundColor Yellow
+    Write-Host ("  │ " + ("─" * 66)) -ForegroundColor DarkYellow
     foreach ($flag in $jvmFlags) {
         $ft = $flag; $fd = ""; $fpath = ""
         if ($flag -match "^(.+?) — (.+) \(path: (.+)\)$") {
@@ -1376,24 +1395,22 @@ if ($jvmFlags.Count -gt 0) {
         } elseif ($flag -match "^(.+?) — (.+)$") {
             $ft = $matches[1]; $fd = $matches[2]
         }
-        $divInner = "= $ft "
-        $divFill  = [Math]::Max(1, $W - $divInner.Length - 1)
-        Write-Host ("  ╠" + $divInner + ("═" * $divFill) + "╣") -ForegroundColor DarkYellow
+        Write-Host "  │" -ForegroundColor DarkYellow
+        Write-Host "  │  " -ForegroundColor DarkYellow -NoNewline
+        Write-Host "◉ " -ForegroundColor Yellow -NoNewline
+        Write-Host $ft -ForegroundColor White
         if ($fd -ne "") {
-            $pad = [Math]::Max(0, $W - 4 - $fd.Length)
-            Write-Host "  ║ " -ForegroundColor DarkYellow -NoNewline
-            Write-Host ($fd + (" " * $pad)) -ForegroundColor Gray -NoNewline
-            Write-Host "║" -ForegroundColor DarkYellow
+            Write-Host "  │    " -ForegroundColor DarkYellow -NoNewline
+            Write-Host $fd -ForegroundColor Gray
         }
         if ($fpath -ne "") {
             $display = if ($fpath.Length -gt 60) { "..." + $fpath.Substring($fpath.Length - 57) } else { $fpath }
-            $pad = [Math]::Max(0, $W - 4 - $display.Length)
-            Write-Host "  ║ " -ForegroundColor DarkYellow -NoNewline
-            Write-Host ($display + (" " * $pad)) -ForegroundColor DarkGray -NoNewline
-            Write-Host "║" -ForegroundColor DarkYellow
+            Write-Host "  │    " -ForegroundColor DarkYellow -NoNewline
+            Write-Host $display -ForegroundColor DarkGray
         }
     }
-    Write-Host ("  ╚" + ("═" * ($W - 1)) + "╝") -ForegroundColor DarkYellow
+    Write-Host "  │" -ForegroundColor DarkYellow
+    Write-Host ("  " + ("─" * 70)) -ForegroundColor DarkYellow
     Write-Host ""
 }
 
