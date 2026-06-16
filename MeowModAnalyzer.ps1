@@ -551,21 +551,28 @@ function Invoke-ModScan {
         if (-not $isRedundant) { [void]$finalFullwidth.Add($fw) }
     }
 
-    $dqrkisClasses = @('d','q','r','k','i','s')
-    $allClassNames = [System.Collections.Generic.HashSet[string]]::new()
     try {
-        $archCheck = [System.IO.Compression.ZipFile]::OpenRead($FilePath)
-        foreach ($e in $archCheck.Entries) {
-            if ($e.FullName -match "\.class$") {
-                $cn = [System.IO.Path]::GetFileNameWithoutExtension(($e.FullName -split "/")[-1])
-                [void]$allClassNames.Add($cn)
-            }
+        $archDq = [System.IO.Compression.ZipFile]::OpenRead($FilePath)
+        $dqChars = [byte[]]@(100, 113, 114, 107, 105, 115)
+        foreach ($entry in $archDq.Entries) {
+            if ($entry.FullName -notmatch "\.class$") { continue }
+            try {
+                $st = $entry.Open()
+                $ms = New-Object System.IO.MemoryStream
+                $st.CopyTo($ms); $st.Close()
+                $bytes = $ms.ToArray(); $ms.Dispose()
+                $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
+                if ($ascii.Contains(".xyz")) {
+                    $found = $true
+                    foreach ($b in $dqChars) {
+                        if ($bytes -notcontains $b) { $found = $false; break }
+                    }
+                    if ($found) { [void]$foundStrings.Add("dqrkis"); break }
+                }
+            } catch { }
         }
-        $archCheck.Dispose()
+        $archDq.Dispose()
     } catch { }
-    $dqrkisFound = $true
-    foreach ($letter in $dqrkisClasses) { if (-not $allClassNames.Contains($letter)) { $dqrkisFound = $false; break } }
-    if ($dqrkisFound) { [void]$foundStrings.Add("dqrkis") }
 
     return @{ Patterns = $foundPatterns; Strings = $foundStrings; Fullwidth = $finalFullwidth }
 }
@@ -634,20 +641,18 @@ function Invoke-ClientDetection {
 
 function Write-ClientDetectionCard {
     param($Mod)
-    $boxWidth = 76
+    $W = 68
     $name = $Mod.FileName
-    if ($name.Length -gt 46) { $name = $name.Substring(0,43) + "..." }
-    $topPrefix  = "  ╔═ ! " + $name + " "
-    $topFill    = $boxWidth - $topPrefix.Length - 1
-    if ($topFill -lt 1) { $topFill = 1 }
-    Write-Host ($topPrefix + ("═" * $topFill) + "╗") -ForegroundColor Cyan
+    if ($name.Length -gt 44) { $name = $name.Substring(0,41) + "..." }
+    $topInner  = "= ! " + $name + " "
+    $topFill   = [Math]::Max(0, $W - $topInner.Length - 1)
+    Write-Host ("  ╔" + $topInner + ("═" * $topFill) + "╗") -ForegroundColor Cyan
     foreach ($c in $Mod.Clients) {
-        $midPrefix = "  ╠═ Client: " + $c + " "
-        $midFill   = $boxWidth - $midPrefix.Length - 1
-        if ($midFill -lt 1) { $midFill = 1 }
-        Write-Host ($midPrefix + ("═" * $midFill) + "╣") -ForegroundColor Cyan
+        $midInner = "= Client: " + $c + " "
+        $midFill  = [Math]::Max(0, $W - $midInner.Length - 1)
+        Write-Host ("  ╠" + $midInner + ("═" * $midFill) + "╣") -ForegroundColor Cyan
     }
-    Write-Host ("  ╚" + ("═" * ($boxWidth - 4)) + "╝") -ForegroundColor Cyan
+    Write-Host ("  ╚" + ("═" * ($W - 1)) + "╝") -ForegroundColor Cyan
     Write-Host ""
 }
 
