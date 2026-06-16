@@ -562,7 +562,7 @@ function Invoke-ModScan {
                 $st.CopyTo($ms); $st.Close()
                 $bytes = $ms.ToArray(); $ms.Dispose()
                 $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
-                if ($ascii.Contains(".xyz")) {
+                if ($ascii.Contains("")) {
                     $found = $true
                     foreach ($b in $dqChars) {
                         if ($bytes -notcontains $b) { $found = $false; break }
