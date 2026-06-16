@@ -95,13 +95,16 @@ $suspiciousPatterns = @(
     "FastPlace", "WalskyOptimizer", "WalksyOptimizer", "walsky.optimizer",
     "WalksyCrystalOptimizerMod", "Donut", "Replace Mod",
     "ShieldDisabler", "SilentAim", "Totem Hit", "Wtap", "FakeLag",
-    "BlockESP", "dev.krypton", "AntiMissClick",
+    "BlockESP", "dev.krypton", "dev/krypton", "skid.krypton", "skid/krypton", "Virgin", "AntiMissClick",
     "LagReach", "PopSwitch", "SprintReset", "ChestSteal", "AntiBot",
     "ElytraSwap", "FastXP", "FastExp", "Refill",  "AirAnchor",
     "jnativehook", "FakeInv", "HoverTotem", "AutoClicker", "AutoFirework",
     "PackSpoof", "Antiknockback", "catlean", "Argon",
     "AuthBypass", "Asteria", "Prestige", "AutoEat", "AutoMine",
-    "MaceSwap", "DoubleAnchor", "AutoTPA", "BaseFinder", "Xenon", "gypsy",
+    "MaceSwap", "QuickStrike", "Macro198", "StunSlam", "SafeAnchor", "DoubleAnchor", "AutoTPA", "BaseFinder", "Xenon", "gypsy",
+    "AutoPotRefill", "WalksyOptimizer", "KeyPearl", "AimAssist", "AutoNethPot", "AutoDtap",
+    "TriggerBot", "AutoWeb", "AnchorAction",
+    "Grim", "grim",
     "org.chainlibs.module.impl.modules.Crystal.Y",
     "org.chainlibs.module.impl.modules.Crystal.bF",
     "org.chainlibs.module.impl.modules.Crystal.bM",
@@ -178,11 +181,20 @@ $cheatStrings = @(
     "ＦａｋｅＬａｇ", "Ｆａｋｅ Ｌａｇ",
     "fakePunch", "Fake Punch",
     "Ｆａｋｅ Ｐｕｎｃｈ",
+    "mace_swap", "quick_strike", "macro_198", "stun_slam",
+    "safe_anchor", "double_anchor", "auto_pot_refill",
+    "walksy_optimizer", "key_pearl", "aim_assist",
+    "auto_neth_pot", "auto_dtap", "trigger_bot", "auto_web",
+    "DOUBLE_ESCAPE", "DOUBLE_RIGHTCLICK_FIRST", "DOUBLE_RIGHTCLICK_SECOND",
+    "POST_CYCLE_DELAY", "PLACE_OBI", "WAIT_OBI", "PLACE_CRYSTAL", "BREAK_CRYSTAL",
+    "ROTATING_DOWN", "ROTATING_BACK", "REFILLING", "PLANTING", "BONEMEALING",
+    "AnchorAction", "Places two anchors for massive damage",
+    "REOFFHAND_TOTEM",
     "webmacro", "web macro",
     "AntiWeb", "AutoWeb",
     "Ａｎｔｉ Ｗｅｂ", "ＡｕｔｏＷｅｂ",
     "Ｐｌａｃｅｓ Ｗｅｂｓ Ｏｎ Ｅｎｅｍｉｅｓ",
-    "lvstrng", "selfdestruct", "self destruct",
+    "lvstrng", "dqrkis", "selfdestruct", "self destruct",
     "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer",
     "Ｗａｌｋｓｙ Ｏｐｔｉｍｉｚｅｒ",
     "autoCrystalPlaceClock",
@@ -209,7 +221,7 @@ $cheatStrings = @(
     "onPushOutOfBlocks", "onIsGlowing",
     "Automatically switches to sword when hitting with totem",
     "arrayOfString", "POT_CHEATS",
-    "Entity.isGlowing",
+    "Dqrkis Client", "Entity.isGlowing",
     "Activate Key", "Ａｃｔｉｖａｔｅ Ｋｅｙ",
     "Click Simulation", "Ｃｌｉｃｋ Ｓｉｍｕｌａｔｉｏｎ",
     "On RMB", "Ｏｎ ＲＭＢ",
@@ -309,7 +321,7 @@ $cheatStrings = @(
     "BowAimbot", "BowSpam", "AutoBow",
     "AutoCrit", "CritBypass", "AlwaysCrit", "CriticalHit",
     "ReachHack", "ExtendReach", "LongReach", "HitboxExpand",
-    "AntiKB", "NoKnockback", "VelocitySpoof", "KBReduce",
+    "AntiKB", "NoKnockback", "GrimVelocity", "GrimDisabler", "VelocitySpoof", "KBReduce",
     "OffhandTotem", "TotemSwitch",
     "AutoWeapon", "AutoSword", "AutoCity", "Burrow", "SelfTrap",
     "HoleFiller", "AntiSurround", "AntiBurrow",
@@ -337,7 +349,7 @@ $cheatStrings = @(
     "FakeNick", "PopSwitch",
     "FakeLatency", "FakePing", "SpoofRotation", "PositionSpoof",
     "GameSpeed", "SpeedTimer",
-    "VulcanBypass", "MatrixBypass",
+     "GrimBypass", "VulcanBypass", "MatrixBypass",
     "AACBypass", "VerusDisabler", "IntaveBypass", "WatchdogBypass",
     "PacketMine", "PacketWalk", "PacketSneak", "PacketCancel", "PacketDupe", "PacketSpam",
     "SelfDestruct", "HideClient",
@@ -366,13 +378,16 @@ $cheatStrings = @(
     "pandaware", "skilled", "moonClient", "astolfo",
     "futureClient", "konas", "rusherhack", "inertia", "exhibition",
     "dev.krypton", "dev/krypton", "skid.krypton", "skid/krypton",
+    "Virgin", "VirginClient", "virgin client",
     "catlean", "CatleanClient", "catlean client",
-    "dev.lvstrng.argon", "lvstrng.argon", "dev/lvstrng/argon",
+    "Argon", "ArgonClient", "argon client",
     "Asteria", "AsteriaClient", "asteria client",
-    "dev.zprestige.prestige", "dev/zprestige/prestige", "prestigeclient.vip",
+    "Prestige", "PrestigeClient", "prestige client", "prestigeclient.vip",
     "gypsy", "GypsyClient", "gypsy client",
     "Xenon", "XenonClient", "xenon client",
-    "phantom-refmap.json"
+    "Grim", "grim", "GrimClient", "grim client",
+    "phantom-refmap.json",
+    "dqrkis", "Dqrkis", "dqrkis.xyz", "Dqrkis Client"
 )
 
 $patternRegex = [regex]::new(
@@ -405,6 +420,7 @@ function Get-DownloadSource {
         elseif ($url -match "doomsdayclient\.com")                               { return "DoomsdayClient" }
         elseif ($url -match "prestigeclient\.vip")                               { return "PrestigeClient" }
         elseif ($url -match "198macros\.com")                                    { return "198Macros" }
+        elseif ($url -match "dqrkis\.xyz")                                       { return "Dqrkis" }
         else {
             if ($url -match "https?://(?:www\.)?([^/]+)") { return $matches[1] }
             return $url
@@ -1064,12 +1080,26 @@ foreach ($jar in $jarFiles) {
     if ($hash) {
         $modrinthData = Query-Modrinth -Hash $hash
         if ($modrinthData.Slug) {
-            $verifiedMods += [PSCustomObject]@{ ModName = $modrinthData.Name; FileName = $jar.Name; FilePath = $jar.FullName }
+
+            $modrinthWhitelistedSlugs = @("viafabricplus", "viafabricversion")
+            $isModrinthWhitelisted = $modrinthWhitelistedSlugs -contains $modrinthData.Slug.ToLower()
+
+            $verifiedMods += [PSCustomObject]@{
+                ModName             = $modrinthData.Name
+                FileName            = $jar.Name
+                FilePath            = $jar.FullName
+                ModrinthWhitelisted = $isModrinthWhitelisted
+            }
             continue
         }
         $megabaseData = Query-Megabase -Hash $hash
         if ($megabaseData.name) {
-            $verifiedMods += [PSCustomObject]@{ ModName = $megabaseData.Name; FileName = $jar.Name; FilePath = $jar.FullName }
+            $verifiedMods += [PSCustomObject]@{
+                ModName             = $megabaseData.Name
+                FileName            = $jar.Name
+                FilePath            = $jar.FullName
+                ModrinthWhitelisted = $false
+            }
             continue
         }
     }
@@ -1089,9 +1119,9 @@ foreach ($jar in $jarFiles) {
     $spinner = $spinnerFrames[$idx % $spinnerFrames.Length]
     Write-Host "`r[$spinner] Scanning: $idx/$totalFiles - $($jar.Name)" -ForegroundColor Yellow -NoNewline
 
-    # SALTA SE GIÀ VERIFICATO
+
     $verifiedEntry = $verifiedMods | Where-Object { $_.FileName -eq $jar.Name } | Select-Object -First 1
-    if ($verifiedEntry) {
+    if ($verifiedEntry -and $verifiedEntry.ModrinthWhitelisted -eq $true) {
         continue
     }
 
@@ -1118,9 +1148,9 @@ foreach ($jar in $jarFiles) {
     $spinner = $spinnerFrames[$idx % $spinnerFrames.Length]
     Write-Host "`r[$spinner] Bypass scan: $idx/$totalFiles - $($jar.Name)" -ForegroundColor Yellow -NoNewline
 
-    # SALTA SE GIÀ VERIFICATO
+
     $verifiedEntry = $verifiedMods | Where-Object { $_.FileName -eq $jar.Name } | Select-Object -First 1
-    if ($verifiedEntry) {
+    if ($verifiedEntry -and $verifiedEntry.ModrinthWhitelisted -eq $true) {
         continue
     }
 
@@ -1145,12 +1175,6 @@ foreach ($jar in $jarFiles) {
     $idx++
     $spinner = $spinnerFrames[$idx % $spinnerFrames.Length]
     Write-Host "`r[$spinner] Obf scan: $idx/$totalFiles - $($jar.Name)" -ForegroundColor Yellow -NoNewline
-
-    # SALTA SE GIÀ VERIFICATO
-    $verifiedEntry = $verifiedMods | Where-Object { $_.FileName -eq $jar.Name } | Select-Object -First 1
-    if ($verifiedEntry) {
-        continue
-    }
 
     $obfFlags = Invoke-ObfuscationScan -FilePath $jar.FullName
 
