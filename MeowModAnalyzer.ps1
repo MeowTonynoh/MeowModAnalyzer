@@ -95,7 +95,7 @@ $suspiciousPatterns = @(
     "FastPlace", "WalskyOptimizer", "WalksyOptimizer", "walsky.optimizer",
     "WalksyCrystalOptimizerMod", "Donut", "Replace Mod",
     "ShieldDisabler", "SilentAim", "Totem Hit", "Wtap", "FakeLag",
-    "BlockESP", "dev.krypton", "dev/krypton", "skid.krypton", "skid/krypton", "Virgin", "AntiMissClick",
+    "BlockESP", "dev.krypton", "dev/krypton", "skid.krypton", "skid/krypton", "AntiMissClick",
     "LagReach", "PopSwitch", "SprintReset", "ChestSteal", "AntiBot",
     "ElytraSwap", "FastXP", "FastExp", "Refill",  "AirAnchor",
     "jnativehook", "FakeInv", "HoverTotem", "AutoClicker", "AutoFirework",
@@ -104,7 +104,6 @@ $suspiciousPatterns = @(
     "MaceSwap", "Macro198", "StunSlam", "SafeAnchor", "DoubleAnchor", "AutoTPA", "BaseFinder", "Xenon", "gypsy",
     "AutoPotRefill", "WalksyOptimizer", "KeyPearl", "AimAssist", "AutoNethPot", "AutoDtap",
     "TriggerBot", "AutoWeb", "AnchorAction",
-    
     "org.chainlibs.module.impl.modules.Crystal.Y",
     "org.chainlibs.module.impl.modules.Crystal.bF",
     "org.chainlibs.module.impl.modules.Crystal.bM",
@@ -194,7 +193,7 @@ $cheatStrings = @(
     "AntiWeb", "AutoWeb",
     "Ａｎｔｉ Ｗｅｂ", "ＡｕｔｏＷｅｂ",
     "Ｐｌａｃｅｓ Ｗｅｂｓ Ｏｎ Ｅｎｅｍｉｅｓ",
-    "lvstrng",  "selfdestruct", "self destruct",
+    "lvstrng", "selfdestruct", "self destruct",
     "WalksyCrystalOptimizerMod", "WalksyOptimizer", "WalskyOptimizer",
     "Ｗａｌｋｓｙ Ｏｐｔｉｍｉｚｅｒ",
     "autoCrystalPlaceClock",
@@ -221,7 +220,7 @@ $cheatStrings = @(
     "onPushOutOfBlocks", "onIsGlowing",
     "Automatically switches to sword when hitting with totem",
     "arrayOfString", "POT_CHEATS",
-    "Dqrkis Client", "Entity.isGlowing",
+    "Entity.isGlowing",
     "Activate Key", "Ａｃｔｉｖａｔｅ Ｋｅｙ",
     "Click Simulation", "Ｃｌｉｃｋ Ｓｉｍｕｌａｔｉｏｎ",
     "On RMB", "Ｏｎ ＲＭＢ",
@@ -230,7 +229,7 @@ $cheatStrings = @(
     "Ｒｅｍｏｖｅｓ ｔｈｅ ｃｒｙｓｔａｌ ｂｏｕｎｃｅ ａｎｉｍａｔｉｏｎ",
     "Place Delay", "Ｐｌａｃｅ Ｄｅｌａｙ",
     "Break Delay", "Ｂｒｅａｋ Ｄｅｌａｙ",
-     "Ｆａｓｔ Ｍｏｄｅ",
+    "Fast Mode", "Ｆａｓｔ Ｍｏｄｅ",
     "Place Chance", "Ｐｌａｃｅ Ｃｈａｎｃｅ",
     "Break Chance", "Ｂｒｅａｋ Ｃｈａｎｃｅ",
     "Stop On Kill", "Ｓｔｏｐ Ｏｎ Ｋｉｌｌ",
@@ -378,16 +377,13 @@ $cheatStrings = @(
     "pandaware", "skilled", "moonClient", "astolfo",
     "futureClient", "konas", "rusherhack", "inertia", "exhibition",
     "dev.krypton", "dev/krypton", "skid.krypton", "skid/krypton",
-    "Virgin", "VirginClient", "virgin client",
     "catlean", "CatleanClient", "catlean client",
     "dev.lvstrng.argon", "lvstrng.argon", "dev/lvstrng/argon",
     "Asteria", "AsteriaClient", "asteria client",
     "dev.zprestige.prestige", "dev/zprestige/prestige", "prestigeclient.vip",
     "gypsy", "GypsyClient", "gypsy client",
     "Xenon", "XenonClient", "xenon client",
-     "GrimClient", "grim client",
-    "phantom-refmap.json",
-     "dqrkis.xyz", "Dqrkis Client"
+    "phantom-refmap.json"
 )
 
 $patternRegex = [regex]::new(
@@ -420,7 +416,6 @@ function Get-DownloadSource {
         elseif ($url -match "doomsdayclient\.com")                               { return "DoomsdayClient" }
         elseif ($url -match "prestigeclient\.vip")                               { return "PrestigeClient" }
         elseif ($url -match "198macros\.com")                                    { return "198Macros" }
-        elseif ($url -match "dqrkis\.xyz")                                       { return "Dqrkis" }
         else {
             if ($url -match "https?://(?:www\.)?([^/]+)") { return $matches[1] }
             return $url
@@ -551,44 +546,18 @@ function Invoke-ModScan {
         if (-not $isRedundant) { [void]$finalFullwidth.Add($fw) }
     }
 
-    try {
-        $archDq = [System.IO.Compression.ZipFile]::OpenRead($FilePath)
-        $dqChars = [byte[]]@(100, 113, 114, 107, 105, 115)
-        foreach ($entry in $archDq.Entries) {
-            if ($entry.FullName -notmatch "\.class$") { continue }
-            try {
-                $st = $entry.Open()
-                $ms = New-Object System.IO.MemoryStream
-                $st.CopyTo($ms); $st.Close()
-                $bytes = $ms.ToArray(); $ms.Dispose()
-                $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
-                if ($ascii.Contains("")) {
-                    $found = $true
-                    foreach ($b in $dqChars) {
-                        if ($bytes -notcontains $b) { $found = $false; break }
-                    }
-                    if ($found) { [void]$foundStrings.Add(""); break }
-                }
-            } catch { }
-        }
-        $archDq.Dispose()
-    } catch { }
-
     return @{ Patterns = $foundPatterns; Strings = $foundStrings; Fullwidth = $finalFullwidth }
 }
 
 $clientSignatures = @(
     @{ Name = "Krypton Client";  Indicators = @("dev.krypton","dev/krypton","skid.krypton","skid/krypton") },
-    @{ Name = "Virgin Client";   Indicators = @("Virgin","VirginClient","virgin client") },
     @{ Name = "Catlean Client";  Indicators = @("catlean","CatleanClient","catlean client") },
     @{ Name = "Argon Client";    Indicators = @("dev.lvstrng.argon","lvstrng.argon","dev/lvstrng/argon") },
     @{ Name = "Asteria Client";  Indicators = @("Asteria","AsteriaClient","asteria client") },
     @{ Name = "Prestige Client"; Indicators = @("dev.zprestige.prestige","dev/zprestige/prestige","prestigeclient.vip") },
     @{ Name = "Gypsy Client";    Indicators = @("gypsy","GypsyClient","gypsy client") },
     @{ Name = "Xenon Client";    Indicators = @("Xenon","XenonClient","xenon client") },
-    @{ Name = "Grim Client";     Indicators = @("GrimClient","grim client") },
     @{ Name = "Phantom Client";  Indicators = @("phantom-refmap.json") },
-    @{ Name = "Dqrkis Client";   Indicators = @("dqrkis.xyz","Dqrkis Client") },
     @{ Name = "Doomsday Client"; Indicators = @("doomsdayclient","DoomsdayClient","doomsday.jar") },
     @{ Name = "Nova Client";     Indicators = @("novaclient","api.novaclient.lol","novoware","novoclient") },
     @{ Name = "Vape Client";     Indicators = @("vape.gg","vapeclient","VapeClient","VapeLite") },
@@ -623,7 +592,6 @@ function Invoke-ClientDetection {
 
     if ($DownloadSource -eq "DoomsdayClient") { [void]$allFound.Add("doomsdayclient") }
     if ($DownloadSource -eq "PrestigeClient") { [void]$allFound.Add("prestigeclient.vip") }
-    if ($DownloadSource -eq "DqrkisClient")         { [void]$allFound.Add("dqrkis.xyz") }
 
     foreach ($client in $clientSignatures) {
         foreach ($ind in $client.Indicators) {
