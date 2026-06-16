@@ -382,7 +382,7 @@ $cheatStrings = @(
     "catlean", "CatleanClient", "catlean client",
     "dev.lvstrng.argon", "lvstrng.argon", "dev/lvstrng/argon",
     "Asteria", "AsteriaClient", "asteria client",
-    "Prestige", "PrestigeClient", "prestige client", "prestigeclient.vip",
+    "dev.zprestige.prestige", "dev/zprestige/prestige", "prestigeclient.vip",
     "gypsy", "GypsyClient", "gypsy client",
     "Xenon", "XenonClient", "xenon client",
     "Grim", "grim", "GrimClient", "grim client",
@@ -560,7 +560,7 @@ $clientSignatures = @(
     @{ Name = "Catlean Client";  Indicators = @("catlean","CatleanClient","catlean client") },
     @{ Name = "Argon Client";    Indicators = @("dev.lvstrng.argon","lvstrng.argon","dev/lvstrng/argon") },
     @{ Name = "Asteria Client";  Indicators = @("Asteria","AsteriaClient","asteria client") },
-    @{ Name = "Prestige Client"; Indicators = @("Prestige","PrestigeClient","prestige client","prestigeclient.vip") },
+    @{ Name = "Prestige Client"; Indicators = @("dev.zprestige.prestige","dev/zprestige/prestige","prestigeclient.vip") },
     @{ Name = "Gypsy Client";    Indicators = @("gypsy","GypsyClient","gypsy client") },
     @{ Name = "Xenon Client";    Indicators = @("Xenon","XenonClient","xenon client") },
     @{ Name = "Grim Client";     Indicators = @("Grim","grim","GrimClient","grim client") },
@@ -618,16 +618,21 @@ function Invoke-ClientDetection {
 
 function Write-ClientDetectionCard {
     param($Mod)
+    $totalWidth = 72
     $name = $Mod.FileName
-    if ($name.Length -gt 48) { $name = $name.Substring(0,45) + "..." }
-    $topLine = "  ╔═ ⚠ " + $name + " " + ("═" * (63 - $name.Length)) + "╗"
+    if ($name.Length -gt 46) { $name = $name.Substring(0,43) + "..." }
+    $topFill = $totalWidth - 6 - $name.Length - 2
+    if ($topFill -lt 0) { $topFill = 0 }
+    $topLine = "  ╔═ ! " + $name + " " + ("═" * $topFill) + "╗"
     Write-Host $topLine -ForegroundColor Cyan
     foreach ($c in $Mod.Clients) {
         $clientText = "Client: $c"
-        $midLine = "  ╠═ " + $clientText + " " + ("═" * (67 - $clientText.Length)) + "╣"
+        $midFill = $totalWidth - 4 - $clientText.Length - 2
+        if ($midFill -lt 0) { $midFill = 0 }
+        $midLine = "  ╠═ " + $clientText + " " + ("═" * $midFill) + "╣"
         Write-Host $midLine -ForegroundColor Cyan
     }
-    $bottomLine = "  ╚" + ("═" * 71) + "╝"
+    $bottomLine = "  ╚" + ("═" * ($totalWidth - 2)) + "╝"
     Write-Host $bottomLine -ForegroundColor Cyan
     Write-Host ""
 }
