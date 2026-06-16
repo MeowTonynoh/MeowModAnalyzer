@@ -95,15 +95,13 @@ $suspiciousPatterns = @(
     "FastPlace", "WalskyOptimizer", "WalksyOptimizer", "walsky.optimizer",
     "WalksyCrystalOptimizerMod", "Donut", "Replace Mod",
     "ShieldDisabler", "SilentAim", "Totem Hit", "Wtap", "FakeLag",
-    "BlockESP", "dev.krypton", "dev/krypton", "skid.krypton", "skid/krypton", "AntiMissClick",
+    "BlockESP", "dev.krypton", "AntiMissClick",
     "LagReach", "PopSwitch", "SprintReset", "ChestSteal", "AntiBot",
     "ElytraSwap", "FastXP", "FastExp", "Refill",  "AirAnchor",
     "jnativehook", "FakeInv", "HoverTotem", "AutoClicker", "AutoFirework",
-    "PackSpoof", "Antiknockback", "catlean",
+    "PackSpoof", "Antiknockback", "catlean", "Argon",
     "AuthBypass", "Asteria", "Prestige", "AutoEat", "AutoMine",
-    "MaceSwap", "Macro198", "StunSlam", "SafeAnchor", "DoubleAnchor", "AutoTPA", "BaseFinder", "Xenon", "gypsy",
-    "AutoPotRefill", "WalksyOptimizer", "KeyPearl", "AimAssist", "AutoNethPot", "AutoDtap",
-    "TriggerBot", "AutoWeb", "AnchorAction",
+    "MaceSwap", "DoubleAnchor", "AutoTPA", "BaseFinder", "Xenon", "gypsy",
     "org.chainlibs.module.impl.modules.Crystal.Y",
     "org.chainlibs.module.impl.modules.Crystal.bF",
     "org.chainlibs.module.impl.modules.Crystal.bM",
@@ -180,15 +178,6 @@ $cheatStrings = @(
     "ＦａｋｅＬａｇ", "Ｆａｋｅ Ｌａｇ",
     "fakePunch", "Fake Punch",
     "Ｆａｋｅ Ｐｕｎｃｈ",
-    "mace_swap", "quick_strike", "macro_198", "stun_slam",
-    "safe_anchor", "double_anchor", "auto_pot_refill",
-    "walksy_optimizer", "key_pearl", "aim_assist",
-    "auto_neth_pot", "auto_dtap", "trigger_bot", "auto_web",
-    "DOUBLE_ESCAPE", "DOUBLE_RIGHTCLICK_FIRST", "DOUBLE_RIGHTCLICK_SECOND",
-    "POST_CYCLE_DELAY", "PLACE_OBI", "WAIT_OBI", "PLACE_CRYSTAL", "BREAK_CRYSTAL",
-    "ROTATING_DOWN", "ROTATING_BACK", "REFILLING", "PLANTING", "BONEMEALING",
-    "AnchorAction", "Places two anchors for massive damage",
-    "REOFFHAND_TOTEM",
     "webmacro", "web macro",
     "AntiWeb", "AutoWeb",
     "Ａｎｔｉ Ｗｅｂ", "ＡｕｔｏＷｅｂ",
@@ -320,7 +309,7 @@ $cheatStrings = @(
     "BowAimbot", "BowSpam", "AutoBow",
     "AutoCrit", "CritBypass", "AlwaysCrit", "CriticalHit",
     "ReachHack", "ExtendReach", "LongReach", "HitboxExpand",
-    "AntiKB", "NoKnockback", "GrimVelocity", "GrimDisabler", "VelocitySpoof", "KBReduce",
+    "AntiKB", "NoKnockback", "VelocitySpoof", "KBReduce",
     "OffhandTotem", "TotemSwitch",
     "AutoWeapon", "AutoSword", "AutoCity", "Burrow", "SelfTrap",
     "HoleFiller", "AntiSurround", "AntiBurrow",
@@ -348,7 +337,7 @@ $cheatStrings = @(
     "FakeNick", "PopSwitch",
     "FakeLatency", "FakePing", "SpoofRotation", "PositionSpoof",
     "GameSpeed", "SpeedTimer",
-     "GrimBypass", "VulcanBypass", "MatrixBypass",
+    "VulcanBypass", "MatrixBypass",
     "AACBypass", "VerusDisabler", "IntaveBypass", "WatchdogBypass",
     "PacketMine", "PacketWalk", "PacketSneak", "PacketCancel", "PacketDupe", "PacketSpam",
     "SelfDestruct", "HideClient",
@@ -547,81 +536,6 @@ function Invoke-ModScan {
     }
 
     return @{ Patterns = $foundPatterns; Strings = $foundStrings; Fullwidth = $finalFullwidth }
-}
-
-$clientSignatures = @(
-    @{ Name = "Krypton Client";  Indicators = @("dev.krypton","dev/krypton","skid.krypton","skid/krypton") },
-    @{ Name = "Catlean Client";  Indicators = @("catlean","CatleanClient","catlean client") },
-    @{ Name = "Argon Client";    Indicators = @("dev.lvstrng.argon","lvstrng.argon","dev/lvstrng/argon") },
-    @{ Name = "Asteria Client";  Indicators = @("Asteria","AsteriaClient","asteria client") },
-    @{ Name = "Prestige Client"; Indicators = @("dev.zprestige.prestige","dev/zprestige/prestige","prestigeclient.vip") },
-    @{ Name = "Gypsy Client";    Indicators = @("gypsy","GypsyClient","gypsy client") },
-    @{ Name = "Xenon Client";    Indicators = @("Xenon","XenonClient","xenon client") },
-    @{ Name = "Phantom Client";  Indicators = @("phantom-refmap.json") },
-    @{ Name = "Doomsday Client"; Indicators = @("doomsdayclient","DoomsdayClient","doomsday.jar") },
-    @{ Name = "Nova Client";     Indicators = @("novaclient","api.novaclient.lol","novoware","novoclient") },
-    @{ Name = "Vape Client";     Indicators = @("vape.gg","vapeclient","VapeClient","VapeLite") },
-    @{ Name = "Intent Client";   Indicators = @("intent.store","IntentClient") },
-    @{ Name = "Rise Client";     Indicators = @("rise.today","riseclient.com") },
-    @{ Name = "Meteor Client";   Indicators = @("meteor-client","meteorclient","meteordevelopment.meteorclient","meteordevelopment") },
-    @{ Name = "LiquidBounce";    Indicators = @("liquidbounce","net.ccbluex","fdp-client") },
-    @{ Name = "Aristois";        Indicators = @("aristois") },
-    @{ Name = "Impact Client";   Indicators = @("impactclient") },
-    @{ Name = "Future Client";   Indicators = @("futureClient") },
-    @{ Name = "Konas Client";    Indicators = @("konas") },
-    @{ Name = "RusherHack";      Indicators = @("rusherhack") },
-    @{ Name = "Hellion Client";  Indicators = @("Hellion","hellion") },
-    @{ Name = "Azura Client";    Indicators = @("azura") },
-    @{ Name = "Astolfo Client";  Indicators = @("astolfo") },
-    @{ Name = "WalksyOptimizer"; Indicators = @("WalksyCrystalOptimizerMod","WalksyOptimizer","WalskyOptimizer","walsky.optimizer","LWFH Crystal") },
-    @{ Name = "Chain Client";    Indicators = @("org.chainlibs.module.impl.modules","org/chainlibs/module/impl/modules") }
-)
-
-function Invoke-ClientDetection {
-    param(
-        [System.Collections.Generic.HashSet[string]]$Patterns,
-        [System.Collections.Generic.HashSet[string]]$Strings,
-        [string]$FileName,
-        [string]$DownloadSource
-    )
-
-    $detected = [System.Collections.Generic.List[string]]::new()
-    $allFound  = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
-    foreach ($p in $Patterns) { [void]$allFound.Add($p) }
-    foreach ($s in $Strings)  { [void]$allFound.Add($s) }
-
-    if ($DownloadSource -eq "DoomsdayClient") { [void]$allFound.Add("doomsdayclient") }
-    if ($DownloadSource -eq "PrestigeClient") { [void]$allFound.Add("prestigeclient.vip") }
-
-    foreach ($client in $clientSignatures) {
-        foreach ($ind in $client.Indicators) {
-            if ($allFound.Contains($ind)) {
-                if (-not $detected.Contains($client.Name)) {
-                    $detected.Add($client.Name)
-                }
-                break
-            }
-        }
-    }
-
-    return $detected
-}
-
-function Write-ClientDetectionCard {
-    param($Mod)
-    $W = 68
-    $name = $Mod.FileName
-    if ($name.Length -gt 44) { $name = $name.Substring(0,41) + "..." }
-    $topInner  = "= ! " + $name + " "
-    $topFill   = [Math]::Max(0, $W - $topInner.Length - 1)
-    Write-Host ("  ╔" + $topInner + ("═" * $topFill) + "╗") -ForegroundColor Cyan
-    foreach ($c in $Mod.Clients) {
-        $midInner = "= Client: " + $c + " "
-        $midFill  = [Math]::Max(0, $W - $midInner.Length - 1)
-        Write-Host ("  ╠" + $midInner + ("═" * $midFill) + "╣") -ForegroundColor Cyan
-    }
-    Write-Host ("  ╚" + ("═" * ($W - 1)) + "╝") -ForegroundColor Cyan
-    Write-Host ""
 }
 
 function Invoke-ObfuscationScan {
@@ -1108,12 +1022,11 @@ function Write-ObfuscationCard {
     Write-Host ""
 }
 
-$verifiedMods       = @()
-$unknownMods        = @()
-$suspiciousMods     = @()
-$bypassMods         = @()
-$obfuscatedMods     = @()
-$detectedClientMods = @()
+$verifiedMods    = @()
+$unknownMods     = @()
+$suspiciousMods  = @()
+$bypassMods      = @()
+$obfuscatedMods  = @()
 
 try {
     $jarFiles = Get-ChildItem -Path $modsPath -Filter *.jar -ErrorAction Stop
@@ -1151,26 +1064,12 @@ foreach ($jar in $jarFiles) {
     if ($hash) {
         $modrinthData = Query-Modrinth -Hash $hash
         if ($modrinthData.Slug) {
-
-            $modrinthWhitelistedSlugs = @("viafabricplus", "viafabricversion")
-            $isModrinthWhitelisted = $modrinthWhitelistedSlugs -contains $modrinthData.Slug.ToLower()
-
-            $verifiedMods += [PSCustomObject]@{
-                ModName             = $modrinthData.Name
-                FileName            = $jar.Name
-                FilePath            = $jar.FullName
-                ModrinthWhitelisted = $isModrinthWhitelisted
-            }
+            $verifiedMods += [PSCustomObject]@{ ModName = $modrinthData.Name; FileName = $jar.Name; FilePath = $jar.FullName }
             continue
         }
         $megabaseData = Query-Megabase -Hash $hash
         if ($megabaseData.name) {
-            $verifiedMods += [PSCustomObject]@{
-                ModName             = $megabaseData.Name
-                FileName            = $jar.Name
-                FilePath            = $jar.FullName
-                ModrinthWhitelisted = $false
-            }
+            $verifiedMods += [PSCustomObject]@{ ModName = $megabaseData.Name; FileName = $jar.Name; FilePath = $jar.FullName }
             continue
         }
     }
@@ -1190,22 +1089,13 @@ foreach ($jar in $jarFiles) {
     $spinner = $spinnerFrames[$idx % $spinnerFrames.Length]
     Write-Host "`r[$spinner] Scanning: $idx/$totalFiles - $($jar.Name)" -ForegroundColor Yellow -NoNewline
 
-
+    # SALTA SE GIÀ VERIFICATO
     $verifiedEntry = $verifiedMods | Where-Object { $_.FileName -eq $jar.Name } | Select-Object -First 1
-    if ($verifiedEntry -and $verifiedEntry.ModrinthWhitelisted -eq $true) {
+    if ($verifiedEntry) {
         continue
     }
 
     $result = Invoke-ModScan -FilePath $jar.FullName
-
-    $src = Get-DownloadSource $jar.FullName
-    $clientsFound = Invoke-ClientDetection -Patterns $result.Patterns -Strings $result.Strings -FileName $jar.Name -DownloadSource $src
-    if ($clientsFound.Count -gt 0) {
-        $existing = $detectedClientMods | Where-Object { $_.FileName -eq $jar.Name } | Select-Object -First 1
-        if (-not $existing) {
-            $detectedClientMods += [PSCustomObject]@{ FileName = $jar.Name; Clients = $clientsFound }
-        }
-    }
 
     if ($result.Patterns.Count -gt 0 -or $result.Strings.Count -gt 0 -or $result.Fullwidth.Count -gt 0) {
         $suspiciousMods += [PSCustomObject]@{
@@ -1228,9 +1118,9 @@ foreach ($jar in $jarFiles) {
     $spinner = $spinnerFrames[$idx % $spinnerFrames.Length]
     Write-Host "`r[$spinner] Bypass scan: $idx/$totalFiles - $($jar.Name)" -ForegroundColor Yellow -NoNewline
 
-
+    # SALTA SE GIÀ VERIFICATO
     $verifiedEntry = $verifiedMods | Where-Object { $_.FileName -eq $jar.Name } | Select-Object -First 1
-    if ($verifiedEntry -and $verifiedEntry.ModrinthWhitelisted -eq $true) {
+    if ($verifiedEntry) {
         continue
     }
 
@@ -1255,6 +1145,12 @@ foreach ($jar in $jarFiles) {
     $idx++
     $spinner = $spinnerFrames[$idx % $spinnerFrames.Length]
     Write-Host "`r[$spinner] Obf scan: $idx/$totalFiles - $($jar.Name)" -ForegroundColor Yellow -NoNewline
+
+    # SALTA SE GIÀ VERIFICATO
+    $verifiedEntry = $verifiedMods | Where-Object { $_.FileName -eq $jar.Name } | Select-Object -First 1
+    if ($verifiedEntry) {
+        continue
+    }
 
     $obfFlags = Invoke-ObfuscationScan -FilePath $jar.FullName
 
@@ -1308,15 +1204,6 @@ if ($unknownMods.Count -gt 0) {
         Write-Host $topLine    -ForegroundColor Yellow
         Write-Host $bottomLine -ForegroundColor Yellow
         Write-Host ""
-    }
-}
-
-if ($detectedClientMods.Count -gt 0) {
-    Write-SectionHeader -Title "CLIENT DETECTED" -Count $detectedClientMods.Count -DotColor Cyan -CountColor Cyan
-    Write-Rule "─" 76 DarkGray
-    Write-Host ""
-    foreach ($mod in $detectedClientMods) {
-        Write-ClientDetectionCard -Mod $mod
     }
 }
 
@@ -1384,14 +1271,13 @@ if ($jvmFlags.Count -gt 0) {
 
 Write-Host "📊 SUMMARY" -ForegroundColor Cyan
 Write-Rule "━" 76 Blue
-Write-Host "  Total files scanned: " -ForegroundColor Gray -NoNewline; Write-Host "$totalFiles"                          -ForegroundColor White
-Write-Host "  Verified mods:       " -ForegroundColor Gray -NoNewline; Write-Host "$($verifiedMods.Count)"               -ForegroundColor Green
-Write-Host "  Unknown mods:        " -ForegroundColor Gray -NoNewline; Write-Host "$($unknownMods.Count)"                -ForegroundColor Yellow
-Write-Host "  Client detected:     " -ForegroundColor Gray -NoNewline; Write-Host "$($detectedClientMods.Count)"         -ForegroundColor Cyan
-Write-Host "  Suspicious mods:     " -ForegroundColor Gray -NoNewline; Write-Host "$($suspiciousMods.Count)"             -ForegroundColor Red
-Write-Host "  Bypass/Injected:     " -ForegroundColor Gray -NoNewline; Write-Host "$($bypassMods.Count)"                 -ForegroundColor Magenta
-Write-Host "  Obfuscated mods:     " -ForegroundColor Gray -NoNewline; Write-Host "$($obfuscatedMods.Count)"             -ForegroundColor Yellow
-Write-Host "  JVM issues:          " -ForegroundColor Gray -NoNewline; Write-Host "$($jvmFlags.Count)"                   -ForegroundColor Yellow
+Write-Host "  Total files scanned: " -ForegroundColor Gray -NoNewline; Write-Host "$totalFiles"                   -ForegroundColor White
+Write-Host "  Verified mods:       " -ForegroundColor Gray -NoNewline; Write-Host "$($verifiedMods.Count)"        -ForegroundColor Green
+Write-Host "  Unknown mods:        " -ForegroundColor Gray -NoNewline; Write-Host "$($unknownMods.Count)"         -ForegroundColor Yellow
+Write-Host "  Suspicious mods:     " -ForegroundColor Gray -NoNewline; Write-Host "$($suspiciousMods.Count)"      -ForegroundColor Red
+Write-Host "  Bypass/Injected:     " -ForegroundColor Gray -NoNewline; Write-Host "$($bypassMods.Count)"          -ForegroundColor Magenta
+Write-Host "  Obfuscated mods:     " -ForegroundColor Gray -NoNewline; Write-Host "$($obfuscatedMods.Count)"      -ForegroundColor Yellow
+Write-Host "  JVM issues:          " -ForegroundColor Gray -NoNewline; Write-Host "$($jvmFlags.Count)"            -ForegroundColor Yellow
 Write-Host
 Write-Rule "━" 76 Blue
 Write-Host ""
