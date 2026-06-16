@@ -90,7 +90,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 $suspiciousPatterns = @(
     "AimAssist", "AnchorTweaks", "AutoAnchor", "AutoCrystal", "AutoDoubleHand",
     "AutoHitCrystal", "AutoPot", "AutoTotem", "AutoArmor", "InventoryTotem",
-    "JumpReset", "LegitTotem", "PingSpoof", "SelfDestruct",
+    "LegitTotem", "PingSpoof", "SelfDestruct",
     "ShieldBreaker", "TriggerBot", "AxeSpam", "WebMacro",
     "FastPlace", "WalskyOptimizer", "WalksyOptimizer", "walsky.optimizer",
     "WalksyCrystalOptimizerMod", "Donut", "Replace Mod",
