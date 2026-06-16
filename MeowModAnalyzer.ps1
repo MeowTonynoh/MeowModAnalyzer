@@ -95,7 +95,7 @@ $suspiciousPatterns = @(
     "FastPlace", "WalskyOptimizer", "WalksyOptimizer", "walsky.optimizer",
     "WalksyCrystalOptimizerMod", "Donut", "Replace Mod",
     "ShieldDisabler", "SilentAim", "Totem Hit", "Wtap", "FakeLag",
-    "BlockESP", "dev.krypton", "Virgin", "AntiMissClick",
+    "BlockESP", "dev.krypton", "dev/krypton", "skid.krypton", "skid/krypton", "Virgin", "AntiMissClick",
     "LagReach", "PopSwitch", "SprintReset", "ChestSteal", "AntiBot",
     "ElytraSwap", "FastXP", "FastExp", "Refill",  "AirAnchor",
     "jnativehook", "FakeInv", "HoverTotem", "AutoClicker", "AutoFirework",
@@ -376,7 +376,18 @@ $cheatStrings = @(
     "novoware", "novoclient",
     "aristois", "impactclient", "azura",
     "pandaware", "skilled", "moonClient", "astolfo",
-    "futureClient", "konas", "rusherhack", "inertia", "exhibition"
+    "futureClient", "konas", "rusherhack", "inertia", "exhibition",
+    "dev.krypton", "dev/krypton", "skid.krypton", "skid/krypton",
+    "Virgin", "VirginClient", "virgin client",
+    "catlean", "CatleanClient", "catlean client",
+    "Argon", "ArgonClient", "argon client",
+    "Asteria", "AsteriaClient", "asteria client",
+    "Prestige", "PrestigeClient", "prestige client", "prestigeclient.vip",
+    "gypsy", "GypsyClient", "gypsy client",
+    "Xenon", "XenonClient", "xenon client",
+    "Grim", "grim", "GrimClient", "grim client",
+    "phantom-refmap.json",
+    "dqrkis", "Dqrkis", "dqrkis.xyz", "Dqrkis Client"
 )
 
 $patternRegex = [regex]::new(
