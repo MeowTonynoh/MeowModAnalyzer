@@ -101,10 +101,10 @@ $suspiciousPatterns = @(
     "jnativehook", "FakeInv", "HoverTotem", "AutoClicker", "AutoFirework",
     "PackSpoof", "Antiknockback", "catlean", "Argon",
     "AuthBypass", "Asteria", "Prestige", "AutoEat", "AutoMine",
-    "MaceSwap", "QuickStrike", "Macro198", "StunSlam", "SafeAnchor", "DoubleAnchor", "AutoTPA", "BaseFinder", "Xenon", "gypsy",
+    "MaceSwap",  "Macro198", "StunSlam", "SafeAnchor", "DoubleAnchor", "AutoTPA", "BaseFinder", "Xenon", "gypsy",
     "AutoPotRefill", "WalksyOptimizer", "KeyPearl", "AimAssist", "AutoNethPot", "AutoDtap",
     "TriggerBot", "AutoWeb", "AnchorAction",
-    "Grim", "grim",
+    
     "org.chainlibs.module.impl.modules.Crystal.Y",
     "org.chainlibs.module.impl.modules.Crystal.bF",
     "org.chainlibs.module.impl.modules.Crystal.bM",
@@ -385,9 +385,9 @@ $cheatStrings = @(
     "Prestige", "PrestigeClient", "prestige client", "prestigeclient.vip",
     "gypsy", "GypsyClient", "gypsy client",
     "Xenon", "XenonClient", "xenon client",
-    "Grim", "grim", "GrimClient", "grim client",
+     "GrimClient", "grim client",
     "phantom-refmap.json",
-    "dqrkis", "Dqrkis", "dqrkis.xyz", "Dqrkis Client"
+     "dqrkis.xyz", "Dqrkis Client"
 )
 
 $patternRegex = [regex]::new(
