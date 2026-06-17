@@ -88,7 +88,7 @@ if ($mcProcess) {
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 $suspiciousPatterns = @(
-    "AimAssist", "AnchorTweaks", "AutoAnchor", "AutoCrystal", "AutoDoubleHand",
+    "AimAssist", "AnchorTweaks", "AutoAnchor", "AutoCrystal", "AutoDoubleHand", "JDWP.VirtualMachine.AllModules",
     "AutoHitCrystal", "AutoPot", "AutoTotem", "AutoArmor", "InventoryTotem",
     "LegitTotem", "PingSpoof", "SelfDestruct",
     "ShieldBreaker", "TriggerBot", "AxeSpam", "WebMacro",
@@ -130,7 +130,7 @@ $suspiciousPatterns = @(
 )
 
 $cheatStrings = @(
-    "AutoCrystal", "autocrystal", "auto crystal", "cw crystal",
+    "AutoCrystal", "autocrystal", "auto crystal", "cw crystal", "JDWP.VirtualMachine.AllModules",
     "dontPlaceCrystal", "dontBreakCrystal",
     "AutoHitCrystal", "autohitcrystal", "canPlaceCrystalServer", "healPotSlot",
     "ＡｕｔｏＣｒｙｓｔａｌ", "Ａｕｔｏ Ｃｒｙｓｔａｌ",
@@ -206,7 +206,7 @@ $cheatStrings = @(
     "FreezePlayer","VirtualMachine"
     "Ｆｒｅｅｃａｍ", "Ｍｏｖｅ ｆｒｅｅｌｙ ｔｈｒｏｕｇｈ ｗａｌｌｓ",
     "Ｎｏ Ｃｌｉｐ", "Ｆｒｅｅｚｅ Ｐｌａｙｅｒ",
-    "LWFH Crystal",
+    "LWFH Crystal", "JDWP.VirtualMachine.AllModules",
     "ＬＷＦＨ Ｃｒｙｓｔａｌ",
     "KeyPearl", "LootYeeter",
     "ＫｅｙＰｅａｒｌ", "Ｋｅｙ Ｐｅａｒｌ",
