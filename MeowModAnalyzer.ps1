@@ -203,7 +203,7 @@ $cheatStrings = @(
     "PackSpoof", "Antiknockback", "catlean",
     "AuthBypass", "obfuscatedAuth", "LicenseCheckMixin",
     "BaseFinder", "invsee", "ItemExploit",
-    "FreezePlayer","VirtualMachine",
+    "FreezePlayer",
     "Ｆｒｅｅｃａｍ", "Ｍｏｖｅ ｆｒｅｅｌｙ ｔｈｒｏｕｇｈ ｗａｌｌｓ",
     "Ｎｏ Ｃｌｉｐ", "Ｆｒｅｅｚｅ Ｐｌａｙｅｒ",
     "LWFH Crystal", "JDWP.VirtualMachine.AllModules",
