@@ -398,18 +398,25 @@ $cheatStrings = @(
     "E.xplode Delay", "E.xplode Slot"
 )
 
+$suspiciousPatterns = @($suspiciousPatterns | Select-Object -Unique)
+$cheatStrings       = @($cheatStrings | Select-Object -Unique)
+
 $patternRegex = [regex]::new(
     '(?<![A-Za-z])(' + ($suspiciousPatterns -join '|') + ')(?![A-Za-z])',
     [System.Text.RegularExpressions.RegexOptions]::Compiled
 )
 
-$cheatStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
-foreach ($s in $cheatStrings) { [void]$cheatStringSet.Add($s) }
+$cheatStringRegex = [regex]::new(
+    '(' + (($cheatStrings | ForEach-Object { [regex]::Escape($_) }) -join '|') + ')',
+    [System.Text.RegularExpressions.RegexOptions]::Compiled
+)
 
 $fullwidthRegex = [regex]::new(
     "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]{2,}",
     [System.Text.RegularExpressions.RegexOptions]::Compiled
 )
+
+$fwCheatPool = @($cheatStrings | Where-Object { $_ -cmatch "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]" })
 
 $mavenPrefixes = @(
     "com_","org_","net_","io_","dev_","gs_","xyz_",
@@ -483,9 +490,9 @@ function Get-DownloadSource {
 function Query-Modrinth {
     param([string]$Hash)
     try {
-        $versionInfo = Invoke-RestMethod -Uri "https://api.modrinth.com/v2/version_file/$Hash" -Method Get -UseBasicParsing -ErrorAction Stop
+        $versionInfo = Invoke-RestMethod -Uri "https://api.modrinth.com/v2/version_file/$Hash" -Method Get -UseBasicParsing -TimeoutSec 8 -ErrorAction Stop
         if ($versionInfo.project_id) {
-            $projectInfo = Invoke-RestMethod -Uri "https://api.modrinth.com/v2/project/$($versionInfo.project_id)" -Method Get -UseBasicParsing -ErrorAction Stop
+            $projectInfo = Invoke-RestMethod -Uri "https://api.modrinth.com/v2/project/$($versionInfo.project_id)" -Method Get -UseBasicParsing -TimeoutSec 8 -ErrorAction Stop
             return @{ Name = $projectInfo.title; Slug = $projectInfo.slug }
         }
     } catch { }
@@ -495,7 +502,7 @@ function Query-Modrinth {
 function Query-Megabase {
     param([string]$Hash)
     try {
-        $result = Invoke-RestMethod -Uri "https://megabase.vercel.app/api/query?hash=$Hash" -Method Get -UseBasicParsing -ErrorAction Stop
+        $result = Invoke-RestMethod -Uri "https://megabase.vercel.app/api/query?hash=$Hash" -Method Get -UseBasicParsing -TimeoutSec 8 -ErrorAction Stop
         if (-not $result.error) { return $result.data }
     } catch { }
     return $null
@@ -505,7 +512,7 @@ function Test-SuspiciousJarName {
     param([string]$JarName)
     $base = [System.IO.Path]::GetFileNameWithoutExtension($JarName)
     if ($base -match '\d')                                          { return $false }
-    foreach ($pfx in $script:mavenPrefixes) {
+    foreach ($pfx in $mavenPrefixes) {
         if ($base.ToLower().StartsWith($pfx))                       { return $false }
     }
     if ($base.Length -gt 20)                                        { return $false }
@@ -575,13 +582,11 @@ function Invoke-CombinedScan {
     }
 
     $outerClasses = @($Handle.OuterEntries | Where-Object { $_.FullName -match "\.class$" })
-    $suspiciousNestedJars = @()
     foreach ($nj in $Handle.NestedJarEntries) {
         $njBase = [System.IO.Path]::GetFileName($nj.FullName)
-        if (Test-SuspiciousJarName -JarName $njBase) { $suspiciousNestedJars += $njBase }
-    }
-    foreach ($sj in $suspiciousNestedJars) {
-        $bypassFlags.Add("Suspicious nested JAR — no version, unknown dependency: $sj")
+        if (Test-SuspiciousJarName -JarName $njBase) {
+            $bypassFlags.Add("Suspicious nested JAR — no version, unknown dependency: $njBase")
+        }
     }
     if ($Handle.NestedJarEntries.Count -eq 1 -and $outerClasses.Count -lt 3) {
         $njName = [System.IO.Path]::GetFileName(($Handle.NestedJarEntries | Select-Object -First 1).FullName)
@@ -599,19 +604,19 @@ function Invoke-CombinedScan {
         } catch { }
     }
 
-    $totalClass         = 0
-    $numericCount        = 0
-    $unicodeCount        = 0
-    $fullwidthCount      = 0
-    $japaneseCount       = 0
-    $singleLetterCount   = 0
-    $twoLetterCount      = 0
-    $gibberishCount      = 0
-    $noVowelCount        = 0
-    $confusionCount      = 0
-    $singleCharPkg       = 0
-    $contentSample       = [System.Text.StringBuilder]::new()
-    $sampleSize          = 0
+    $totalClass          = 0
+    $numericCount         = 0
+    $unicodeCount         = 0
+    $fullwidthCount       = 0
+    $japaneseCount        = 0
+    $singleLetterCount    = 0
+    $twoLetterCount       = 0
+    $gibberishCount       = 0
+    $noVowelCount         = 0
+    $confusionCount       = 0
+    $singleCharPkg        = 0
+    $contentSample        = [System.Text.StringBuilder]::new()
+    $sampleSize           = 0
 
     $bypassObfuscatedCount = 0
     $numericClassCount     = 0
@@ -670,39 +675,32 @@ function Invoke-CombinedScan {
                 $st.CopyTo($ms2); $st.Close()
                 $bytes = $ms2.ToArray(); $ms2.Dispose()
 
-                $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
-                $utf8  = [System.Text.Encoding]::UTF8.GetString($bytes)
+                $text = [System.Text.Encoding]::UTF8.GetString($bytes)
 
-                foreach ($m in $patternRegex.Matches($ascii)) { [void]$foundPatterns.Add($m.Value) }
-                foreach ($s in $cheatStringSet) {
-                    if ($ascii.Contains($s)) { [void]$foundStrings.Add($s); continue }
-                    if ($utf8.Contains($s))  { [void]$foundStrings.Add($s) }
-                }
-                foreach ($m in $fullwidthRegex.Matches($utf8)) { [void]$foundFullwidth.Add($m.Value) }
+                foreach ($m in $patternRegex.Matches($text)) { [void]$foundPatterns.Add($m.Value) }
+                foreach ($m in $cheatStringRegex.Matches($text)) { [void]$foundStrings.Add($m.Value) }
+                foreach ($m in $fullwidthRegex.Matches($text)) { [void]$foundFullwidth.Add($m.Value) }
 
                 if ($isClass) {
-                    if ($ascii -match "java/lang/Runtime" -and $ascii -match "getRuntime" -and $ascii -match "exec") {
+                    if ($text -match "java/lang/Runtime" -and $text -match "getRuntime" -and $text -match "exec") {
                         $runtimeExecFound = $true
                     }
-                    if ($ascii -match "openConnection" -and $ascii -match "HttpURLConnection" -and $ascii -match "FileOutputStream") {
+                    if ($text -match "openConnection" -and $text -match "HttpURLConnection" -and $text -match "FileOutputStream") {
                         $httpDownloadFound = $true
                     }
-                    if ($ascii -match "openConnection" -and $ascii -match "setDoOutput" -and $ascii -match "getOutputStream" -and $ascii -match "getProperty") {
+                    if ($text -match "openConnection" -and $text -match "setDoOutput" -and $text -match "getOutputStream" -and $text -match "getProperty") {
                         $httpExfilFound = $true
                     }
 
                     if ($sampleSize -lt 150000 -and $entry.Length -lt 100000 -and $entry.Length -gt 100) {
-                        [void]$contentSample.Append($ascii)
-                        $sampleSize += $ascii.Length
+                        [void]$contentSample.Append($text)
+                        $sampleSize += $text.Length
                     }
                 }
             } catch { }
         }
     }
 
-    $fwCheatPool = @($script:cheatStrings | Where-Object {
-        $_ -cmatch "[\uFF21-\uFF3A\uFF41-\uFF5A\uFF10-\uFF19]"
-    })
     $resolvedFullwidth = [System.Collections.Generic.HashSet[string]]::new()
     foreach ($fw in @($foundFullwidth)) {
         if ($fw.Length -lt 3) { continue }
@@ -769,7 +767,7 @@ function Invoke-CombinedScan {
         }
     }
 
-    $obfPct = if ($totalClassCount -ge 10) { [math]::Round(($bypassObfuscatedCount / $totalClassCount) * 100) } else { 0 }
+    $obfPct  = if ($totalClassCount -ge 10) { [math]::Round(($bypassObfuscatedCount / $totalClassCount) * 100) } else { 0 }
     $numPctB = if ($totalClassCount -ge 5)  { [math]::Round(($numericClassCount / $totalClassCount) * 100) } else { 0 }
     $uniPctB = if ($totalClassCount -ge 5)  { [math]::Round(($unicodeClassCount / $totalClassCount) * 100) } else { 0 }
 
@@ -856,6 +854,60 @@ function Invoke-JvmScan {
             Flags       = $flags
             InfoArgs    = $infoArgs
         })
+    }
+
+    return $results
+}
+
+function New-ParallelPool {
+    param(
+        [int]$ThrottleLimit,
+        [hashtable]$Variables,
+        [string[]]$FunctionNames
+    )
+
+    $iss = [System.Management.Automation.Runspaces.InitialSessionState]::CreateDefault()
+
+    foreach ($key in $Variables.Keys) {
+        $entry = [System.Management.Automation.Runspaces.SessionStateVariableEntry]::new($key, $Variables[$key], $null)
+        $iss.Variables.Add($entry)
+    }
+
+    foreach ($fnName in $FunctionNames) {
+        $fnInfo = Get-Item "function:$fnName" -ErrorAction SilentlyContinue
+        if ($fnInfo) {
+            $entry = [System.Management.Automation.Runspaces.SessionStateFunctionEntry]::new($fnName, $fnInfo.ScriptBlock)
+            $iss.Commands.Add($entry)
+        }
+    }
+
+    $pool = [runspacefactory]::CreateRunspacePool(1, $ThrottleLimit, $iss, $Host)
+    $pool.Open()
+    return $pool
+}
+
+function Invoke-InParallel {
+    param(
+        [Parameter(Mandatory)] $Pool,
+        [Parameter(Mandatory)] [scriptblock]$ScriptBlock,
+        [Parameter(Mandatory)] [array]$Items
+    )
+
+    $jobs = [System.Collections.Generic.List[object]]::new()
+    foreach ($item in $Items) {
+        $ps = [powershell]::Create()
+        $ps.RunspacePool = $Pool
+        [void]$ps.AddScript($ScriptBlock).AddArgument($item)
+        $jobs.Add([PSCustomObject]@{ Pipe = $ps; Handle = $ps.BeginInvoke() })
+    }
+
+    $results = [System.Collections.Generic.List[object]]::new()
+    foreach ($job in $jobs) {
+        try {
+            $out = $job.Pipe.EndInvoke($job.Handle)
+            foreach ($o in $out) { $results.Add($o) }
+        } catch { }
+        $job.Pipe.Dispose()
     }
 
     return $results
@@ -1066,80 +1118,120 @@ if ($jarFiles.Count -eq 0) {
 }
 
 $fileWord    = if ($jarFiles.Count -eq 1) { "file" } else { "files" }
-Write-Host "🔍 Found $($jarFiles.Count) JAR $fileWord to analyze" -ForegroundColor Green
+$totalFiles  = $jarFiles.Count
+$cpuCount    = [Environment]::ProcessorCount
+$scanThrottle = [Math]::Min(16, [Math]::Max(4, $cpuCount))
+$netThrottle  = [Math]::Min(20, [Math]::Max(6, $cpuCount * 3))
+
+Write-Host "🔍 Found $totalFiles JAR $fileWord to analyze" -ForegroundColor Green
+Write-Host "⚙️  Using $scanThrottle scan threads / $netThrottle network threads" -ForegroundColor DarkGray
 Write-Host
 
-$spinnerFrames = @("⣾","⣽","⣻","⢿","⡿","⣟","⣯","⣷")
-$totalFiles    = $jarFiles.Count
-$idx           = 0
+Write-Host "🔍 Pass 1 — Hash verification (Modrinth + Megabase, parallel)..." -ForegroundColor Cyan
 
-Write-Host "🔍 Pass 1 — Hash verification (Modrinth + Megabase)..." -ForegroundColor Cyan
-
-foreach ($jar in $jarFiles) {
-    $idx++
-    $spinner = $spinnerFrames[$idx % $spinnerFrames.Length]
-    Write-Host "`r[$spinner] Verifying: $idx/$totalFiles - $($jar.Name)" -ForegroundColor Yellow -NoNewline
-
+$pass1Script = {
+    param($jar)
     $hash = Get-FileSHA1 -Path $jar.FullName
+    $verifiedName = $null
+    $verifiedSlug = $null
 
     if ($hash) {
         $modrinthData = Query-Modrinth -Hash $hash
         if ($modrinthData.Slug) {
-
-            $modrinthWhitelistedSlugs = @("viafabricplus", "viafabricversion")
-            $isModrinthWhitelisted = $modrinthWhitelistedSlugs -contains $modrinthData.Slug.ToLower()
-
-            $verifiedMods += [PSCustomObject]@{
-                ModName             = $modrinthData.Name
-                FileName            = $jar.Name
-                FilePath            = $jar.FullName
-                ModrinthWhitelisted = $isModrinthWhitelisted
-            }
-            continue
-        }
-        $megabaseData = Query-Megabase -Hash $hash
-        if ($megabaseData.name) {
-            $verifiedMods += [PSCustomObject]@{
-                ModName             = $megabaseData.Name
-                FileName            = $jar.Name
-                FilePath            = $jar.FullName
-                ModrinthWhitelisted = $false
-            }
-            continue
+            $verifiedName = $modrinthData.Name
+            $verifiedSlug = $modrinthData.Slug
+        } else {
+            $megabaseData = Query-Megabase -Hash $hash
+            if ($megabaseData.name) { $verifiedName = $megabaseData.Name }
         }
     }
 
-    $src = Get-DownloadSource $jar.FullName
-    $unknownMods += [PSCustomObject]@{ FileName = $jar.Name; FilePath = $jar.FullName; DownloadSource = $src }
+    $src = $null
+    if (-not $verifiedName) { $src = Get-DownloadSource $jar.FullName }
+
+    [PSCustomObject]@{
+        FileName       = $jar.Name
+        FilePath       = $jar.FullName
+        VerifiedName   = $verifiedName
+        VerifiedSlug   = $verifiedSlug
+        DownloadSource = $src
+    }
+}
+
+$pass1Results = $null
+try {
+    $pool1 = New-ParallelPool -ThrottleLimit $netThrottle -Variables @{} -FunctionNames @("Get-FileSHA1","Get-DownloadSource","Query-Modrinth","Query-Megabase")
+    $pass1Results = Invoke-InParallel -Pool $pool1 -ScriptBlock $pass1Script -Items $jarFiles
+    $pool1.Close(); $pool1.Dispose()
+} catch {
+    $pass1Results = foreach ($jar in $jarFiles) { & $pass1Script $jar }
+}
+
+$modrinthWhitelistedSlugs = @("viafabricplus", "viafabricversion")
+foreach ($r in $pass1Results) {
+    if ($r.VerifiedName) {
+        $isWhitelisted = $r.VerifiedSlug -and ($modrinthWhitelistedSlugs -contains $r.VerifiedSlug.ToLower())
+        $verifiedMods += [PSCustomObject]@{
+            ModName             = $r.VerifiedName
+            FileName            = $r.FileName
+            FilePath            = $r.FilePath
+            ModrinthWhitelisted = $isWhitelisted
+        }
+    } else {
+        $unknownMods += [PSCustomObject]@{ FileName = $r.FileName; FilePath = $r.FilePath; DownloadSource = $r.DownloadSource }
+    }
 }
 
 Write-Host "`r$(' ' * 100)`r" -NoNewline
 
 $modWord = if ($totalFiles -eq 1) { "mod" } else { "mods" }
-Write-Host "🔬 Pass 2 — Deep-scanning all $totalFiles $modWord (patterns, bypass, obfuscation)..." -ForegroundColor Cyan
-$idx = 0
+Write-Host "🔬 Pass 2 — Deep-scanning all $totalFiles $modWord (patterns, bypass, obfuscation, parallel)..." -ForegroundColor Cyan
 
-foreach ($jar in $jarFiles) {
-    $idx++
-    $spinner = $spinnerFrames[$idx % $spinnerFrames.Length]
-    Write-Host "`r[$spinner] Scanning: $idx/$totalFiles - $($jar.Name)" -ForegroundColor Yellow -NoNewline
+$whitelistedSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+foreach ($v in $verifiedMods) { if ($v.ModrinthWhitelisted -eq $true) { [void]$whitelistedSet.Add($v.FileName) } }
 
-    $verifiedEntry = $verifiedMods | Where-Object { $_.FileName -eq $jar.Name } | Select-Object -First 1
-    if ($verifiedEntry -and $verifiedEntry.ModrinthWhitelisted -eq $true) {
-        continue
-    }
+$jarsToScan = @($jarFiles | Where-Object { -not $whitelistedSet.Contains($_.Name) })
 
+$pass2Script = {
+    param($jar)
     $handle = Get-JarHandle -FilePath $jar.FullName
     $scan   = Invoke-CombinedScan -Handle $handle
     Close-JarHandle -Handle $handle
+    [PSCustomObject]@{
+        FileName = $jar.Name
+        Scan     = $scan
+    }
+}
 
+$pass2Vars = @{
+    patternRegex      = $patternRegex
+    cheatStringRegex  = $cheatStringRegex
+    fullwidthRegex    = $fullwidthRegex
+    fwCheatPool       = $fwCheatPool
+    mavenPrefixes     = $mavenPrefixes
+    cheatObfuscators  = $cheatObfuscators
+    knownLegitModIds  = $knownLegitModIds
+}
+$pass2Functions = @("Test-SuspiciousJarName","Get-JarHandle","Close-JarHandle","Invoke-CombinedScan")
+
+$pass2Results = $null
+try {
+    $pool2 = New-ParallelPool -ThrottleLimit $scanThrottle -Variables $pass2Vars -FunctionNames $pass2Functions
+    $pass2Results = Invoke-InParallel -Pool $pool2 -ScriptBlock $pass2Script -Items $jarsToScan
+    $pool2.Close(); $pool2.Dispose()
+} catch {
+    $pass2Results = foreach ($jar in $jarsToScan) { & $pass2Script $jar }
+}
+
+foreach ($r in $pass2Results) {
+    $scan = $r.Scan
     $isSuspicious = ($scan.Patterns.Count -gt 0 -or $scan.Strings.Count -gt 0 -or $scan.Fullwidth.Count -gt 0)
     $isBypass     = ($scan.BypassFlags.Count -gt 0)
     $isObf        = ($scan.ObfFlags.Count -gt 0)
 
     if ($isSuspicious) {
         $suspiciousMods += [PSCustomObject]@{
-            FileName  = $jar.Name
+            FileName  = $r.FileName
             Patterns  = $scan.Patterns
             Strings   = $scan.Strings
             Fullwidth = $scan.Fullwidth
@@ -1147,24 +1239,18 @@ foreach ($jar in $jarFiles) {
     }
 
     if ($isBypass) {
-        $bypassMods += [PSCustomObject]@{
-            FileName = $jar.Name
-            Flags    = $scan.BypassFlags
-        }
+        $bypassMods += [PSCustomObject]@{ FileName = $r.FileName; Flags = $scan.BypassFlags }
     }
 
     if ($isObf -and -not $isSuspicious -and -not $isBypass) {
-        $obfuscatedMods += [PSCustomObject]@{
-            FileName = $jar.Name
-            Flags    = $scan.ObfFlags
-        }
+        $obfuscatedMods += [PSCustomObject]@{ FileName = $r.FileName; Flags = $scan.ObfFlags }
     }
 
     if ($isSuspicious -or $isBypass -or $isObf) {
-        $verifiedMods = $verifiedMods | Where-Object { $_.FileName -ne $jar.Name }
+        $verifiedMods = $verifiedMods | Where-Object { $_.FileName -ne $r.FileName }
     }
     if ($isBypass) {
-        $unknownMods = $unknownMods | Where-Object { $_.FileName -ne $jar.Name }
+        $unknownMods = $unknownMods | Where-Object { $_.FileName -ne $r.FileName }
     }
 }
 
