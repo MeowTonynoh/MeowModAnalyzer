@@ -94,7 +94,7 @@ $suspiciousPatterns = @(
     "ShieldBreaker", "TriggerBot", "AxeSpam", "WebMacro",
     "FastPlace", "WalskyOptimizer", "WalksyOptimizer", "walsky.optimizer",
     "WalksyCrystalOptimizerMod", "Donut", "Replace Mod",
-    "ShieldDisabler", "SilentAim", "Totem Hit", "Wtap", "FakeLag",
+    "ShieldDisabler", "SilentAim", "Totem Hit", "Wtap", "FakeLag", "dev.virel", "orchard" 
     "BlockESP", "dev.krypton", "dev/krypton", "skid.krypton", "skid/krypton",  "AntiMissClick",
     "LagReach", "PopSwitch", "SprintReset", "ChestSteal", "AntiBot",
     "ElytraSwap", "FastXP", "FastExp", "Refill",  "AirAnchor",
@@ -131,7 +131,7 @@ $suspiciousPatterns = @(
 
 $cheatStrings = @(
     "AutoCrystal", "autocrystal", "auto crystal", "cw crystal", "JDWP.VirtualMachine.AllModules",
-    "dontPlaceCrystal", "dontBreakCrystal",
+    "dontPlaceCrystal", "dontBreakCrystal", "dev.virel", "orchard" 
     "AutoHitCrystal", "autohitcrystal", "canPlaceCrystalServer", "healPotSlot",
     "ＡｕｔｏＣｒｙｓｔａｌ", "Ａｕｔｏ Ｃｒｙｓｔａｌ",
     "ＡｕｔｏＨｉｔＣｒｙｓｔａｌ",
