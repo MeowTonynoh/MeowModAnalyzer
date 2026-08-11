@@ -90,7 +90,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 $suspiciousPatterns = @(
     "AimAssist", "AnchorTweaks", "AutoAnchor", "AutoCrystal", "AutoDoubleHand", "JDWP.VirtualMachine.AllModules",
     "AutoHitCrystal", "AutoPot", "AutoTotem", "AutoArmor", "InventoryTotem",
-    "LegitTotem", "PingSpoof", "SelfDestruct", "Ranush", "ranush", "CartOptimizer", "cartoptimizer", "CartOptimizerClient",
+    "LegitTotem", "PingSpoof", "SelfDestruct",
     "ShieldBreaker", "TriggerBot", "AxeSpam", "WebMacro",
     "FastPlace", "WalskyOptimizer", "WalksyOptimizer", "walsky.optimizer",
     "WalksyCrystalOptimizerMod", "Donut", "Replace Mod",
@@ -133,7 +133,7 @@ $cheatStrings = @(
     "AutoCrystal", "autocrystal", "auto crystal", "cw crystal", "JDWP.VirtualMachine.AllModules",
     "dontPlaceCrystal", "dontBreakCrystal", "dev.virel", "orchard" 
     "AutoHitCrystal", "autohitcrystal", "canPlaceCrystalServer", "healPotSlot",
-    "ＡｕｔｏＣｒｙｓｔａｌ", "Ａｕｔｏ Ｃｒｙｓｔａｌ", "Ranush", "ranush", "CartOptimizerClient" "CartOptimizer", "cartoptimizer"
+    "ＡｕｔｏＣｒｙｓｔａｌ", "Ａｕｔｏ Ｃｒｙｓｔａｌ",
     "ＡｕｔｏＨｉｔＣｒｙｓｔａｌ",
     "AutoAnchor", "autoanchor", "auto anchor", "DoubleAnchor",
      "HasAnchor", "anchortweaks", "anchor macro", "safe anchor", "safeanchor",
