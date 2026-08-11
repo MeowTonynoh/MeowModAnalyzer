@@ -925,7 +925,7 @@ function Write-SuspiciousCard {
     if ($Mod.Patterns.Count -gt 0) {
         Write-Host "  PATTERNS" -ForegroundColor DarkGray
         foreach ($p in ($Mod.Patterns | Sort-Object)) {
-            Write-Host "    * " -ForegroundColor DarkGray -NoNewline
+            Write-Host "    - " -ForegroundColor Red -NoNewline
             Write-Host $p -ForegroundColor Red
         }
         Write-Host ""
@@ -935,7 +935,7 @@ function Write-SuspiciousCard {
     if ($uniqueStrings.Count -gt 0) {
         Write-Host "  STRINGS" -ForegroundColor DarkGray
         foreach ($s in $uniqueStrings) {
-            Write-Host "    * " -ForegroundColor DarkGray -NoNewline
+            Write-Host "    - " -ForegroundColor DarkYellow -NoNewline
             Write-Host $s -ForegroundColor DarkYellow
         }
         Write-Host ""
@@ -944,7 +944,7 @@ function Write-SuspiciousCard {
     if ($Mod.Fullwidth -and $Mod.Fullwidth.Count -gt 0) {
         Write-Host "  FULLWIDTH UNICODE" -ForegroundColor DarkGray
         foreach ($fw in ($Mod.Fullwidth | Sort-Object)) {
-            Write-Host "    * " -ForegroundColor DarkGray -NoNewline
+            Write-Host "    - " -ForegroundColor Cyan -NoNewline
             Write-Host $fw -ForegroundColor Cyan
         }
         Write-Host ""
@@ -967,14 +967,14 @@ function Write-InjectionCard {
             $flagDesc  = ""
         }
 
-        Write-Host "    * " -ForegroundColor DarkGray -NoNewline
+        Write-Host "    - " -ForegroundColor Magenta -NoNewline
         Write-Host $flagTitle -ForegroundColor White
 
         if ($flagDesc -ne "") {
             Write-Host "      $flagDesc" -ForegroundColor Gray
         }
+        Write-Host ""
     }
-    Write-Host ""
 }
 
 function Write-ObfuscationCard {
@@ -993,14 +993,14 @@ function Write-ObfuscationCard {
             $flagDesc  = ""
         }
 
-        Write-Host "    * " -ForegroundColor DarkGray -NoNewline
+        Write-Host "    - " -ForegroundColor Yellow -NoNewline
         Write-Host $flagTitle -ForegroundColor White
 
         if ($flagDesc -ne "") {
             Write-Host "      $flagDesc" -ForegroundColor Gray
         }
+        Write-Host ""
     }
-    Write-Host ""
 }
 
 $verifiedMods    = @()
@@ -1172,7 +1172,7 @@ Write-Host "`r$(' ' * 100)`r" -NoNewline
 if ($verifiedMods.Count -gt 0) {
     Write-SectionHeader -Title "VERIFIED MODS" -Count $verifiedMods.Count -CountColor Green
     foreach ($mod in $verifiedMods) {
-        Write-Host "  * " -ForegroundColor DarkGray -NoNewline
+        Write-Host "  - " -ForegroundColor Green -NoNewline
         Write-Host "$($mod.ModName)" -ForegroundColor White -NoNewline
         Write-Host " -> " -ForegroundColor Gray -NoNewline
         Write-Host "$($mod.FileName)" -ForegroundColor DarkGray
@@ -1224,7 +1224,7 @@ if ($jvmFlags.Count -gt 0) {
         } elseif ($flag -match "^(.+?) — (.+)$") {
             $ft = $matches[1]; $fd = $matches[2]
         }
-        Write-Host "    * " -ForegroundColor DarkGray -NoNewline
+        Write-Host "    - " -ForegroundColor Yellow -NoNewline
         Write-Host $ft -ForegroundColor White
         if ($fd -ne "") {
             Write-Host "      $fd" -ForegroundColor Gray
@@ -1233,8 +1233,8 @@ if ($jvmFlags.Count -gt 0) {
             $display = if ($fpath.Length -gt 60) { "..." + $fpath.Substring($fpath.Length - 57) } else { $fpath }
             Write-Host "      $display" -ForegroundColor DarkGray
         }
+        Write-Host ""
     }
-    Write-Host ""
 }
 
 Write-Host "SUMMARY" -ForegroundColor Cyan
