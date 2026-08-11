@@ -104,7 +104,8 @@ $suspiciousPatterns = @(
     "MaceSwap",  "Macro198", "StunSlam", "SafeAnchor", "DoubleAnchor", "AutoTPA", "BaseFinder", "Xenon", "gypsy",
     "AutoPotRefill", "WalksyOptimizer", "KeyPearl", "AimAssist", "AutoNethPot", "AutoDtap",
     "TriggerBot", "AutoWeb", "AnchorAction",
-    
+    "Ranush", "ranush", "CartOptimizer", "CartOptimizerClient", "cartoptimizer",
+
     "org.chainlibs.module.impl.modules.Crystal.Y",
     "org.chainlibs.module.impl.modules.Crystal.bF",
     "org.chainlibs.module.impl.modules.Crystal.bM",
@@ -387,7 +388,9 @@ $cheatStrings = @(
     "Xenon", "XenonClient", "xenon client",
      "GrimClient", "grim client",
     "phantom-refmap.json",
-     "dqrkis.xyz", "Dqrkis Client"
+     "dqrkis.xyz", "Dqrkis Client",
+    "Ranush", "ranush", "RanushClient", "ranush client",
+    "CartOptimizer", "CartOptimizerClient", "cartoptimizer", "cart optimizer"
 )
 
 $patternRegex = [regex]::new(
