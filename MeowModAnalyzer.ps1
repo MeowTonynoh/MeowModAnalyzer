@@ -398,6 +398,19 @@ $patternRegex = [regex]::new(
 $cheatStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
 foreach ($s in $cheatStrings) { [void]$cheatStringSet.Add($s) }
 
+# A cheat name that starts with a capital and directly follows a lowercase letter is part of a longer camelCase
+# identifier (isCriticalHit, getAlwaysCritical, disableWTapSprint), not the cheat name itself
+function Test-CheatString {
+    param([string]$Text, [string]$Needle)
+    $checkCase = [char]::IsUpper($Needle[0])
+    $i = $Text.IndexOf($Needle, [System.StringComparison]::Ordinal)
+    while ($i -ge 0) {
+        if (-not $checkCase -or $i -eq 0 -or -not [char]::IsLower($Text[$i - 1])) { return $true }
+        $i = $Text.IndexOf($Needle, $i + 1, [System.StringComparison]::Ordinal)
+    }
+    return $false
+}
+
 function Get-FileSHA1 {
     param([string]$Path)
     return (Get-FileHash -Path $Path -Algorithm SHA1).Hash
@@ -504,8 +517,8 @@ function Invoke-ModScan {
                     foreach ($m in $patternRegex.Matches($ascii)) { [void]$foundPatterns.Add($m.Value) }
 
                     foreach ($s in $cheatStringSet) {
-                        if ($ascii.Contains($s)) { [void]$foundStrings.Add($s); continue }
-                        if ($utf8.Contains($s))  { [void]$foundStrings.Add($s) }
+                        if (Test-CheatString $ascii $s) { [void]$foundStrings.Add($s); continue }
+                        if (Test-CheatString $utf8 $s)  { [void]$foundStrings.Add($s) }
                     }
 
                     foreach ($m in $fullwidthRegex.Matches($utf8)) {
