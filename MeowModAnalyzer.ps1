@@ -398,6 +398,19 @@ $patternRegex = [regex]::new(
 $cheatStringSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
 foreach ($s in $cheatStrings) { [void]$cheatStringSet.Add($s) }
 
+# A cheat name that starts with a capital and directly follows a lowercase letter is part of a longer camelCase
+# identifier (isCriticalHit, getAlwaysCritical, disableWTapSprint), not the cheat name itself
+function Test-CheatString {
+    param([string]$Text, [string]$Needle)
+    $checkCase = [char]::IsUpper($Needle[0])
+    $i = $Text.IndexOf($Needle, [System.StringComparison]::Ordinal)
+    while ($i -ge 0) {
+        if (-not $checkCase -or $i -eq 0 -or -not [char]::IsLower($Text[$i - 1])) { return $true }
+        $i = $Text.IndexOf($Needle, $i + 1, [System.StringComparison]::Ordinal)
+    }
+    return $false
+}
+
 function Get-FileSHA1 {
     param([string]$Path)
     return (Get-FileHash -Path $Path -Algorithm SHA1).Hash
@@ -491,6 +504,9 @@ function Invoke-ModScan {
         foreach ($entry in $allEntries) {
             $name = $entry.FullName
 
+            # Tokenizer vocabularies and stemmer word lists contain plain English words that are also cheat names
+            if ($name -match '(^|/)[^/]*(tokenizer|vocab)[^/]*\.json$' -or $name -match '^org/apache/lucene/analysis/') { continue }
+
             if ($name -match '\.(class|json)$' -or $name -match 'MANIFEST\.MF') {
                 try {
                     $st = $entry.Open()
@@ -504,8 +520,8 @@ function Invoke-ModScan {
                     foreach ($m in $patternRegex.Matches($ascii)) { [void]$foundPatterns.Add($m.Value) }
 
                     foreach ($s in $cheatStringSet) {
-                        if ($ascii.Contains($s)) { [void]$foundStrings.Add($s); continue }
-                        if ($utf8.Contains($s))  { [void]$foundStrings.Add($s) }
+                        if (Test-CheatString $ascii $s) { [void]$foundStrings.Add($s); continue }
+                        if (Test-CheatString $utf8 $s)  { [void]$foundStrings.Add($s) }
                     }
 
                     foreach ($m in $fullwidthRegex.Matches($utf8)) {
@@ -1081,7 +1097,7 @@ foreach ($jar in $jarFiles) {
         $modrinthData = Query-Modrinth -Hash $hash
         if ($modrinthData.Slug) {
 
-            $modrinthWhitelistedSlugs = @("viafabricplus", "viafabricversion")
+            $modrinthWhitelistedSlugs = @("viafabricplus", "viafabricversion", "polydium", "itemphysicliteconfig")
             $isModrinthWhitelisted = $modrinthWhitelistedSlugs -contains $modrinthData.Slug.ToLower()
 
             $verifiedMods += [PSCustomObject]@{
