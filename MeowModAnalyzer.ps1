@@ -1097,7 +1097,7 @@ foreach ($jar in $jarFiles) {
         $modrinthData = Query-Modrinth -Hash $hash
         if ($modrinthData.Slug) {
 
-            $modrinthWhitelistedSlugs = @("viafabricplus", "viafabricversion")
+            $modrinthWhitelistedSlugs = @("viafabricplus", "viafabricversion", "polydium")
             $isModrinthWhitelisted = $modrinthWhitelistedSlugs -contains $modrinthData.Slug.ToLower()
 
             $verifiedMods += [PSCustomObject]@{
