@@ -504,6 +504,9 @@ function Invoke-ModScan {
         foreach ($entry in $allEntries) {
             $name = $entry.FullName
 
+            # Tokenizer vocabularies and stemmer word lists contain plain English words that are also cheat names
+            if ($name -match '(^|/)[^/]*(tokenizer|vocab)[^/]*\.json$' -or $name -match '^org/apache/lucene/analysis/') { continue }
+
             if ($name -match '\.(class|json)$' -or $name -match 'MANIFEST\.MF') {
                 try {
                     $st = $entry.Open()
